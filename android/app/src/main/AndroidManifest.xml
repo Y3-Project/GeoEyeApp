@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_app_firebase_login">
    <application
-        android:label="flutter_app_firebase_login"
+        android:label="GeoEye"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
