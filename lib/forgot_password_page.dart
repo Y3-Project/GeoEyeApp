@@ -22,15 +22,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.black,
         elevation: 0,
-        title: const Text("Reset Password"),
+        title: const Text("Reset Password", style: TextStyle(fontSize: 25)),
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
-            "Receive an email to reset your password",
+            "Enter the email you signed-up with to reset your password",
             textAlign: TextAlign.center,
           ),
           TextFormField(

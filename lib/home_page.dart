@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'login_page.dart';
 
 class HomePage extends StatelessWidget {
   final Function(User?) onSignOut;
 
   const HomePage({required this.onSignOut});
 
-  Future<void> logout() async {
-    await FirebaseAuth.instance.signOut();
-    onSignOut(null);
-  }
-
   @override
   Widget build(BuildContext context) {
+
+    //method to log the user out
+    Future<void> logout() async {
+      await FirebaseAuth.instance.signOut();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => LoginPage(onSignIn: (user) {}),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const Text('Home Page', style: TextStyle(fontSize: 25)),
       ),
       bottomNavigationBar: BottomNavigationBar(items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),

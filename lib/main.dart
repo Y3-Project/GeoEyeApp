@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/decision_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_app_firebase_login/welcome_page.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DecisionsTree(),
+      home: WelcomePage(),
     );
   }
 }
