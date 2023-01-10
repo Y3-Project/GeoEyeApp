@@ -2,8 +2,8 @@
     package="com.example.flutter_app_firebase_login">
    <application
         android:label="GeoEye"
-        android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:name="android.app.Application"
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
