@@ -15,6 +15,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'GeoEye',
+      theme: ThemeData.light().copyWith(
+
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.black,
+          textTheme: ButtonTextTheme.accent,
+        ),
+
+        appBarTheme:AppBarTheme(
+          backgroundColor: Color(0xff000000),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
     );
@@ -27,11 +39,12 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
-        splash: Row(mainAxisAlignment: MainAxisAlignment.center,children: [
-          Text('GeoEye', style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold)),
-          Lottie.asset('images/eye-blinking.json')
-        ]),
-        nextScreen: WelcomePage(),
+      splash: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text('GeoEye',
+            style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold)),
+        Lottie.asset('images/eye-blinking.json')
+      ]),
+      nextScreen: WelcomePage(),
       pageTransitionType: PageTransitionType.fade,
     );
   }

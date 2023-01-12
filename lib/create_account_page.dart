@@ -65,6 +65,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           TextFormField(
             controller: _controllerPassword,
+            obscureText: true,
             decoration: const InputDecoration(labelText: "Password"),
           ),
           Text(error!),

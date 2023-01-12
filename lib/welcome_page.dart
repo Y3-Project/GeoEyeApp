@@ -22,7 +22,7 @@ class _WelcomePageState extends State<WelcomePage> {
           title: Text('GeoEye', style: TextStyle(fontSize: 25)),
         ),
         Text(
-          'Hi, welcome to GeoEye.',
+          'Hello, welcome to GeoEye.',
           style: TextStyle(fontSize: 20),
         ),
         ElevatedButton(
