@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/login_page.dart';
-
 import 'home_page.dart';
+
+import 'generator.dart';
+//generate a random username with UsernameGen().generate()
 
 class SignUpPage extends StatefulWidget {
   final Function(User?) onSignIn;
@@ -17,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   String? error = '';
+  //String username = UsernameGen().generate();
 
   onRefresh(userCred) {
     setState(() {
@@ -56,7 +59,8 @@ class _SignUpPageState extends State<SignUpPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text('Create an account', style: TextStyle(fontSize: 25)),
+          title:
+              const Text('Create an account', style: TextStyle(fontSize: 25)),
         ),
         body: Column(children: [
           TextFormField(
@@ -83,10 +87,10 @@ class _SignUpPageState extends State<SignUpPage> {
           GestureDetector(
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => LoginPage(onSignIn: (user){}),
+                builder: (context) => LoginPage(onSignIn: (user) {}),
               ),
             ),
-            child: const Text(
+            child: Text(
               "Already have an account?",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),

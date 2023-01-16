@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/create_account_page.dart';
 import 'package:flutter_app_firebase_login/login_page.dart';
-
 import 'home_page.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -22,7 +21,7 @@ class _WelcomePageState extends State<WelcomePage> {
           title: Text('GeoEye', style: TextStyle(fontSize: 25)),
         ),
         Text(
-          'Hello, welcome to GeoEye.',
+          'Hello, welcome to GeoEye. [INSERT SOME CATCHPHRASE]',
           style: TextStyle(fontSize: 20),
         ),
         ElevatedButton(
