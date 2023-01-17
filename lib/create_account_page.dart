@@ -19,7 +19,11 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   String? error = '';
-  //String username = UsernameGen().generate();
+  String username = '';
+
+  String username1 = UsernameGen().generate();
+  String username2 = UsernameGen().generate();
+  String username3 = UsernameGen().generate();
 
   onRefresh(userCred) {
     setState(() {
@@ -62,11 +66,45 @@ class _SignUpPageState extends State<SignUpPage> {
           title:
               const Text('Create an account', style: TextStyle(fontSize: 25)),
         ),
-        body: Column(children: [
+        body:
+            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           TextFormField(
             controller: _controllerEmail,
             decoration: const InputDecoration(labelText: "Email"),
           ),
+          Text("Please pick a username amongst the three shown",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            GestureDetector(
+                onTap: () {
+                  username = username1;
+                },
+                child: Text(username1,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Colors.lightBlue))),
+            SizedBox(height: 25),
+            GestureDetector(
+                onTap: () {
+                  username = username2;
+                },
+                child: Text(username2,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Colors.lightBlue))),
+            SizedBox(height: 25),
+            GestureDetector(
+                onTap: () {
+                  username = username3;
+                },
+                child: Text(username3,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Colors.lightBlue)))
+          ]),
           TextFormField(
             controller: _controllerPassword,
             obscureText: true,
@@ -79,9 +117,9 @@ class _SignUpPageState extends State<SignUpPage> {
             onPressed: () {
               createUser();
             },
-            child: const Text(
+            child: Text(
               style: TextStyle(fontSize: 20),
-              "Sign-up",
+              'Sign-up',
             ),
           ),
           GestureDetector(
