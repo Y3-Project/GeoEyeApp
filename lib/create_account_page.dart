@@ -116,6 +116,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 backgroundColor: MaterialStatePropertyAll(Colors.green)),
             onPressed: () {
               createUser();
+              //TODO {send username, email, and uid of user to database here}
             },
             child: Text(
               style: TextStyle(fontSize: 20),

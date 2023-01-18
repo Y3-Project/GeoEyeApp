@@ -8,6 +8,7 @@ import 'package:page_transition/page_transition.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // TODO connect to firebase cloud storage here?
   runApp(MyApp());
 }
 
@@ -17,13 +18,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'GeoEye',
       theme: ThemeData.light().copyWith(
-
         buttonTheme: ButtonThemeData(
           buttonColor: Colors.black,
           textTheme: ButtonTextTheme.accent,
         ),
-
-        appBarTheme:AppBarTheme(
+        appBarTheme: AppBarTheme(
           backgroundColor: Color(0xff000000),
         ),
       ),
