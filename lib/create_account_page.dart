@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/login_page.dart';
 import 'home_page.dart';
-
 import 'generator.dart';
 //generate a random username with UsernameGen().generate()
 
@@ -18,12 +17,17 @@ class _SignUpPageState extends State<SignUpPage> {
   User? user;
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-  String? error = '';
-  String username = '';
 
-  String username1 = UsernameGen().generate();
-  String username2 = UsernameGen().generate();
-  String username3 = UsernameGen().generate();
+  String? error = '';
+  String selectedUsername = '';
+
+  static String username1 = UsernameGen().generate();
+  static String username2 = UsernameGen().generate();
+  static String username3 = UsernameGen().generate();
+
+  SnackBar snack1 = SnackBar(content: Text(username1 + " selected!"), duration: Duration(seconds: 1));
+  SnackBar snack2 = SnackBar(content: Text(username2 + " selected!"), duration: Duration(seconds: 1));
+  SnackBar snack3 = SnackBar(content: Text(username3 + " selected!"), duration: Duration(seconds: 1));
 
   onRefresh(userCred) {
     setState(() {
@@ -77,7 +81,8 @@ class _SignUpPageState extends State<SignUpPage> {
           Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             GestureDetector(
                 onTap: () {
-                  username = username1;
+                  selectedUsername = username1;
+                  ScaffoldMessenger.of(context).showSnackBar(snack1);
                 },
                 child: Text(username1,
                     style: TextStyle(
@@ -87,7 +92,8 @@ class _SignUpPageState extends State<SignUpPage> {
             SizedBox(height: 25),
             GestureDetector(
                 onTap: () {
-                  username = username2;
+                  selectedUsername = username2;
+                  ScaffoldMessenger.of(context).showSnackBar(snack2);
                 },
                 child: Text(username2,
                     style: TextStyle(
@@ -97,7 +103,8 @@ class _SignUpPageState extends State<SignUpPage> {
             SizedBox(height: 25),
             GestureDetector(
                 onTap: () {
-                  username = username3;
+                  selectedUsername = username3;
+                  ScaffoldMessenger.of(context).showSnackBar(snack3);
                 },
                 child: Text(username3,
                     style: TextStyle(
