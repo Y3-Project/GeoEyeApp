@@ -1,14 +1,23 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app_firebase_login/welcome_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
-  // TODO connect to firebase cloud storage here?
+  // FirebaseFirestore.instance.collection('<table>').snapshots();
+  // to connect to firestore database
+  /*here is an example
+  final users = FirebaseFirestore.instance.collection('users').snapshots();
+  users.listen((data) => data.docs.forEach((element) {
+        print(element.data().toString());
+      }));
+  */
   runApp(MyApp());
 }
 
