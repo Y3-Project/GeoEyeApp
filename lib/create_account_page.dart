@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/login_page.dart';
@@ -25,14 +26,32 @@ class _SignUpPageState extends State<SignUpPage> {
   static String username2 = UsernameGen().generate();
   static String username3 = UsernameGen().generate();
 
-  SnackBar snack1 = SnackBar(content: Text(username1 + " selected!"), duration: Duration(seconds: 1));
-  SnackBar snack2 = SnackBar(content: Text(username2 + " selected!"), duration: Duration(seconds: 1));
-  SnackBar snack3 = SnackBar(content: Text(username3 + " selected!"), duration: Duration(seconds: 1));
+  SnackBar snack1 = SnackBar(
+      content: Text(username1 + " selected!"), duration: Duration(seconds: 1));
+  SnackBar snack2 = SnackBar(
+      content: Text(username2 + " selected!"), duration: Duration(seconds: 1));
+  SnackBar snack3 = SnackBar(
+      content: Text(username3 + " selected!"), duration: Duration(seconds: 1));
 
   onRefresh(userCred) {
     setState(() {
       user = userCred;
     });
+  }
+
+  /** sends user information to the firestore database
+   * 
+   */
+  Future<void> sendUserInformationToFirestore(
+      String email, bool moderator, String username, User? user) async {
+    FirebaseFirestore.instance.collection('users').add({
+      'email': email,
+      'moderator': moderator,
+      'username': username,
+      'uuid': user?.uid
+    }).then((value) => print("document created with id: " + value.id),
+        onError: (e) => print(
+            "ERROR sending user information on sign up to firestore, $e"));
   }
 
   @override
@@ -44,9 +63,9 @@ class _SignUpPageState extends State<SignUpPage> {
             .createUserWithEmailAndPassword(
                 email: _controllerEmail.text,
                 password: _controllerPassword.text);
-
         widget.onSignIn(userCredential.user);
-
+        await sendUserInformationToFirestore(_controllerEmail.text, false,
+            selectedUsername, userCredential.user);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => HomePage(
@@ -123,7 +142,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 backgroundColor: MaterialStatePropertyAll(Colors.green)),
             onPressed: () {
               createUser();
-              //TODO {send username, email, and uid of user to database here}
             },
             child: Text(
               style: TextStyle(fontSize: 20),
