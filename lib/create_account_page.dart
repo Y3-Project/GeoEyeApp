@@ -54,10 +54,12 @@ class _SignUpPageState extends State<SignUpPage> {
             "ERROR sending user information on sign up to firestore, $e"));
   }
 
+
   @override
   Widget build(BuildContext context) {
     //method to create a user in the Firebase account
     Future<void> createUser() async {
+
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
