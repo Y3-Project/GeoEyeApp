@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app_firebase_login/create_account_page.dart';
+import 'package:flutter_app_firebase_login/moderator_page.dart';
 import 'forgot_password_page.dart';
 import 'home_page.dart';
 
@@ -34,14 +35,16 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     //access firestore database here to get the corresponding email from the username
     Future<String> getEmailFromUsername() async {
       String email = '';
       QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
-          .instance.collection("users").where("username", isEqualTo: _controllerUsername.text).get();
+          .instance
+          .collection("users")
+          .where("username", isEqualTo: _controllerUsername.text)
+          .get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
-      for(QueryDocumentSnapshot<Map<String, dynamic>> doc in docList){
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
         email = doc.get('email');
       }
       return email;
@@ -56,16 +59,34 @@ class _LoginPageState extends State<LoginPage> {
                 email: userEmail, password: _controllerPassword.text);
 
         widget.onSignIn(userCredential.user);
+        bool moderator = false;
+        final snap = await FirebaseFirestore.instance
+            .collection('users')
+            .where("moderator", isEqualTo: true)
+            .where("username", isEqualTo: _controllerUsername.text)
+            .get();
+        for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snap.docs) {
+          moderator = doc.get('moderator');
+        }
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => HomePage(
-              onSignOut: (userCred) {
-                onRefresh(userCred);
-              },
+        if (moderator == true) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ModeratorPage(
+                    onSignOut: (userCred) {
+                      onRefresh(userCred);
+                    },
+                  )));
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => HomePage(
+                onSignOut: (userCred) {
+                  onRefresh(userCred);
+                },
+              ),
             ),
-          ),
-        );
+          );
+        }
       } on FirebaseAuthException catch (e) {
         setState(() {
           error = e.message;
