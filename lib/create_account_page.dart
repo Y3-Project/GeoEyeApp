@@ -46,6 +46,8 @@ class _SignUpPageState extends State<SignUpPage> {
       String email, bool moderator, String username, User? user) async {
     FirebaseFirestore.instance.collection('users').add({
       'email': email,
+      'followers': [],  // todo: list of user ids that follow the user
+      'following': [],  // todo: this should be an arr of uuids that the user follows
       'moderator': moderator,
       'username': username,
       'uuid': user?.uid
