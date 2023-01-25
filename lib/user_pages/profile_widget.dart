@@ -8,6 +8,8 @@ class ProfileWidget extends StatelessWidget {
   static const double SETTINGS_BUTTON_WIDTH = 60;
   static const double SETTINGS_BUTTON_SPACING = 20;
 
+  static String username = '';
+
   const ProfileWidget({Key? key}) : super(key: key);
 
   @override
@@ -45,9 +47,10 @@ class ProfileWidget extends StatelessWidget {
         for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
           username = doc.get('username');
         }
-        return username;
+        return await username;
     }
 
+    getUsername().then((value) => {username = value});
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -87,7 +90,7 @@ class ProfileWidget extends StatelessWidget {
                             size: 80,
                           ),
                         ),
-                        Text("Username",
+                        Text(username,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16)),
                       ],
