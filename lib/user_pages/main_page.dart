@@ -40,27 +40,6 @@ class _MainUserPageState extends State<MainUserPage> with TickerProviderStateMix
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-          toolbarHeight: 10,
-          backgroundColor: Colors.black,
-          centerTitle: true,
-          bottom: TabBar(
-            indicatorColor: Colors.white,
-            controller: _tabController,
-            tabs: const [
-              Tab(
-                text: "Feed",
-              ),
-              Tab(
-                text: "Map View",
-              ),
-              Tab(
-                text: "AR View",
-              )
-            ],
-          )
-      ),
-
       body: getSelectedPage(index: index),
 
       bottomNavigationBar: CurvedNavigationBar(
