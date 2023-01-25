@@ -28,11 +28,11 @@ class _ModeratorPageState extends State<ModeratorPage> {
   List<Row> getPosts(AsyncSnapshot<QuerySnapshot> snapshot) {
     List<Row> display = List.empty(growable: true);
     for (int i = 0; i < snapshot.data!.docs.length; i++) {
-      print("HELLO: " + snapshot.data!.docs[i].get("picture"));
       display.add(Row(
         children: [
           Expanded(
             child: Text(
+              // TODO: add conditions for text, picture, video
               snapshot.data!.docs[i].get("picture"),
               textAlign: TextAlign.center,
             ),
@@ -57,6 +57,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
   }
 
   Future<void> deletePost() async {
+    //TODO: impl
     print("deleting happened");
   }
 

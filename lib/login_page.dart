@@ -145,11 +145,5 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
-
-    //return MainUserPage(
-    //  onSignOut: (userCred) {
-    //    onRefresh(userCred);
-    //  },
-    //);
   }
 }
