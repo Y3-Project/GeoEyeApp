@@ -8,6 +8,7 @@ class ProfileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: 64,
         backgroundColor: Colors.black,
         centerTitle: true,
