@@ -14,6 +14,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: 64,
         backgroundColor: Colors.black,
         centerTitle: true,

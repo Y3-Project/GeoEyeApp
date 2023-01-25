@@ -36,6 +36,7 @@ class _MainUserPageState extends State<MainUserPage> {
       body: getSelectedPage(index: index),
 
       bottomNavigationBar: CurvedNavigationBar(
+        animationDuration: Duration(microseconds: 199900),
         backgroundColor: Colors.white,
         index: index,
         color: Colors.black,
