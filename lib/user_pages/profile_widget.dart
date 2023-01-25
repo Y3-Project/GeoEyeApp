@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileWidget extends StatelessWidget {
   static const double SETTINGS_BUTTON_WIDTH = 60;
@@ -20,6 +21,33 @@ class ProfileWidget extends StatelessWidget {
         ),
       );
     }
+
+
+    String? getUuid()
+    {
+      String? uuid = '';
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User? user = auth.currentUser;
+
+      uuid = user?.uid;
+      return uuid;
+    }
+
+    //method to get the username of the user logged in
+    Future<String> getUsername() async
+    {
+        String username = '';
+        QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
+            .instance.collection("users")
+            .where("uuid", isEqualTo: getUuid() as String)
+            .get();
+        List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
+        for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
+          username = doc.get('username');
+        }
+        return username;
+    }
+
 
     return Scaffold(
       backgroundColor: Colors.white,
