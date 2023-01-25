@@ -16,15 +16,8 @@ class MainUserPage extends StatefulWidget {
   State<MainUserPage> createState() => _MainUserPageState();
 }
 
-class _MainUserPageState extends State<MainUserPage> with TickerProviderStateMixin {
-  late TabController _tabController;
+class _MainUserPageState extends State<MainUserPage> {
   int index = 1;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,30 +33,10 @@ class _MainUserPageState extends State<MainUserPage> with TickerProviderStateMix
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-          toolbarHeight: 10,
-          backgroundColor: Colors.black,
-          centerTitle: true,
-          bottom: TabBar(
-            indicatorColor: Colors.white,
-            controller: _tabController,
-            tabs: const [
-              Tab(
-                text: "Feed",
-              ),
-              Tab(
-                text: "Map View",
-              ),
-              Tab(
-                text: "AR View",
-              )
-            ],
-          )
-      ),
-
       body: getSelectedPage(index: index),
 
       bottomNavigationBar: CurvedNavigationBar(
+        animationDuration: Duration(microseconds: 199900),
         backgroundColor: Colors.white,
         index: index,
         color: Colors.black,
