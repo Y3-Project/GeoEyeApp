@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import '../login_page.dart';
 
 class ProfileWidget extends StatelessWidget {
+  static const double SETTINGS_BUTTON_WIDTH = 60;
+  static const double SETTINGS_BUTTON_SPACING = 20;
+
   const ProfileWidget({Key? key}) : super(key: key);
 
   @override
@@ -29,20 +32,116 @@ class ProfileWidget extends StatelessWidget {
       ),
       body: Container(
           alignment: Alignment.center,
-          margin: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+          margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
           decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(color: Colors.white),
               borderRadius: const BorderRadius.all(Radius.circular(20))),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("User Profile", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              ElevatedButton(
-                  onPressed: () {
-                    logout();
-                  },
-                  child: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),))
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black)),
+                          child: Icon(
+                            Icons.person,
+                            size: 80,
+                          ),
+                        ),
+                        Text("Username",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16)),
+                      ],
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          logout();
+                        },
+                        child: const Text(
+                          'Logout',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ))
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black)),
+                      child: Text("Post Count"),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black)),
+                      child: Text("Interactions"),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black)),
+                      child: Text("Interacted with"),
+                    )
+                  ],
+                )
+              ]),
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: SETTINGS_BUTTON_SPACING),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size.fromHeight(
+                              SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                        ),
+                        onPressed: () {},
+                        child: Text("Password Settings")),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: SETTINGS_BUTTON_SPACING),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size.fromHeight(
+                              SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                        ),
+                        onPressed: () {},
+                        child: Text("Account Settings")),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: SETTINGS_BUTTON_SPACING),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size.fromHeight(
+                              SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                        ),
+                        onPressed: () {},
+                        child: Text("Privacy Settings")),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: SETTINGS_BUTTON_SPACING),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size.fromHeight(
+                              SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                        ),
+                        onPressed: () {},
+                        child: Text("Help")),
+                  ),
+                ],
+              ),
             ],
           )),
     );
