@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    //access firestore database here to get the corresponding email from the username
+    //access firestore database here to get the corresponding email
     Future<String> getEmailFromUsername() async {
       String email = '';
       QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
@@ -108,12 +108,12 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             TextFormField(
               controller: _controllerUsername,
-              decoration: const InputDecoration(labelText: "Username"),
+              decoration: const InputDecoration(labelText: "Username")
             ),
             TextFormField(
               controller: _controllerPassword,
               obscureText: true,
-              decoration: const InputDecoration(labelText: "Password"),
+              decoration: const InputDecoration(labelText: "Password")
             ),
             Text(error!),
             ElevatedButton(
