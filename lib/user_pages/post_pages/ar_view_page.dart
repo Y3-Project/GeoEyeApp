@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ARViewPage extends StatefulWidget {
   const ARViewPage({Key? key}) : super(key: key);
@@ -10,6 +11,14 @@ class ARViewPage extends StatefulWidget {
 class _ARViewPageState extends State<ARViewPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container(
+      alignment: Alignment.center,
+      margin: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.white),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child: Text("AR View"),
+    );
   }
 }

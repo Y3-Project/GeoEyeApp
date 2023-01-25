@@ -16,15 +16,8 @@ class MainUserPage extends StatefulWidget {
   State<MainUserPage> createState() => _MainUserPageState();
 }
 
-class _MainUserPageState extends State<MainUserPage> with TickerProviderStateMixin {
-  late TabController _tabController;
+class _MainUserPageState extends State<MainUserPage> {
   int index = 1;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
 
   @override
   Widget build(BuildContext context) {
