@@ -68,7 +68,6 @@ class _LoginPageState extends State<LoginPage> {
         for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snap.docs) {
           moderator = doc.get('moderator');
         }
-
         if (moderator == true) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ModeratorPage(
@@ -94,67 +93,63 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
 
-    if (user == null) {
-      return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: const Text(
-            'Sign in to your account',
-            style: TextStyle(fontSize: 25),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text(
+          'Sign in to your account',
+          style: TextStyle(fontSize: 25),
         ),
-        body: Column(
-          children: [
-            TextFormField(
+      ),
+      body: Column(
+        children: [
+          TextFormField(
               controller: _controllerUsername,
-              decoration: const InputDecoration(labelText: "Username")
-            ),
-            TextFormField(
+              decoration: const InputDecoration(labelText: "Username")),
+          TextFormField(
               controller: _controllerPassword,
               obscureText: true,
-              decoration: const InputDecoration(labelText: "Password")
-            ),
-            Text(error!),
-            ElevatedButton(
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.green)),
-              onPressed: () {
-                loginUser();
-              },
-              child: const Text(style: TextStyle(fontSize: 25), "Login"),
-            ),
-            GestureDetector(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ForgotPasswordPage(),
-                ),
-              ),
-              child: const Text(
-                "Forgot Password?",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              decoration: const InputDecoration(labelText: "Password")),
+          Text(error!),
+          ElevatedButton(
+            style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.green)),
+            onPressed: () {
+              loginUser();
+            },
+            child: const Text(style: TextStyle(fontSize: 25), "Login"),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ForgotPasswordPage(),
               ),
             ),
-            GestureDetector(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SignUpPage(onSignIn: (user) {}),
-                ),
+            child: const Text(
+              "Forgot Password?",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SignUpPage(onSignIn: (user) {}),
               ),
-              child: const Text(
-                "Don't have an account?",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            )
-          ],
-        ),
-      );
-    }
-
-    return MainUserPage(
-      onSignOut: (userCred) {
-        onRefresh(userCred);
-      },
+            ),
+            child: const Text(
+              "Don't have an account?",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          )
+        ],
+      ),
     );
+
+    //return MainUserPage(
+    //  onSignOut: (userCred) {
+    //    onRefresh(userCred);
+    //  },
+    //);
   }
 }

@@ -1,10 +1,64 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ModeratorPage extends StatelessWidget {
+class ModeratorPage extends StatefulWidget {
   final Function(User?) onSignOut;
   const ModeratorPage({required this.onSignOut});
+
+  @override
+  State<StatefulWidget> createState() => _ModeratorPageState();
+}
+
+class _ModeratorPageState extends State<ModeratorPage> {
+  late Stream<QuerySnapshot> data;
+
+  @override
+  void initState() {
+    data = FirebaseFirestore.instance
+        .collection("posts")
+        .where("reported", isEqualTo: true)
+        .snapshots();
+    super.initState();
+  }
+
+  List<Row> getPosts(AsyncSnapshot<QuerySnapshot> snapshot) {
+    List<Row> display = List.empty(growable: true);
+    for (int i = 0; i < snapshot.data!.docs.length; i++) {
+      print("HELLO: " + snapshot.data!.docs[i].get("picture"));
+      display.add(Row(
+        children: [
+          Expanded(
+            child: Text(
+              snapshot.data!.docs[i].get("picture"),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                deletePost();
+              },
+              child: const Text("Delete"),
+            ),
+          )
+        ],
+      ));
+    }
+    return display;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> deletePost() async {
+    print("deleting happened");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +82,28 @@ class ModeratorPage extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings")
       ]),
-      body: ElevatedButton(
+      body: Center(
+          child: StreamBuilder<QuerySnapshot>(
+        stream: data,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("Error fetching posts!");
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading...");
+          }
+
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Text("Error fetching reported posts!");
+          }
+          return Container(
+            padding: const EdgeInsets.all(10),
+            child: Column(children: getPosts(snapshot)),
+          );
+        },
+      )),
+      bottomSheet: ElevatedButton(
           onPressed: () {
             logout();
           },
