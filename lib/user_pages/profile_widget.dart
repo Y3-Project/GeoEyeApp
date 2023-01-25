@@ -6,17 +6,22 @@ class ProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      margin: const EdgeInsets.fromLTRB(0, 5, 0, 10),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-              color: Colors.white
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(20))
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 64,
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        title: Text("Profile Page"),
       ),
-      child: Text("Profile"),
-    );;
+      body: Container(
+        alignment: Alignment.center,
+        margin: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.white),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
+        child: Text("User Profile"),
+      ),
+    );
   }
 }
