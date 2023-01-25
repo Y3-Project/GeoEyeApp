@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app_firebase_login/create_account_page.dart';
 import 'package:flutter_app_firebase_login/moderator_page.dart';
 import 'forgot_password_page.dart';
-import 'home_page.dart';
+import 'user_pages/main_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function(User?) onSignIn;
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => HomePage(
+              builder: (context) => MainUserPage(
                 onSignOut: (userCred) {
                   onRefresh(userCred);
                 },
@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
 
-    return HomePage(
+    return MainUserPage(
       onSignOut: (userCred) {
         onRefresh(userCred);
       },
