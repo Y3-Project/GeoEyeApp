@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
             error = 'Please enter the correct password';
           }
           else{
-            error = e.message;
+            error = 'Please enter the correct username';
           }
         });
       }

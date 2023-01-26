@@ -1,18 +1,30 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_pages/settings_pages/account_settings_page.dart';
 import 'package:flutter_app_firebase_login/user_pages/settings_pages/help_page.dart';
+import 'package:image_picker/image_picker.dart';
 import '../login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ProfileWidget extends StatelessWidget {
+class ProfileWidget extends StatefulWidget {
   static const double SETTINGS_BUTTON_WIDTH = 60;
   static const double SETTINGS_BUTTON_SPACING = 20;
 
-  static String username = '';
+  static XFile? _imageFile;
 
   const ProfileWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileWidget> createState() => _ProfileWidgetState();
+}
+
+class _ProfileWidgetState extends State<ProfileWidget> {
+
+  static String username = '';
+  final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +61,91 @@ class ProfileWidget extends StatelessWidget {
       }
       return await username;
     }
-
     getUsername().then((value) => {username = value});
+
+
+    void takePhoto(ImageSource source) async {
+      final pickedFile = await _picker.pickImage(
+        source: source,
+      );
+      setState(() {
+        ProfileWidget._imageFile = pickedFile;
+      });
+    }
+
+
+    Widget bottomSheet() {
+      return Container(
+        height: 100.0,
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20,
+        ),
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Choose Profile photo",
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.white
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+              TextButton.icon(
+                icon: Icon(Icons.camera),
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                },
+                label: Text("Camera"),
+              ),
+              TextButton.icon(
+                icon: Icon(Icons.image),
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                },
+                label: Text("Gallery"),
+              ),
+            ])
+          ],
+        ),
+      );
+    }
+
+
+    Widget imageProfile() {
+      return Center(
+        child: Stack(children: <Widget>[
+          CircleAvatar(
+            backgroundColor: Colors.black,
+            radius: 80.0,
+            backgroundImage: ProfileWidget._imageFile == null
+                ? AssetImage("images/geoeye.png")
+                : FileImage(File(ProfileWidget._imageFile?.path as String)) as ImageProvider,
+          ),
+          Positioned(
+            bottom: 10.0,
+            right: 10.0,
+            child: InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: ((builder) => bottomSheet()),
+                );
+              },
+              child: Icon(
+                Icons.add_a_photo,
+                color: Colors.white,
+                size: 28.0,
+              ),
+            ),
+          ),
+        ]),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -59,7 +154,10 @@ class ProfileWidget extends StatelessWidget {
         toolbarHeight: 64,
         backgroundColor: Colors.black,
         centerTitle: true,
-        title: Text("Profile Page", style: TextStyle(fontSize: 25),),
+        title: Text(
+          "Profile Page",
+          style: TextStyle(fontSize: 25),
+        ),
       ),
       body: Container(
         alignment: Alignment.center,
@@ -79,17 +177,15 @@ class ProfileWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        height: 100,
-                        width: 100,
-                        margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.black)),
-                        child: Icon(
-                          Icons.person,
-                          size: 80,
-                        ),
+                          height: 100,
+                          width: 100,
+                          margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black)),
+                        child: imageProfile(),
                       ),
+
                       Text(username,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20)),
@@ -127,18 +223,17 @@ class ProfileWidget extends StatelessWidget {
               children: [
                 Container(
                   margin:
-                      EdgeInsets.symmetric(vertical: SETTINGS_BUTTON_SPACING),
+                      EdgeInsets.symmetric(vertical: ProfileWidget.SETTINGS_BUTTON_SPACING),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         minimumSize: Size.fromHeight(
-                            SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                            ProfileWidget.SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
                       ),
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => AccountSettingsPage()
-                          ),
+                              builder: (context) => AccountSettingsPage()),
                         );
                       },
                       child: Text(
@@ -149,18 +244,18 @@ class ProfileWidget extends StatelessWidget {
                 ),
                 Container(
                   margin:
-                      EdgeInsets.symmetric(vertical: SETTINGS_BUTTON_SPACING),
+                      EdgeInsets.symmetric(vertical: ProfileWidget.SETTINGS_BUTTON_SPACING),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         minimumSize: Size.fromHeight(
-                            SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                            ProfileWidget.SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
                       ),
-                      onPressed: () {Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => HelpPage()
-                        ),
-                      );},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => HelpPage()),
+                        );
+                      },
                       child: Text(
                         "Help",
                         style: TextStyle(
