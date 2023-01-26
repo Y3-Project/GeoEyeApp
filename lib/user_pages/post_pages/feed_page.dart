@@ -11,14 +11,16 @@ class FeedPage extends StatefulWidget {
 class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      margin: const EdgeInsets.fromLTRB(0, 5, 0, 10),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.white),
-          borderRadius: const BorderRadius.all(Radius.circular(20))),
-      child: Text("Feed"),
+    return Scaffold(
+      body: Container(
+        alignment: Alignment.center,
+        margin: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.white),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
+        child: Text("Feed"),
+      ),
     );
   }
 }
