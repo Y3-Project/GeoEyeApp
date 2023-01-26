@@ -11,6 +11,13 @@ class NotificationsWidget extends StatefulWidget {
 class _NotificationsWidgetState extends State<NotificationsWidget> {
   @override
   Widget build(BuildContext context) {
+
+    /*
+    Future<List<String>> getNotifications() async {
+
+    }
+     */
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
