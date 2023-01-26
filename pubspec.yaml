@@ -39,6 +39,7 @@ dependencies:
   cloud_firestore: ^4.3.1
   geolocator: ^9.0.2
   curved_navigation_bar: ^1.0.3
+  firebase_storage: ^11.0.10
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:flutter_app_firebase_login/main.dart';
+
 import 'util/util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
@@ -14,43 +16,41 @@ class ModeratorPage extends StatefulWidget {
 }
 
 class _ModeratorPageState extends State<ModeratorPage> {
-  late Stream<QuerySnapshot> data;
+  late StreamSubscription<QuerySnapshot> _querySnapshot;
+  List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
+  late List<Row> _display;
 
   @override
   void initState() {
-    data = FirebaseFirestore.instance
+    super.initState();
+    _querySnapshot = FirebaseFirestore.instance
         .collection("posts")
         .where("reported", isEqualTo: true)
-        .snapshots();
-    super.initState();
+        .snapshots()
+        .listen((snapshot) {
+      setState(() {
+        _snapshots.addAll(snapshot.docs);
+        for (int i = 0; i < _snapshots.length; ++i) {
+          init(i);
+        }
+      });
+    });
   }
 
-  List<Row> getPosts(AsyncSnapshot<QuerySnapshot> snapshot) {
-    List<Row> display = List.empty(growable: true);
-    for (int i = 0; i < snapshot.data!.docs.length; i++) {
-      if (snapshot.data!.docs[i].get("picture") != "" ||
-          snapshot.data!.docs[i].get("picture") != null) {
-        display.add(getPicturePosts(snapshot, i));
-      } else if (snapshot.data!.docs[i].get("text") != "" ||
-          snapshot.data!.docs[i].get("text") != null) {
-        display.add(getTextPosts(snapshot, i));
-      } else if (snapshot.data!.docs[i].get("video") != "" ||
-          snapshot.data!.docs[i].get("video") != null) {
-        display.add(getVideoPosts(snapshot, i));
-      }
-    }
-    return display;
+  Future<void> init(index) async {
+    _display = await getPosts(_snapshots[index]);
   }
 
   @override
   void dispose() {
+    _querySnapshot.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     //method to log the user out
-    Future<void> logout() async {
+    Future<void> _logout() async {
       await FirebaseAuth.instance.signOut();
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -61,43 +61,30 @@ class _ModeratorPageState extends State<ModeratorPage> {
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: const Text('Moderator Page', style: TextStyle(fontSize: 25)),
-      ),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings")
-      ]),
-      body: Center(
-          child: StreamBuilder<QuerySnapshot>(
-        stream: data,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text("Error fetching posts!");
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading...");
-          }
-
-          if (snapshot.connectionState == ConnectionState.none) {
-            return const Text("No connection!");
-          }
-          return SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(children: getPosts(snapshot)),
-            ),
-            scrollDirection: Axis.vertical,
-          );
-        },
-      )),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          title: const Text(
+            "Moderator main page",
+            style: TextStyle(fontSize: 25),
+          )),
+      body: _snapshots != null
+          ? ListView.builder(
+              itemCount: _snapshots.length,
+              itemBuilder: ((context, index) {
+                return Container(
+                  child: Column(children: _display),
+                );
+              }))
+          : Center(
+              child: CircularProgressIndicator(
+              color: Color.fromRGBO(0, 0, 0, 1),
+            )),
       bottomSheet: ElevatedButton(
-          onPressed: () {
-            logout();
-          },
-          child: const Text('Logout')),
+        onPressed: () {
+          _logout();
+        },
+        child: Text("logout"),
+      ),
     );
   }
 }
