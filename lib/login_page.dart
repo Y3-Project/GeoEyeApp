@@ -54,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
     Future<void> loginUser() async {
       try {
         userEmail = await getEmailFromUsername();
+
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
                 email: userEmail, password: _controllerPassword.text);
@@ -88,7 +89,15 @@ class _LoginPageState extends State<LoginPage> {
         }
       } on FirebaseAuthException catch (e) {
         setState(() {
-          error = e.message;
+          if(e.code == 'unknown'){
+            error = 'Please enter the correct username';
+          }
+          else if(e.code == 'wrong-password'){
+            error = 'Please enter the correct password';
+          }
+          else{
+            error = e.message;
+          }
         });
       }
     }

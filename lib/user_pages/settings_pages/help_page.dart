@@ -6,6 +6,11 @@ class HelpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+        appBar: AppBar(
+            centerTitle: true,
+            title: Title(
+                color: Colors.black,
+                child: Text("Help", style: TextStyle(fontSize: 25)))));
   }
 }

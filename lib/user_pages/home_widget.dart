@@ -24,6 +24,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             backgroundColor: Colors.black,
             centerTitle: true,
             bottom: TabBar(
+              labelStyle: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
               indicatorColor: Colors.white,
               tabs: const [
                 Tab(
