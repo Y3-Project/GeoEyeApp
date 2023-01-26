@@ -46,9 +46,11 @@ class _SignUpPageState extends State<SignUpPage> {
       String email, bool moderator, String username, User? user) async {
     FirebaseFirestore.instance.collection('users').add({
       'email': email,
-      'followers': [],  // todo: list of user ids that follow the user
-      'following': [],  // todo: this should be an arr of uuids that the user follows
+      'followers': [], // todo: list of user ids that follow the user
+      'following':
+          [], // todo: this should be an arr of uuids that the user follows
       'moderator': moderator,
+      'profilePicture': "",
       'username': username,
       'uuid': user?.uid
     }).then((value) => print("document created with id: " + value.id),
@@ -56,12 +58,10 @@ class _SignUpPageState extends State<SignUpPage> {
             "ERROR sending user information on sign up to firestore, $e"));
   }
 
-
   @override
   Widget build(BuildContext context) {
     //method to create a user in the Firebase account
     Future<void> createUser() async {
-
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(

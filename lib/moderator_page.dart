@@ -18,7 +18,7 @@ class ModeratorPage extends StatefulWidget {
 class _ModeratorPageState extends State<ModeratorPage> {
   late StreamSubscription<QuerySnapshot> _querySnapshot;
   List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
-  late List<Row> _display;
+  List<Row> _display = List.empty(growable: true);
 
   @override
   void initState() {
@@ -30,15 +30,15 @@ class _ModeratorPageState extends State<ModeratorPage> {
         .listen((snapshot) {
       setState(() {
         _snapshots.addAll(snapshot.docs);
-        for (int i = 0; i < _snapshots.length; ++i) {
-          init(i);
+        for (int index = 0; index < _snapshots.length; index++) {
+          init(index);
         }
       });
     });
   }
 
   Future<void> init(index) async {
-    _display = await getPosts(_snapshots[index]);
+    _display.addAll(await getPosts(_snapshots[index]));
   }
 
   @override

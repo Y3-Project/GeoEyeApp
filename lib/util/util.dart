@@ -16,7 +16,6 @@ Future<void> deletePost(QueryDocumentSnapshot snapshot) async {
 }
 
 Future<Row> getTextPosts(QueryDocumentSnapshot postDocument) async {
-  print("TEXT: ${postDocument.get("text")}");
   return Row(
     children: [
       Expanded(
@@ -70,14 +69,13 @@ Future<String> loadText(QueryDocumentSnapshot postDocument) async {
   return postDocument.get("text");
 }
 
-Future<String> loadImage(QueryDocumentSnapshot postDocument) async {
-  final String userId = getUserDocumentIDFromPost(postDocument);
-  var postDoc = postDocument.id;
-  var refToPost = FirebaseStorage.instance.ref("images/$userId/$postDoc/post");
-  // TODO COMPLETE
-  // var s = refToPost.getDownloadURL();
-  // return Image.network(s);
-  return "TEMP";
+Future<Image> loadImage(QueryDocumentSnapshot postDocument) async {
+  var s = await postDocument.get("picture");
+  Image im = Image.network(
+    s,
+    height: 100.0,
+  );
+  return im;
 }
 
 Future<Row> getPicturePosts(QueryDocumentSnapshot snapshot) async {
@@ -85,8 +83,7 @@ Future<Row> getPicturePosts(QueryDocumentSnapshot snapshot) async {
     children: [
       Expanded(
         child: Container(
-            child: Text(await loadImage(snapshot) + " " + snapshot.id),
-            alignment: Alignment.center),
+            child: await loadImage(snapshot), alignment: Alignment.center),
       ),
       Expanded(
         child: ElevatedButton(
@@ -102,13 +99,12 @@ Future<Row> getPicturePosts(QueryDocumentSnapshot snapshot) async {
 
 Future<List<Row>> getPosts(QueryDocumentSnapshot post) async {
   List<Row> display = List.empty(growable: true);
-  if (post.get("picture") != "" || post.get("picture") != null) {
-    display.add(await getPicturePosts(post));
-  }
-  if (post.get("text") != "" || post.get("text") != null) {
+  //TODO: this is buggy I think.
+  if (post.get("text") != "") {
     display.add(await getTextPosts(post));
-  }
-  if (post.get("video") != "" || post.get("video") != null) {
+  } else if (post.get("picture") != "") {
+    display.add(await getPicturePosts(post));
+  } else if (post.get("video") != "") {
     display.add(await getVideoPosts(post));
   }
   return display;
