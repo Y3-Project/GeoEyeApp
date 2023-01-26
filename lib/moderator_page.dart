@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'util/util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
 import 'package:flutter/material.dart';
@@ -28,25 +28,16 @@ class _ModeratorPageState extends State<ModeratorPage> {
   List<Row> getPosts(AsyncSnapshot<QuerySnapshot> snapshot) {
     List<Row> display = List.empty(growable: true);
     for (int i = 0; i < snapshot.data!.docs.length; i++) {
-      display.add(Row(
-        children: [
-          Expanded(
-            child: Text(
-              // TODO: add conditions for text, picture, video
-              snapshot.data!.docs[i].get("picture"),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {
-                deletePost();
-              },
-              child: const Text("Delete"),
-            ),
-          )
-        ],
-      ));
+      if (snapshot.data!.docs[i].get("picture") != "" ||
+          snapshot.data!.docs[i].get("picture") != null) {
+        display.add(getPicturePosts(snapshot, i));
+      } else if (snapshot.data!.docs[i].get("text") != "" ||
+          snapshot.data!.docs[i].get("text") != null) {
+        display.add(getTextPosts(snapshot, i));
+      } else if (snapshot.data!.docs[i].get("video") != "" ||
+          snapshot.data!.docs[i].get("video") != null) {
+        display.add(getVideoPosts(snapshot, i));
+      }
     }
     return display;
   }
@@ -54,11 +45,6 @@ class _ModeratorPageState extends State<ModeratorPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> deletePost() async {
-    //TODO: impl
-    print("deleting happened");
   }
 
   @override
@@ -96,11 +82,14 @@ class _ModeratorPageState extends State<ModeratorPage> {
           }
 
           if (snapshot.connectionState == ConnectionState.none) {
-            return const Text("Error fetching reported posts!");
+            return const Text("No connection!");
           }
-          return Container(
-            padding: const EdgeInsets.all(10),
-            child: Column(children: getPosts(snapshot)),
+          return SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(children: getPosts(snapshot)),
+            ),
+            scrollDirection: Axis.vertical,
           );
         },
       )),

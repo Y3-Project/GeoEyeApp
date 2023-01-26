@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 
 int distanceFromOneGeoPointToAnotherInKM(GeoPoint p1, GeoPoint p2) {
@@ -6,6 +8,56 @@ int distanceFromOneGeoPointToAnotherInKM(GeoPoint p1, GeoPoint p2) {
   final res = _geoLocatorPlatform.distanceBetween(
       p1.latitude, p1.longitude, p2.latitude, p2.longitude);
   return (res ~/ 1000);
+}
+
+Future<void> deletePost(QueryDocumentSnapshot<Object?> snapshot) async {
+  // todo: implement
+}
+
+Row getTextPosts(AsyncSnapshot<QuerySnapshot> snapshot, int index) {
+  return Row(
+    children: [
+      Expanded(
+          child: Text(
+        snapshot.data!.docs[index].get("text"),
+        textAlign: TextAlign.center,
+      ))
+    ],
+  );
+}
+
+Row getVideoPosts(AsyncSnapshot<QuerySnapshot> snapshot, int index) {
+  var t = snapshot.data!.docs[index];
+  return Row(
+    children: [
+      Expanded(
+          child: Text(
+        snapshot.data!.docs[index].get("video"),
+        textAlign: TextAlign.center,
+      ))
+    ],
+  );
+}
+
+Row getPicturePosts(AsyncSnapshot<QuerySnapshot> snapshot, int index) {
+  return Row(
+    children: [
+      Expanded(
+        child: Text(
+          snapshot.data!.docs[index].get("picture"),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      Expanded(
+        child: ElevatedButton(
+          onPressed: () {
+            deletePost(snapshot.data!.docs[index]);
+          },
+          child: const Text("Delete"),
+        ),
+      )
+    ],
+  );
 }
 
 /*
