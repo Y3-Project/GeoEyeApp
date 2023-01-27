@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_pages/settings_pages/account_settings_page.dart';
@@ -22,7 +23,6 @@ class ProfileWidget extends StatefulWidget {
 }
 
 class _ProfileWidgetState extends State<ProfileWidget> {
-
   static String username = '';
   final ImagePicker _picker = ImagePicker();
 
@@ -61,38 +61,56 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       }
       return await username;
     }
+
     getUsername().then((value) => {username = value});
 
+
+    String imageURL = '';
 
     void takePhoto(ImageSource source) async {
       final pickedFile = await _picker.pickImage(
         source: source,
       );
+
       setState(() {
         ProfileWidget._imageFile = pickedFile;
       });
+
+      final storageRef = FirebaseStorage.instance.ref();
+      final profilePicRef = storageRef.child("profilePic.jpg");
+
+      final profileImagesRef = storageRef.child("profileImages/profilePic.jpg");
+
+      assert(profilePicRef.name == profileImagesRef.name);
+      assert(profilePicRef.fullPath != profileImagesRef.fullPath);
+
+      File file = File(ProfileWidget._imageFile?.path as String);
+      await profilePicRef.putFile(file);
+
+      imageURL = await profilePicRef.getDownloadURL();
     }
 
 
     Widget bottomSheet() {
       return Container(
+        color: Colors.black,
         height: 100.0,
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
+          horizontal: 0.1,
+          vertical: 0.1,
         ),
         child: Column(
           children: <Widget>[
             Text(
               "Choose Profile photo",
               style: TextStyle(
-                fontSize: 20.0,
-                color: Colors.white
-              ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                  color: Colors.white),
             ),
             SizedBox(
-              height: 20,
+              height: 25,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               TextButton.icon(
@@ -115,7 +133,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       );
     }
 
-
     Widget imageProfile() {
       return Center(
         child: Stack(children: <Widget>[
@@ -124,7 +141,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             radius: 80.0,
             backgroundImage: ProfileWidget._imageFile == null
                 ? AssetImage("images/geoeye.png")
-                : FileImage(File(ProfileWidget._imageFile?.path as String)) as ImageProvider,
+
+                //got to change the following line of code,
+                // so it accesses this image from the database for the current user,
+                // with the current uuid
+                //: Image.network(imageURL) as ImageProvider,
+                : FileImage(File(ProfileWidget._imageFile?.path as String))
+                    as ImageProvider,
           ),
           Positioned(
             bottom: 10.0,
@@ -177,15 +200,14 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                          height: 100,
-                          width: 100,
-                          margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.black)),
+                        height: 100,
+                        width: 100,
+                        margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.black)),
                         child: imageProfile(),
                       ),
-
                       Text(username,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20)),
@@ -222,13 +244,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: ProfileWidget.SETTINGS_BUTTON_SPACING),
+                  margin: EdgeInsets.symmetric(
+                      vertical: ProfileWidget.SETTINGS_BUTTON_SPACING),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
-                        minimumSize: Size.fromHeight(
-                            ProfileWidget.SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                        minimumSize: Size.fromHeight(ProfileWidget
+                            .SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
                       ),
                       onPressed: () {
                         Navigator.of(context).push(
@@ -243,13 +265,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       )),
                 ),
                 Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: ProfileWidget.SETTINGS_BUTTON_SPACING),
+                  margin: EdgeInsets.symmetric(
+                      vertical: ProfileWidget.SETTINGS_BUTTON_SPACING),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
-                        minimumSize: Size.fromHeight(
-                            ProfileWidget.SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                        minimumSize: Size.fromHeight(ProfileWidget
+                            .SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
                       ),
                       onPressed: () {
                         Navigator.of(context).push(
