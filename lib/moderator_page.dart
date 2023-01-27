@@ -20,7 +20,6 @@ class _ModeratorPageState extends State<ModeratorPage> {
 
   @override
   void initState() {
-    super.initState();
     _querySnapshot = FirebaseFirestore.instance
         .collection("posts")
         .where("reported", isEqualTo: true)
@@ -28,16 +27,21 @@ class _ModeratorPageState extends State<ModeratorPage> {
         .listen((snapshot) {
       setState(() {
         _display.clear();
+        _snapshots.clear();
         _snapshots.addAll(snapshot.docs);
-        for (int index = 0; index < _snapshots.length; index++) {
-          init(index);
-        }
       });
+      for (int i = 0; i < _snapshots.length; i++) {
+        print("index: " + i.toString());
+        print("document id: " + _snapshots[i].id);
+        initDisplay(i);
+      }
     });
+    super.initState();
   }
 
-  Future<void> init(int index) async {
-    _display.add(await getPost(_snapshots[index]));
+  Future<void> initDisplay(int i) async {
+    print("data: " + _snapshots[i].data().toString());
+    _display.add(await getPost(_snapshots[i]));
   }
 
   @override
@@ -58,6 +62,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
       );
     }
 
+    print("_display length2: " + _display.length.toString());
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
@@ -66,12 +71,14 @@ class _ModeratorPageState extends State<ModeratorPage> {
             "Moderator main page",
             style: TextStyle(fontSize: 25),
           )),
-      body: _snapshots != List.empty()
-          ? ListView.builder(itemBuilder: ((context, index) {
-              return Container(
-                child: Column(children: _display),
-              );
-            }))
+      body: _display != List.empty()
+          ? ListView.builder(
+              itemCount: _display.length,
+              itemBuilder: ((context, index) {
+                return Container(
+                  child: Column(children: _display),
+                );
+              }))
           : Center(
               child: CircularProgressIndicator(
               color: Color.fromARGB(255, 2, 2, 2),

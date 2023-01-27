@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 Future<void> deletePost(QueryDocumentSnapshot snapshot) async {
   print("DELETING POST: ${snapshot.id}");
@@ -47,10 +45,6 @@ Future<Row> getVideoPosts(QueryDocumentSnapshot postDocument) async {
   );
 }
 
-Future<String> loadText(QueryDocumentSnapshot postDocument) async {
-  return postDocument.get("text");
-}
-
 Future<Image> loadImage(QueryDocumentSnapshot postDocument) async {
   var s = await postDocument.get("picture");
   Image im = Image.network(
@@ -80,6 +74,9 @@ Future<Row> getPicturePosts(QueryDocumentSnapshot snapshot) async {
 }
 
 Future<Row> getPost(QueryDocumentSnapshot post) async {
+  Row display = Row(children: [
+    Text("Error"),
+  ]);
   if (post.get("text") != "") {
     return await getTextPosts(post);
   }
@@ -89,5 +86,5 @@ Future<Row> getPost(QueryDocumentSnapshot post) async {
   if (post.get("video") != "") {
     return await getVideoPosts(post);
   }
-  return Row(); // this will be empty
+  return display;
 }

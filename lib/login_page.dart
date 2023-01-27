@@ -89,13 +89,11 @@ class _LoginPageState extends State<LoginPage> {
         }
       } on FirebaseAuthException catch (e) {
         setState(() {
-          if(e.code == 'unknown'){
+          if (e.code == 'unknown') {
             error = 'Please enter the correct username';
-          }
-          else if(e.code == 'wrong-password'){
+          } else if (e.code == 'wrong-password') {
             error = 'Please enter the correct password';
-          }
-          else{
+          } else {
             error = 'Please enter the correct username';
           }
         });
