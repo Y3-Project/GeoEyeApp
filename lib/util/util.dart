@@ -10,50 +10,6 @@ int distanceFromOneGeoPointToAnotherInKM(GeoPoint p1, GeoPoint p2) {
   return (res ~/ 1000);
 }
 
-Future<void> deletePost(QueryDocumentSnapshot snapshot) async {
-  print("DELETING POST: ${snapshot.id}");
-  // todo: implement
-}
-
-Future<Row> getTextPosts(QueryDocumentSnapshot postDocument) async {
-  return Row(
-    children: [
-      Expanded(
-        child: Text(postDocument.get("text"), textAlign: TextAlign.center),
-      ),
-      Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            deletePost(postDocument);
-          },
-          child: Text("Delete"),
-        ),
-      )
-    ],
-  );
-}
-
-Future<Row> getVideoPosts(QueryDocumentSnapshot postDocument) async {
-  // currently this would just show the URL
-  return Row(
-    children: [
-      Expanded(
-          child: Text(
-        postDocument.get("video"),
-        textAlign: TextAlign.center,
-      )),
-      Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            deletePost(postDocument);
-          },
-          child: const Text("Delete"),
-        ),
-      )
-    ],
-  );
-}
-
 /** getUserDocumentIDFromPost
  * 
  * this gets a user document id from a post
@@ -63,51 +19,6 @@ Future<Row> getVideoPosts(QueryDocumentSnapshot postDocument) async {
 String getUserDocumentIDFromPost(QueryDocumentSnapshot snap) {
   DocumentReference userDoc = snap.get("user");
   return userDoc.id;
-}
-
-Future<String> loadText(QueryDocumentSnapshot postDocument) async {
-  return postDocument.get("text");
-}
-
-Future<Image> loadImage(QueryDocumentSnapshot postDocument) async {
-  var s = await postDocument.get("picture");
-  Image im = Image.network(
-    s,
-    height: 100.0,
-  );
-  return im;
-}
-
-Future<Row> getPicturePosts(QueryDocumentSnapshot snapshot) async {
-  return Row(
-    children: [
-      Expanded(
-        child: Container(
-            child: await loadImage(snapshot), alignment: Alignment.center),
-      ),
-      Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            deletePost(snapshot);
-          },
-          child: const Text("Delete"),
-        ),
-      )
-    ],
-  );
-}
-
-Future<List<Row>> getPosts(QueryDocumentSnapshot post) async {
-  List<Row> display = List.empty(growable: true);
-  //TODO: this is buggy I think.
-  if (post.get("text") != "") {
-    display.add(await getTextPosts(post));
-  } else if (post.get("picture") != "") {
-    display.add(await getPicturePosts(post));
-  } else if (post.get("video") != "") {
-    display.add(await getVideoPosts(post));
-  }
-  return display;
 }
 
 /*
