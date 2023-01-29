@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app_firebase_login/util/post.dart';
+import 'package:flutter_app_firebase_login/util/scrapbook.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -10,31 +11,29 @@ class FeedPage extends StatefulWidget {
   State<FeedPage> createState() => _FeedPageState();
 }
 
-Future<List<Post>> getPostsFromServer() async {
-  // get post documents from firestore
+Future<List<Scrapbook>> getScrapbooks() async {
+  // get scrapbook documents from firestore
   var postDocs = await FirebaseFirestore.instance
-      .collection("posts")
+      .collection("scrapbooks")
       .orderBy("timestamp", descending: true)
       // group by location
       .limit(10)
       .get();
 
-  // convert documents to Post objects
-  List<Post> posts = [];
+  // convert documents to Scrapbook objects
+  List<Scrapbook> scrapbooks = [];
   for (var doc in postDocs.docs) {
-    posts.add(Post.fromDocument(doc));
+    scrapbooks.add(Scrapbook.fromDocument(doc));
   }
-  return posts;
+  return scrapbooks;
 }
 
 class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
-    // get list of posts from firestore via getPostsFromServer()
-    // List<Post> posts = [];
-    // getPostsFromServer().then((posts) => posts = posts);
+    // get list of scrapbooks from firestore via getScrapbooks()
 
-    // todo: display posts
+    // todo: display scrapbooks
 
     return Scaffold(
       body: Container(

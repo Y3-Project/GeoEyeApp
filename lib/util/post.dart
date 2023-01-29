@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Post {
   Timestamp timestamp =
       Timestamp.fromMillisecondsSinceEpoch(0); // time the post was created
-  GeoPoint location = GeoPoint(0, 0); // location of the post
+
+  /* String scrapbookId = ''; // path to scrapbook document eg '/scrapbooks/abcdefg' */
+
   String picture =
       ''; // url to image eg 'https://firebasestorage.googleapis.com/v0/b/flutter-app-firebase-log-c1c41.appspot.com/o/images%2FKHkfKSUzbGhgmVPhIdHk%2FW9mNhinT7muurZpKLaUi%2Fpost.jpg?alt=media&token=61efd0ac-0788-4b12-9598-77e641115821'
   String video = ''; // url to video eg "
@@ -15,7 +17,7 @@ class Post {
   /* Constructor */
   Post(
       {required this.timestamp,
-      required this.location,
+      /* required this.scrapbookId, */
       required this.picture,
       required this.video,
       required this.likes,
@@ -26,7 +28,7 @@ class Post {
   /* Convert a document to a Post object */
   Post.fromDocument(DocumentSnapshot doc) {
     this.timestamp = doc['timestamp'];
-    this.location = doc['location'];
+    /* this.scrapbookId = doc['scrapbookId']; */
     this.picture = doc['picture'];
     this.video = doc['video'];
     this.likes = doc['likes'];
