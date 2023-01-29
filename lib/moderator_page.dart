@@ -29,18 +29,15 @@ class _ModeratorPageState extends State<ModeratorPage> {
         _display.clear();
         _snapshots.clear();
         _snapshots.addAll(snapshot.docs);
+        for (int i = 0; i < _snapshots.length; i++) {
+          initDisplay(i);
+        }
       });
-      for (int i = 0; i < _snapshots.length; i++) {
-        print("index: " + i.toString());
-        print("document id: " + _snapshots[i].id);
-        initDisplay(i);
-      }
     });
     super.initState();
   }
 
   Future<void> initDisplay(int i) async {
-    print("data: " + _snapshots[i].data().toString());
     _display.add(await getPost(_snapshots[i]));
   }
 
@@ -62,7 +59,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
       );
     }
 
-    print("_display length2: " + _display.length.toString());
+    print("TOTAL REPORTED ITEMS TO DISPLAY: ${_display.length}");
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
@@ -73,10 +70,10 @@ class _ModeratorPageState extends State<ModeratorPage> {
           )),
       body: _display != List.empty()
           ? ListView.builder(
-              itemCount: _display.length,
+              itemCount: _display.length - _display.length + 1,
               itemBuilder: ((context, index) {
                 return Container(
-                  child: Column(children: _display),
+                  child: Column(children: _display.toSet().toList()),
                 );
               }))
           : Center(
