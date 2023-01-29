@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 Future<void> deletePost(QueryDocumentSnapshot snapshot) async {
   print("DELETING POST: ${snapshot.id}");
   var inst = FirebaseFirestore.instance.collection('posts');
-  inst.doc("/posts/${snapshot.id}").delete();
+  inst.doc("${snapshot.id}").delete();
 }
 
 Future<void> timeoutUserFromPost(QueryDocumentSnapshot post) async {
@@ -34,15 +35,16 @@ Future<Row> getTextPost(QueryDocumentSnapshot postDocument) async {
   );
 }
 
+Future<VideoPlayerController> loadVideo(QueryDocumentSnapshot post) async {
+  String url = await post.get("video");
+  return VideoPlayerController.network(url);
+}
+
 Future<Row> getVideoPost(QueryDocumentSnapshot postDocument) async {
   // currently this would just show the URL
   return Row(
     children: [
-      Expanded(
-          child: Text(
-        postDocument.get("video"),
-        textAlign: TextAlign.center,
-      )),
+      Expanded(child: VideoPlayer(await loadVideo(postDocument))),
       Expanded(
         child: ElevatedButton(
           onPressed: () {
