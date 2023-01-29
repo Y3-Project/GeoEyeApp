@@ -54,11 +54,12 @@ class _LoginPageState extends State<LoginPage> {
     Future<void> loginUser() async {
       try {
         userEmail = await getEmailFromUsername();
-
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
                 email: userEmail, password: _controllerPassword.text);
-
+        // TODO: if user is banned, then throw an exception here!
+        // get userCredential.user?.uid; then use this uid to ask firestore whether the
+        // user document with this uid has banned == true, if so then throw an exception
         widget.onSignIn(userCredential.user);
         bool moderator = false;
         final snap = await FirebaseFirestore.instance

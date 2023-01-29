@@ -45,6 +45,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<void> sendUserInformationToFirestore(
       String email, bool moderator, String username, User? user) async {
     FirebaseFirestore.instance.collection('users').add({
+      'banned': false,
       'email': email,
       'followers': [], // todo: list of user ids that follow the user
       'following':
