@@ -51,6 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
           [], // todo: this should be an arr of uuids that the user follows
       'moderator': moderator,
       'profilePicture': "",
+      'timeoutStart': "", // timeout date will be stored as a string
       'username': username,
       'uuid': user?.uid
     }).then((value) => print("document created with id: " + value.id),
