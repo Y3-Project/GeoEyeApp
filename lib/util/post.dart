@@ -24,6 +24,7 @@ class Post {
       required this.video,
       required this.likes,
       required this.reported,
+      required this.reportsNumber,
       required this.user,
       required this.text,
       required this.title,
