@@ -49,6 +49,9 @@ class AccountSettingsPage extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => WelcomePage()),
                   );
+                  SnackBar snack1 = SnackBar(
+                      content: Text('Your account has been deleted', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)), duration: Duration(seconds: 2));
+                  ScaffoldMessenger.of(context).showSnackBar(snack1);
                 },
               ),
               TextButton(
