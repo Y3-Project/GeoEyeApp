@@ -44,7 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
    */
   Future<void> sendUserInformationToFirestore(
       String email, bool moderator, String username, User? user) async {
-    FirebaseFirestore.instance.collection('users').add({
+    await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
       'banned': false,
       'email': email,
       'followers': [], // todo: list of user ids that follow the user
@@ -55,9 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
       'timeoutStart': "", // timeout date will be stored as a string
       'username': username,
       'uuid': user?.uid
-    }).then((value) => print("document created with id: " + value.id),
-        onError: (e) => print(
-            "ERROR sending user information on sign up to firestore, $e"));
+    });
   }
 
   @override
