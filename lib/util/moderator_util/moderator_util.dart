@@ -2,31 +2,44 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-Future<void> deletePost(QueryDocumentSnapshot snapshot) async {
-  print("DELETING POST: ${snapshot.id}");
+Future<void> deletePost(QueryDocumentSnapshot post) async {
+  print("DELETING POST: ${post.id}");
   var inst = FirebaseFirestore.instance.collection('posts');
-  inst.doc("${snapshot.id}").delete();
+  inst.doc("${post.id}").delete();
 }
 
 Future<void> timeoutUserFromPost(QueryDocumentSnapshot post) async {
-  print("timing out user from document: ${post.id}");
-  // TODO: implement
+  print("timing out user ${post.get("user")} from document: ${post.id}");
+  var date = DateTime.now();
+  DocumentReference user = FirebaseFirestore.instance.doc(post.get("user"));
+  user.update({"timeoutStart": date.toString()});
 }
 
 Future<void> banUserFromPost(QueryDocumentSnapshot post) async {
-  // TODO: implement
+  print("banning user ${post.get("user")} for post ${post.id}");
+  DocumentReference user = FirebaseFirestore.instance.doc(post.get("user"));
+  user.update({'banned': true});
 }
 
-Future<Row> getTextPost(QueryDocumentSnapshot postDocument) async {
-  return Row(
+Future<Row> getTextPost(QueryDocumentSnapshot post) async {
+  DocumentReference document = post.get("user");
+  return await Row(
     children: [
       Expanded(
-        child: Text(postDocument.get("text"), textAlign: TextAlign.center),
+        child: Column(children: [
+          ListTile(
+              title: Text(post.get("title")), subtitle: Text(post.get("text"))),
+          Text(
+            "posted by ${document.id}, reported ${post.get("reportsNumber")} times",
+            softWrap: true,
+          )
+        ]),
       ),
+      // TODO: make drop down
       Expanded(
         child: ElevatedButton(
           onPressed: () {
-            deletePost(postDocument);
+            deletePost(post);
           },
           child: Text("Delete"),
         ),
@@ -40,15 +53,15 @@ Future<VideoPlayerController> loadVideo(QueryDocumentSnapshot post) async {
   return VideoPlayerController.network(url);
 }
 
-Future<Row> getVideoPost(QueryDocumentSnapshot postDocument) async {
+Future<Row> getVideoPost(QueryDocumentSnapshot post) async {
   // currently this would just show the URL
   return Row(
     children: [
-      Expanded(child: VideoPlayer(await loadVideo(postDocument))),
+      Expanded(child: VideoPlayer(await loadVideo(post))),
       Expanded(
         child: ElevatedButton(
           onPressed: () {
-            deletePost(postDocument);
+            deletePost(post);
           },
           child: const Text("Delete"),
         ),
@@ -57,8 +70,8 @@ Future<Row> getVideoPost(QueryDocumentSnapshot postDocument) async {
   );
 }
 
-Future<Image> loadImage(QueryDocumentSnapshot postDocument) async {
-  var s = await postDocument.get("picture");
+Future<Image> loadImage(QueryDocumentSnapshot post) async {
+  var s = await post.get("picture");
   return Image.network(
     s,
     height: 200.0,
@@ -72,17 +85,26 @@ Image loadImageFromURL(String url) {
   );
 }
 
-Future<Row> getPicturePost(QueryDocumentSnapshot snapshot) async {
-  return Row(
+Future<Row> getPicturePost(QueryDocumentSnapshot post) async {
+  DocumentReference document = post.get("user");
+  return await Row(
     children: [
       Expanded(
-        child: Container(
-            child: await loadImage(snapshot), alignment: Alignment.center),
-      ),
+          child: Column(children: [
+        ListTile(
+          leading: await loadImage(post),
+          title: Text(post.get("title")),
+          subtitle: Text(post.get("text")),
+        ),
+        Text(
+          "posted by ${document.id}, reported ${post.get("reportsNumber")} times",
+          softWrap: true,
+        )
+      ])),
       Expanded(
         child: ElevatedButton(
           onPressed: () {
-            deletePost(snapshot);
+            deletePost(post);
           },
           child: const Text("Delete"),
         ),
