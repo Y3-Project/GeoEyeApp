@@ -61,7 +61,14 @@ Future<Image> loadImage(QueryDocumentSnapshot postDocument) async {
   var s = await postDocument.get("picture");
   return Image.network(
     s,
-    height: 100.0,
+    height: 200.0,
+  );
+}
+
+Image loadImageFromURL(String url) {
+  return Image.network(
+    url,
+    height: 200.0,
   );
 }
 

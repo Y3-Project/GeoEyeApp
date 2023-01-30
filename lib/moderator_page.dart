@@ -23,6 +23,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
     _querySnapshot = FirebaseFirestore.instance
         .collection("posts")
         .where("reported", isEqualTo: true)
+        .orderBy("timestamp", descending: false)
         .snapshots()
         .listen((snapshot) {
       setState(() {
@@ -73,7 +74,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
               itemCount: _display.length - _display.length + 1,
               itemBuilder: ((context, index) {
                 return Container(
-                  child: Column(children: _display.toSet().toList()),
+                  child: Column(children: _display),
                 );
               }))
           : Center(
