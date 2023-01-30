@@ -37,6 +37,7 @@ class _FeedPageState extends State<FeedPage> {
     return StreamProvider<List<Post>>.value(
       value: posts,
       initialData: [],
+      // todo: display scrapbooks instead of posts
       child: Scaffold(body: PostList()),
     );
   }
