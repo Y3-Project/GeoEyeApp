@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../models/post.dart';
+import '../util/post.dart';
 
 class PostTile extends StatelessWidget {
   final Post post;
@@ -14,9 +13,9 @@ class PostTile extends StatelessWidget {
       child: Card(
         margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0),
         child: ListTile(
-          leading: Image.network(post.thumbnail),
+          leading: Image.network(post.picture),
           title: Text(post.title),
-          subtitle: Text(post.description),
+          subtitle: Text(post.text),
         ),
       ),
 

@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_tile.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_widget.dart';
 import 'package:provider/provider.dart';
-
-import '../models/post.dart';
+import '../util/post.dart';
 
 class PostList extends StatefulWidget {
   const PostList({Key? key}) : super(key: key);
