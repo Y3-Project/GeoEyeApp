@@ -18,6 +18,16 @@ class ProfileWidget extends StatefulWidget {
 
   const ProfileWidget({Key? key}) : super(key: key);
 
+  String? getUuid()
+  {
+    String? uuid = '';
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+
+    uuid = user?.uid;
+    return uuid;
+  }
+
   @override
   State<ProfileWidget> createState() => _ProfileWidgetState();
 }
@@ -38,22 +48,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       );
     }
 
-    String? getUuid() {
-      String? uuid = '';
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      final User? user = auth.currentUser;
-
-      uuid = user?.uid;
-      return uuid;
-    }
-
     //method to get the username of the user logged in
     Future<String> getUsername() async {
       String username = '';
       QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
           .instance
           .collection("users")
-          .where("uuid", isEqualTo: getUuid() as String)
+          .where("uuid", isEqualTo: ProfileWidget().getUuid() as String)
           .get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
