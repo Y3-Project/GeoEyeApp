@@ -60,6 +60,8 @@ class _LoginPageState extends State<LoginPage> {
         // TODO: if user is banned, then throw an exception here!
         // get userCredential.user?.uid; then use this uid to ask firestore whether the
         // user document with this uid has banned == true, if so then throw an exception
+
+        // TODO: if timeoutStart field of user is within a certain range, then don't allow them in
         widget.onSignIn(userCredential.user);
         bool moderator = false;
         final snap = await FirebaseFirestore.instance
