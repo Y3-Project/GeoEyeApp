@@ -25,7 +25,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
         toolbarHeight: 64,
         backgroundColor: Colors.black,
         centerTitle: true,
-        title: Text("Notifications Page", style: TextStyle(fontSize: 25),),
+        title: Text("Notifications", style: TextStyle(fontSize: 25),),
       ),
       body: Container(
         alignment: Alignment.center,
