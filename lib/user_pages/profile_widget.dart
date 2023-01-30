@@ -316,6 +316,22 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           minimumSize: Size.fromHeight(ProfileWidget
                               .SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
                         ),
+                        onPressed: () {},
+                        child: Text(
+                          "My Posts",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 22),
+                        )),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        vertical: ProfileWidget.SETTINGS_BUTTON_SPACING),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          minimumSize: Size.fromHeight(ProfileWidget
+                              .SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
+                        ),
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
