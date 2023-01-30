@@ -46,6 +46,8 @@ class _SignUpPageState extends State<SignUpPage> {
       String email, bool moderator, String username, User? user) async {
     await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
       'banned': false,
+      'biography': "",
+      'blockedUsers': [],
       'email': email,
       'followers': [], // todo: list of user ids that follow the user
       'following':
