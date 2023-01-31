@@ -14,7 +14,7 @@ class Post {
   String text = '';
   String title = '';
   String id = '/posts/'; // document id
-  int likes = 0; // do we want to keep track of which users liked the post?
+  List<dynamic> likes = List.empty(growable: true); // this is an array of references to users who liked the post
 
   /* Constructor */
   Post(

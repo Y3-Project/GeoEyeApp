@@ -25,7 +25,6 @@ class _FeedPageState extends State<FeedPage> {
     return snapshot.docs.map((doc) {
       DocumentReference<Map<String, dynamic>> ref = doc.get('user');
       // String username = ref.get().then((value) => value.get('username')).then((value) => print(value.toString())).toString();
-
       // todo: add the remaining attributes from the server's post doc
       // Error received from other adding other attributes -> "Bad state: field does not exist within the DocumentSnapshotPlatform"
       return Post(
@@ -34,8 +33,7 @@ class _FeedPageState extends State<FeedPage> {
         picture: doc.data().toString().contains('picture') ? doc.get('picture').toString() : '',
         //video: doc.data().toString().contains('video') ? doc.get('video').toString() : '',
         video: '',
-        //likes: doc.data().toString().contains('likes') ? doc.get('likes') as int : 0,
-        likes: 0,
+        likes: doc.get('likes'),
         //reported: doc.data().toString().contains('reported') ? doc.get('reported') as bool : false,
         reported: false,
         //reportsNumber: doc.data().toString().contains('reportsNumber') ? doc.get('reportsNumber') as int : 0,
