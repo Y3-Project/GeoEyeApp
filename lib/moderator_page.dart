@@ -22,14 +22,17 @@ class _ModeratorPageState extends State<ModeratorPage> {
   void initState() {
     _querySnapshot = FirebaseFirestore.instance
         .collection("posts")
-        .where("reported", isEqualTo: true)
         .snapshots()
         .listen((snapshot) {
       setState(() {
-        _display.clear();
-        _snapshots.clear();
-        _snapshots.addAll(snapshot.docs);
+          _display.clear();
+          _snapshots.clear();
+          _snapshots.addAll(snapshot.docs);
         for (int i = 0; i < _snapshots.length; i++) {
+          List<dynamic> reports = _snapshots[i].get("reports");
+          if (reports.length == 0) {
+            continue;
+          }
           initDisplay(i);
         }
       });
