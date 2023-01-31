@@ -14,8 +14,6 @@ class ProfileWidget extends StatefulWidget {
   static const double SETTINGS_BUTTON_WIDTH = 60;
   static const double SETTINGS_BUTTON_SPACING = 20;
 
-  static XFile? _imageFile;
-
   const ProfileWidget({Key? key}) : super(key: key);
 
   String? getUuid() {
@@ -33,6 +31,7 @@ class ProfileWidget extends StatefulWidget {
 
 class _ProfileWidgetState extends State<ProfileWidget> {
   static String profileBio = '';
+  static String userProfilePhoto = '';
   static String username = '';
   final ImagePicker _picker = ImagePicker();
   TextEditingController _profileBioController = new TextEditingController();
@@ -67,30 +66,50 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
     getUsername().then((value) => {username = value});
 
-    String imageURL = '';
+
+    Future<void> sendProfilePicToFirestore(String imagePath) async {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(ProfileWidget().getUuid())
+          .update({'profilePicture': imagePath});
+    }
+
+    Future<String> retrieveProfilePicFromFirestore() async {
+      String profilePicPath = '';
+      QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
+          .instance
+          .collection("users")
+          .where("uuid", isEqualTo: ProfileWidget().getUuid() as String)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
+        profilePicPath = doc.get('profilePicture');
+      }
+      setState(() {
+      });
+      return await profilePicPath;
+    }
+
+    retrieveProfilePicFromFirestore().then((value) => {userProfilePhoto = value});
+
+
 
     void takePhoto(ImageSource source) async {
+      XFile? _imageFile;
       final pickedFile = await _picker.pickImage(
         source: source,
       );
 
       setState(() {
-        ProfileWidget._imageFile = pickedFile;
-        print(ProfileWidget._imageFile);
+        _imageFile = pickedFile;
+        sendProfilePicToFirestore(_imageFile?.path as String);
+        retrieveProfilePicFromFirestore();
       });
-      final storageRef = FirebaseStorage.instance.ref();
-      final profilePicRef = storageRef.child("profilePic.jpg");
 
-      final profileImagesRef = storageRef.child("profileImages/profilePic.jpg");
-
-      assert(profilePicRef.name == profileImagesRef.name);
-      assert(profilePicRef.fullPath != profileImagesRef.fullPath);
-
-      File file = File(ProfileWidget._imageFile?.path as String);
-      await profilePicRef.putFile(file);
-
-      imageURL = await profilePicRef.getDownloadURL();
     }
+
+
+
 
     Widget bottomSheet() {
       return Container(
@@ -140,16 +159,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           CircleAvatar(
             backgroundColor: Colors.black,
             radius: 80.0,
-            backgroundImage: ProfileWidget._imageFile == null
-                ? AssetImage("images/default_avatar.png")
-
-
-                //got to change the following line of code,
-                // so it accesses this image from the database for the current user,
-                // with the current uuid
-               // : Image.network(imageURL) as ImageProvider,
-                : FileImage(File(ProfileWidget._imageFile?.path as String))
-                   as ImageProvider,
+            backgroundImage: FileImage(File(userProfilePhoto)),
           ),
           Positioned(
             bottom: 10.0,
@@ -163,7 +173,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               },
               child: Icon(
                 Icons.add_a_photo,
-                color: Colors.black,
+                color: Colors.white,
                 size: 28.0,
               ),
             ),
