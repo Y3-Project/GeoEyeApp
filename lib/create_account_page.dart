@@ -54,8 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
           [], // todo: this should be an arr of uuids that the user follows
       'moderator': moderator,
       'profilePicture': "",
-      'reported': false,
-      'reportsNumber': 0,
+      'reports': [],
       'timeoutStart': "", // timeout date will be stored as a string
       'username': username,
       'uuid': user?.uid

@@ -14,8 +14,6 @@ class ProfileWidget extends StatefulWidget {
   static const double SETTINGS_BUTTON_WIDTH = 60;
   static const double SETTINGS_BUTTON_SPACING = 20;
 
-  static XFile? _imageFile;
-
   const ProfileWidget({Key? key}) : super(key: key);
 
   String? getUuid() {
@@ -33,6 +31,7 @@ class ProfileWidget extends StatefulWidget {
 
 class _ProfileWidgetState extends State<ProfileWidget> {
   static String profileBio = '';
+  static String userProfilePhoto = '';
   static String username = '';
   final ImagePicker _picker = ImagePicker();
   TextEditingController _profileBioController = new TextEditingController();
@@ -61,44 +60,64 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
         username = doc.get('username');
       }
+      setState(() {});
       return await username;
     }
 
     getUsername().then((value) => {username = value});
 
-    String imageURL = '';
+
+    Future<void> sendProfilePicToFirestore(String imagePath) async {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(ProfileWidget().getUuid())
+          .update({'profilePicture': imagePath});
+    }
+
+    Future<String> retrieveProfilePicFromFirestore() async {
+      String profilePicPath = '';
+      QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
+          .instance
+          .collection("users")
+          .where("uuid", isEqualTo: ProfileWidget().getUuid() as String)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
+        profilePicPath = doc.get('profilePicture');
+      }
+      setState(() {
+      });
+      return await profilePicPath;
+    }
+
+    retrieveProfilePicFromFirestore().then((value) => {userProfilePhoto = value});
+
+
 
     void takePhoto(ImageSource source) async {
+      XFile? _imageFile;
       final pickedFile = await _picker.pickImage(
         source: source,
       );
 
       setState(() {
-        ProfileWidget._imageFile = pickedFile;
+        _imageFile = pickedFile;
+        sendProfilePicToFirestore(_imageFile?.path as String);
+        retrieveProfilePicFromFirestore();
       });
 
-      final storageRef = FirebaseStorage.instance.ref();
-      print('hello');
-      print(storageRef.toString());
-      final profilePicRef = storageRef.child("profilePic.jpg");
-
-      final profileImagesRef = storageRef.child("profileImages/profilePic.jpg");
-
-      assert(profilePicRef.name == profileImagesRef.name);
-      assert(profilePicRef.fullPath != profileImagesRef.fullPath);
-
-      File file = File(ProfileWidget._imageFile?.path as String);
-      await profilePicRef.putFile(file);
-
-      imageURL = await profilePicRef.getDownloadURL();
     }
 
+
+
+    /**
     ImageProvider<Object> getUserPicture() {
       if (ProfileWidget._imageFile == null)
         return FileImage(File(""));
       else
         return NetworkImage('');
     }
+    **/
 
     Widget bottomSheet() {
       return Container(
@@ -148,8 +167,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           CircleAvatar(
             backgroundColor: Colors.black,
             radius: 80.0,
-            // todo: make user's profile picture appear by getting it from the server
-            backgroundImage: getUserPicture(),
+            backgroundImage: FileImage(File(userProfilePhoto)),
           ),
           Positioned(
             bottom: 10.0,
@@ -194,6 +212,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     }
 
     retrieveBioFromFirestore().then((value) => {profileBio = value});
+
+
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -271,10 +291,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20)),
                       )),
-                      Text(
-                        profileBio,
-                        style: TextStyle(fontSize: 20),
-                      )
+                      Text(profileBio, style: TextStyle(fontSize: 20),)
                     ]),
                     Align(
                         child: Container(

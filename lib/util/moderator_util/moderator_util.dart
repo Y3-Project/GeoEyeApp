@@ -32,7 +32,7 @@ Future<Row> getTextPost(QueryDocumentSnapshot post) async {
         child: Column(children: [
           ListTile(title: Text(postObj.title), subtitle: Text(postObj.text)),
           Text(
-            "posted by ${document.id}, reported ${post.get("reportsNumber")} times",
+            "posted by ${document.id}, reported ${postObj.reports.length} times",
             softWrap: true,
           )
         ]),
@@ -97,7 +97,7 @@ Future<Row> getPicturePost(QueryDocumentSnapshot post) async {
           child: Column(children: [
         tile,
         Text(
-          "posted by ${user.id}, reported ${postObj.reportsNumber} times",
+          "posted by ${user.id}, reported ${postObj.reports.length} times",
           softWrap: true,
         )
       ])),
