@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../util/post.dart';
@@ -18,6 +19,9 @@ class PostTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
       child: Card(

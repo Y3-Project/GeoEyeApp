@@ -78,6 +78,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       });
 
       final storageRef = FirebaseStorage.instance.ref();
+      print('hello');
+      print(storageRef.toString());
       final profilePicRef = storageRef.child("profilePic.jpg");
 
       final profileImagesRef = storageRef.child("profileImages/profilePic.jpg");
@@ -89,6 +91,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       await profilePicRef.putFile(file);
 
       imageURL = await profilePicRef.getDownloadURL();
+    }
+
+    ImageProvider<Object> getUserPicture() {
+      if (ProfileWidget._imageFile == null)
+        return FileImage(File(""));
+      else
+        return NetworkImage('');
     }
 
     Widget bottomSheet() {
@@ -139,15 +148,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           CircleAvatar(
             backgroundColor: Colors.black,
             radius: 80.0,
-            backgroundImage: ProfileWidget._imageFile == null
-                ? AssetImage("images/default_avatar.png")
-
-                //got to change the following line of code,
-                // so it accesses this image from the database for the current user,
-                // with the current uuid
-                //: Image.network(imageURL) as ImageProvider,
-                : FileImage(File(ProfileWidget._imageFile?.path as String))
-                    as ImageProvider,
+            // todo: make user's profile picture appear by getting it from the server
+            backgroundImage: getUserPicture(),
           ),
           Positioned(
             bottom: 10.0,
@@ -192,8 +194,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     }
 
     retrieveBioFromFirestore().then((value) => {profileBio = value});
-
-
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -271,7 +271,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20)),
                       )),
-                      Text(profileBio, style: TextStyle(fontSize: 20),)
+                      Text(
+                        profileBio,
+                        style: TextStyle(fontSize: 20),
+                      )
                     ]),
                     Align(
                         child: Container(
