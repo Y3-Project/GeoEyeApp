@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import '../../post_widgets/post_tile.dart';
+import '../post.dart';
 
 Future<void> deletePost(QueryDocumentSnapshot post) async {
   print("DELETING POST: ${post.id}");
@@ -23,12 +25,12 @@ Future<void> banUserFromPost(QueryDocumentSnapshot post) async {
 
 Future<Row> getTextPost(QueryDocumentSnapshot post) async {
   DocumentReference document = post.get("user");
+  Post postObj = Post.fromDocument(post);
   return await Row(
     children: [
       Expanded(
         child: Column(children: [
-          ListTile(
-              title: Text(post.get("title")), subtitle: Text(post.get("text"))),
+          ListTile(title: Text(postObj.title), subtitle: Text(postObj.text)),
           Text(
             "posted by ${document.id}, reported ${post.get("reportsNumber")} times",
             softWrap: true,
@@ -71,10 +73,9 @@ Future<Row> getVideoPost(QueryDocumentSnapshot post) async {
 }
 
 Future<Image> loadImage(QueryDocumentSnapshot post) async {
-  var s = await post.get("picture");
+  var s = post.get("picture");
   return Image.network(
     s,
-    height: 200.0,
   );
 }
 
@@ -86,18 +87,17 @@ Image loadImageFromURL(String url) {
 }
 
 Future<Row> getPicturePost(QueryDocumentSnapshot post) async {
-  DocumentReference document = post.get("user");
+  Post postObj = Post.fromDocument(post);
+  PostTile tile = PostTile(postObj);
+  DocumentReference user = post.get("user");
+  print("here");
   return await Row(
     children: [
       Expanded(
           child: Column(children: [
-        ListTile(
-          leading: await loadImage(post),
-          title: Text(post.get("title")),
-          subtitle: Text(post.get("text")),
-        ),
+        tile,
         Text(
-          "posted by ${document.id}, reported ${post.get("reportsNumber")} times",
+          "posted by ${user.id}, reported ${postObj.reportsNumber} times",
           softWrap: true,
         )
       ])),
@@ -115,7 +115,6 @@ Future<Row> getPicturePost(QueryDocumentSnapshot post) async {
 
 Future<Row> getPost(QueryDocumentSnapshot post) async {
   bool textPresent = (post.get("text") != "" && post.get("text") != null);
-  bool noTextPresent = (post.get("text") == "" || post.get("text") == null);
   bool picturePresent =
       (post.get("picture") != "" && post.get("picture") != null);
   bool noPicturePresent =
@@ -123,14 +122,17 @@ Future<Row> getPost(QueryDocumentSnapshot post) async {
   bool videoPresent = (post.get("video") != "" && post.get("video") != null);
   bool noVideoPresent = (post.get("video") == "" || post.get("video") == null);
 
-  // for a particular post, only one of text, picture, and video can not be ""
   if (textPresent && noPicturePresent && noVideoPresent) {
+    // only text
     print("text detected ${post.id}");
     return await getTextPost(post);
-  } else if (picturePresent && noTextPresent && noVideoPresent) {
+  } else if (picturePresent) {
+    // picture & text
     print("picture detected ${post.id}");
+    print("EEEEEEEEEEEEEE");
     return await getPicturePost(post);
-  } else if (videoPresent && noTextPresent && noPicturePresent) {
+  } else if (videoPresent) {
+    // video & text
     return await getVideoPost(post);
   }
   return Row(children: [Text("Error")]);
