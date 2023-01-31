@@ -61,6 +61,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
         username = doc.get('username');
       }
+      setState(() {});
       return await username;
     }
 
@@ -75,8 +76,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
       setState(() {
         ProfileWidget._imageFile = pickedFile;
+        print(ProfileWidget._imageFile);
       });
-
       final storageRef = FirebaseStorage.instance.ref();
       final profilePicRef = storageRef.child("profilePic.jpg");
 
@@ -142,12 +143,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             backgroundImage: ProfileWidget._imageFile == null
                 ? AssetImage("images/default_avatar.png")
 
+
                 //got to change the following line of code,
                 // so it accesses this image from the database for the current user,
                 // with the current uuid
-                //: Image.network(imageURL) as ImageProvider,
+               // : Image.network(imageURL) as ImageProvider,
                 : FileImage(File(ProfileWidget._imageFile?.path as String))
-                    as ImageProvider,
+                   as ImageProvider,
           ),
           Positioned(
             bottom: 10.0,
@@ -161,7 +163,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               },
               child: Icon(
                 Icons.add_a_photo,
-                color: Colors.white,
+                color: Colors.black,
                 size: 28.0,
               ),
             ),
