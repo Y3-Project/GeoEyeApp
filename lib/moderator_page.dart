@@ -23,7 +23,6 @@ class _ModeratorPageState extends State<ModeratorPage> {
     _querySnapshot = FirebaseFirestore.instance
         .collection("posts")
         .where("reported", isEqualTo: true)
-        .orderBy("timestamp", descending: false)
         .snapshots()
         .listen((snapshot) {
       setState(() {
@@ -39,6 +38,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
   }
 
   Future<void> initDisplay(int i) async {
+    print("data: ${_snapshots[i].data().toString()}");
     _display.add(await getPost(_snapshots[i]));
   }
 
@@ -69,7 +69,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
             "Moderator main page",
             style: TextStyle(fontSize: 25),
           )),
-      body: _display != List.empty()
+      body: _display.length != 0
           ? ListView.builder(
               itemCount: _display.length - _display.length + 1,
               itemBuilder: ((context, index) {
