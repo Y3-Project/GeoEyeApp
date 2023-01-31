@@ -24,7 +24,7 @@ class _FeedPageState extends State<FeedPage> {
   List<Post> _postListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       DocumentReference<Map<String, dynamic>> ref = doc.get('user');
-      String username = ref.get().then((value) => value.get('username')).then((value) => print(value.toString())).toString();
+      // String username = ref.get().then((value) => value.get('username')).then((value) => print(value.toString())).toString();
 
       // todo: add the remaining attributes from the server's post doc
       // Error received from other adding other attributes -> "Bad state: field does not exist within the DocumentSnapshotPlatform"

@@ -77,6 +77,8 @@ flutter:
   assets:
    - images/eye-blinking.json
    - images/geoeye.png
+   - images/default_avatar.png
+   - images/default_image.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

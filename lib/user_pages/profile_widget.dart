@@ -140,7 +140,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             backgroundColor: Colors.black,
             radius: 80.0,
             backgroundImage: ProfileWidget._imageFile == null
-                ? AssetImage("images/geoeye.png")
+                ? AssetImage("images/default_avatar.png")
 
                 //got to change the following line of code,
                 // so it accesses this image from the database for the current user,
