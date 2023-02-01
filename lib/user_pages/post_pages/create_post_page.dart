@@ -51,7 +51,9 @@ class _CreatePostPageState extends State<CreatePostPage> {
                           MaterialStateColor.resolveWith((states) => Colors.black),
                       textStyle: MaterialStateTextStyle.resolveWith(
                           (states) => TextStyle(color: Colors.white))),
-                  onPressed: () {},
+                  onPressed: () {
+                    // TODO: add fields so we can create a post document
+                  },
                   child: Text("Post")),
             ],
           ),
