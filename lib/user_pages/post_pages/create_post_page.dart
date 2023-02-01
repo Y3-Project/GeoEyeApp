@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CreatePostPage extends StatefulWidget {
+  // TODO: we will also need the currently logged in user
   const CreatePostPage({Key? key}) : super(key: key);
 
   @override
@@ -47,8 +48,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
             children: [
               ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateColor.resolveWith((states) => Colors.black),
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.black),
                       textStyle: MaterialStateTextStyle.resolveWith(
                           (states) => TextStyle(color: Colors.white))),
                   onPressed: () {

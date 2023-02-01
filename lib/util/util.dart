@@ -21,6 +21,51 @@ String getUserDocumentIDFromPost(QueryDocumentSnapshot snap) {
   return userDoc.id;
 }
 
+String getUserDocumentFromUsername(String username) {
+  String ref = "";
+  FirebaseFirestore.instance
+      .collection("users")
+      .where("username", isEqualTo: username)
+      .snapshots()
+      .listen((event) {
+    for (var document in event.docs) {
+      ref = document.reference.toString();
+    }
+  });
+  return ref;
+}
+
+void createPostPicture(
+    String title, String caption, String pictureURL, String username) {
+  String user = getUserDocumentFromUsername(username);
+  FirebaseFirestore.instance.collection("posts").add({
+    "likes": [],
+    "picture": pictureURL,
+    "reports": [],
+    "text": caption,
+    "timestamp": FieldValue.serverTimestamp(),
+    "title": title,
+    "user": user, // this is a document reference as a string
+    "video": ""
+  });
+}
+
+void createPostVideo(
+    String title, String caption, String videoURL, String username) {
+  String user = getUserDocumentFromUsername(username);
+  FieldValue.serverTimestamp();
+  FirebaseFirestore.instance.collection("posts").add({
+    "likes": [],
+    "picture": "",
+    "reports": [],
+    "text": caption,
+    "timestamp": DateTime.now(),
+    "title": title,
+    "user": user, // this is a document reference as a string
+    "video": videoURL
+  });
+}
+
 /*
   @param: user: the user to be followed
   @param: newFollower: the user who is following the user
