@@ -16,7 +16,7 @@ class ModeratorPage extends StatefulWidget {
 class _ModeratorPageState extends State<ModeratorPage> {
   late StreamSubscription<QuerySnapshot> _querySnapshot;
   List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
-  List<Row> _display = List.empty(growable: true);
+  List<Container> _display = List.empty(growable: true);
 
   @override
   void initState() {
@@ -25,9 +25,9 @@ class _ModeratorPageState extends State<ModeratorPage> {
         .snapshots()
         .listen((snapshot) {
       setState(() {
-          _display.clear();
-          _snapshots.clear();
-          _snapshots.addAll(snapshot.docs);
+        _display.clear();
+        _snapshots.clear();
+        _snapshots.addAll(snapshot.docs);
         for (int i = 0; i < _snapshots.length; i++) {
           List<dynamic> reports = _snapshots[i].get("reports");
           if (reports.length == 0) {

@@ -8,6 +8,7 @@ Future<void> deletePost(QueryDocumentSnapshot post) async {
   print("DELETING POST: ${post.id}");
   var inst = FirebaseFirestore.instance.collection('posts');
   inst.doc("${post.id}").delete();
+  // TODO: delete from scrapbook it belongs to
 }
 
 Future<void> timeoutUserFromPost(QueryDocumentSnapshot post) async {
@@ -23,30 +24,41 @@ Future<void> banUserFromPost(QueryDocumentSnapshot post) async {
   user.update({'banned': true});
 }
 
-Future<Row> getTextPost(QueryDocumentSnapshot post) async {
-  DocumentReference document = post.get("user");
+Future<void> allowPostToBeOnApp(QueryDocumentSnapshot post) async {
+  print("Allowing post ${post.id} to be on app");
+  // remove all previous reports - allow it to be on the application
+  FirebaseFirestore.instance.doc(post.reference.path).update({"reports": []});
+}
+
+Future<Container> getTextPost(QueryDocumentSnapshot post) async {
+  DocumentReference user = post.get("user");
   Post postObj = Post.fromDocument(post);
-  return await Row(
-    children: [
-      Expanded(
-        child: Column(children: [
-          ListTile(title: Text(postObj.title), subtitle: Text(postObj.text)),
-          Text(
-            "posted by ${document.id}, reported ${postObj.reports.length} times",
-            softWrap: true,
-          )
-        ]),
-      ),
-      // TODO: make drop down
-      Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            deletePost(post);
-          },
-          child: Text("Delete"),
+  PostTile tile = PostTile(postObj);
+  return await Container(
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(children: [
+            Text(
+              "post: ${post.id}",
+              softWrap: true,
+            ),
+            ListTile(
+              title: Text(postObj.title),
+              subtitle: Text(postObj.text),
+            ),
+            Text(
+              "posted by ${user.id}, reported ${postObj.reports.length} times",
+              softWrap: true,
+            )
+          ]),
         ),
-      )
-    ],
+        Expanded(child: createDropDownMenu(post, user.id)),
+      ],
+    ),
+    decoration:
+        BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black))),
+    padding: EdgeInsets.only(bottom: 5.0),
   );
 }
 
@@ -55,20 +67,25 @@ Future<VideoPlayerController> loadVideo(QueryDocumentSnapshot post) async {
   return VideoPlayerController.network(url);
 }
 
-Future<Row> getVideoPost(QueryDocumentSnapshot post) async {
+Future<Container> getVideoPost(QueryDocumentSnapshot post) async {
+  Post postObj = Post.fromDocument(post);
+  PostTile tile = PostTile(postObj); // TODO: create video playing widget
+  DocumentReference user = post.get("user");
   // currently this would just show the URL
-  return Row(
-    children: [
-      Expanded(child: VideoPlayer(await loadVideo(post))),
-      Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            deletePost(post);
-          },
-          child: const Text("Delete"),
+  return Container(
+    child: Row(
+      children: [
+        Text(
+          "post: ${post.id}",
+          softWrap: true,
         ),
-      )
-    ],
+        Expanded(child: VideoPlayer(await loadVideo(post))),
+        Expanded(child: createDropDownMenu(post, user.id))
+      ],
+    ),
+    decoration:
+        BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black))),
+    padding: EdgeInsets.only(bottom: 5.0),
   );
 }
 
@@ -86,34 +103,69 @@ Image loadImageFromURL(String url) {
   );
 }
 
-Future<Row> getPicturePost(QueryDocumentSnapshot post) async {
+Future<Container> getPicturePost(QueryDocumentSnapshot post) async {
   Post postObj = Post.fromDocument(post);
   PostTile tile = PostTile(postObj);
   DocumentReference user = post.get("user");
-  print("here");
-  return await Row(
-    children: [
-      Expanded(
-          child: Column(children: [
-        tile,
-        Text(
-          "posted by ${user.id}, reported ${postObj.reports.length} times",
-          softWrap: true,
-        )
-      ])),
-      Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            deletePost(post);
-          },
-          child: const Text("Delete"),
-        ),
-      )
-    ],
+  return await Container(
+    child: Row(
+      children: [
+        Expanded(
+            child: Column(children: [
+          Text(
+            "post: ${post.id}",
+            softWrap: true,
+          ),
+          tile,
+          Text(
+            "posted by ${user.id}, reported ${postObj.reports.length} times",
+            softWrap: true,
+          )
+        ])),
+        Expanded(child: createDropDownMenu(post, user.id))
+      ],
+    ),
+    decoration:
+        BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black))),
+    padding: EdgeInsets.only(bottom: 10.0),
   );
 }
 
-Future<Row> getPost(QueryDocumentSnapshot post) async {
+PopupMenuButton createDropDownMenu(QueryDocumentSnapshot post, String user) {
+  return PopupMenuButton(
+      child: Text("Actions: "),
+      itemBuilder: (context) => [
+            PopupMenuItem(
+                child: Text("delete"),
+                value: 1,
+                onTap: () {
+                  deletePost(post);
+                }),
+            PopupMenuItem(
+              child: Text("ban user ${user}"),
+              value: 2,
+              onTap: () {
+                banUserFromPost(post);
+              },
+            ),
+            PopupMenuItem(
+              child: Text("timeout user ${user}"),
+              value: 3,
+              onTap: () {
+                timeoutUserFromPost(post);
+              },
+            ),
+            PopupMenuItem(
+              child: Text("Allow post ${post.id}"),
+              value: 4,
+              onTap: () {
+                allowPostToBeOnApp(post);
+              },
+            )
+          ]);
+}
+
+Future<Container> getPost(QueryDocumentSnapshot post) async {
   bool textPresent = (post.get("text") != "" && post.get("text") != null);
   bool picturePresent =
       (post.get("picture") != "" && post.get("picture") != null);
@@ -124,16 +176,17 @@ Future<Row> getPost(QueryDocumentSnapshot post) async {
 
   if (textPresent && noPicturePresent && noVideoPresent) {
     // only text
-    print("text detected ${post.id}");
     return await getTextPost(post);
   } else if (picturePresent) {
     // picture & text
-    print("picture detected ${post.id}");
-    print("EEEEEEEEEEEEEE");
     return await getPicturePost(post);
   } else if (videoPresent) {
     // video & text
     return await getVideoPost(post);
   }
-  return Row(children: [Text("Error")]);
+  return Container(
+    child: Row(children: [Text("Error")]),
+    decoration:
+        BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black))),
+  );
 }
