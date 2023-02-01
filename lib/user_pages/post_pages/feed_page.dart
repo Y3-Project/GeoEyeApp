@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_list.dart';
+import 'package:flutter_app_firebase_login/user_pages/post_pages/create_post_page.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_widget.dart';
 import 'package:provider/provider.dart';
 import '../../util/post.dart';
@@ -45,7 +46,21 @@ class _FeedPageState extends State<FeedPage> {
       value: posts,
       initialData: [],
       // todo: display scrapbooks instead of posts
-      child: Scaffold(body: PostList()),
+      child: Scaffold(
+        body: PostList(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => CreatePostPage()),
+            );
+          },
+          backgroundColor: Colors.black,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }
