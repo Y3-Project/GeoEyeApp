@@ -25,14 +25,14 @@ class _FeedPageState extends State<FeedPage> {
   List<Post> _postListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       DocumentReference<Map<String, dynamic>> ref = doc.get('user');
-      // todo: add the remaining attributes from the server's post doc
+      String userRefDoc = '/users/' + ref.id;
       return Post(
         timestamp: doc.get('timestamp') as Timestamp,
         picture: doc.get('picture').toString(),
         video: doc.get('video').toString(),
         likes: doc.get('likes'),
         reports: doc.get('reports'),
-        user: doc.get('user').toString(),
+        user: userRefDoc,
         text: doc.get('text').toString(),
         title: doc.get('title').toString(),
         id: doc.id,
