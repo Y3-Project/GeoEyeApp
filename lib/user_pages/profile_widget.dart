@@ -68,7 +68,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     getUsername().then((value) => {username = value});
 
 
-
+    //method for uploading image to Firebase Storage
     Future<void> uploadPhotoToStorage() async {
 
       final FirebaseAuth auth = FirebaseAuth.instance;
