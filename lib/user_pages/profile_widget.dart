@@ -30,8 +30,9 @@ class ProfileWidget extends StatefulWidget {
 }
 
 class _ProfileWidgetState extends State<ProfileWidget> {
+  XFile? _imageFile;
+  String profilePhotoURL = '';
   static String profileBio = '';
-  static String userProfilePhoto = '';
   static String username = '';
   final ImagePicker _picker = ImagePicker();
   TextEditingController _profileBioController = new TextEditingController();
@@ -66,15 +67,39 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
     getUsername().then((value) => {username = value});
 
-    Future<void> sendProfilePicToFirestore(String imagePath) async {
+
+
+    Future<void> uploadPhotoToStorage() async {
+
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User? user = auth.currentUser;
+      final uuid = user?.uid;
+
+      final timeNow = DateTime.now();
+      var refRoot = FirebaseStorage.instanceFor(
+              bucket: "gs://flutter-app-firebase-log-c1c41.appspot.com").ref();
+
+      var refDirImages = refRoot.child("profileImages/$uuid");
+
+
+      Reference imageReference = refDirImages.child("$timeNow.jpg");
+      var uploadTask = await imageReference.putFile(File(_imageFile?.path as String));
+
+      profilePhotoURL = await imageReference.getDownloadURL();
+    }
+
+
+    Future<void> sendURLToFirestore() async {
       await FirebaseFirestore.instance
           .collection("users")
           .doc(ProfileWidget().getUuid())
-          .update({'profilePicture': imagePath});
+          .update({'profilePicture': profilePhotoURL});
     }
 
-    Future<String> retrieveProfilePicFromFirestore() async {
-      String profilePicPath = '';
+
+    String profileUrl = '';
+    void retrieveURLFromFirestore() async {
+      String url = '';
       QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
           .instance
           .collection("users")
@@ -82,36 +107,36 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           .get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
-        profilePicPath = doc.get('profilePicture');
+        url = doc.get('profilePicture');
       }
-      setState(() {});
-      return await profilePicPath;
+      profileUrl = await url;
     }
 
-    retrieveProfilePicFromFirestore()
-        .then((value) => {userProfilePhoto = value});
 
     void takePhoto(ImageSource source) async {
-      XFile? _imageFile;
       final pickedFile = await _picker.pickImage(
         source: source,
       );
 
       setState(() {
         _imageFile = pickedFile;
-        sendProfilePicToFirestore(_imageFile?.path as String);
-        retrieveProfilePicFromFirestore();
       });
+
+      uploadPhotoToStorage();
+      sendURLToFirestore();
+      retrieveURLFromFirestore();
     }
 
-    /**
-        ImageProvider<Object> getUserPicture() {
-        if (ProfileWidget._imageFile == null)
-        return FileImage(File(""));
-        else
-        return NetworkImage('');
-        }
-     **/
+    ImageProvider<Object> getUserPicture() {
+    if(_imageFile == null)
+      {
+        return AssetImage("images/geoeye.png");
+      }
+    else
+      {
+        return NetworkImage(profilePhotoURL);
+      }
+    }
 
     Widget bottomSheet() {
       return Container(
@@ -159,9 +184,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       return Center(
         child: Stack(children: <Widget>[
           CircleAvatar(
-            backgroundColor: Colors.black,
-            radius: 80.0,
-            backgroundImage: FileImage(File(userProfilePhoto)),
+              backgroundColor: Colors.black,
+              radius: 80.0,
+              backgroundImage: getUserPicture()
           ),
           Positioned(
             bottom: 10.0,
@@ -256,6 +281,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       onEditingComplete: () {
                         sendBioToFirestore();
                         retrieveBioFromFirestore();
+                        _profileBioController.clear();
                       },
                       controller: _profileBioController,
                       maxLength: 40,
