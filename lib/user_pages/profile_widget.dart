@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -107,9 +108,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           .get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
-        url = doc.get('profilePicture');
+        profileUrl = await doc.get('profilePicture');
       }
-      profileUrl = await url;
     }
 
 
@@ -118,9 +118,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         source: source,
       );
 
-      setState(() {
-        _imageFile = pickedFile;
-      });
+      _imageFile = pickedFile;
 
       uploadPhotoToStorage();
       sendURLToFirestore();
@@ -183,14 +181,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     Widget imageProfile() {
       return Center(
         child: Stack(children: <Widget>[
-          CircleAvatar(
-              backgroundColor: Colors.black,
-              radius: 80.0,
-              backgroundImage: getUserPicture()
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(image: getUserPicture(),fit: BoxFit.fill),
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
           ),
           Positioned(
             bottom: 10.0,
-            right: 10.0,
+            right: 11.0,
             child: InkWell(
               onTap: () {
                 showModalBottomSheet(
@@ -200,7 +200,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               },
               child: Icon(
                 Icons.add_a_photo,
-                color: Colors.white,
+                color: Colors.black,
                 size: 28.0,
               ),
             ),
