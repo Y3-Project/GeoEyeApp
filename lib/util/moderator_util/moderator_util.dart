@@ -142,21 +142,21 @@ PopupMenuButton createDropDownMenu(QueryDocumentSnapshot post, String user) {
                   deletePost(post);
                 }),
             PopupMenuItem(
-              child: Text("ban user ${user}"),
+              child: Text("ban user (beta) ${user}"),
               value: 2,
               onTap: () {
                 banUserFromPost(post);
               },
             ),
             PopupMenuItem(
-              child: Text("timeout user ${user}"),
+              child: Text("timeout user (beta) ${user}"),
               value: 3,
               onTap: () {
                 timeoutUserFromPost(post);
               },
             ),
             PopupMenuItem(
-              child: Text("Allow post ${post.id}"),
+              child: Text("Allow post (beta)${post.id}"),
               value: 4,
               onTap: () {
                 allowPostToBeOnApp(post);
