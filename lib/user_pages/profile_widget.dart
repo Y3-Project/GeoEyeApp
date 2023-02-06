@@ -32,7 +32,8 @@ class ProfileWidget extends StatefulWidget {
 
 class _ProfileWidgetState extends State<ProfileWidget> {
   XFile? _imageFile;
-  String profilePhotoURL = '';
+  static String profilePhotoURL = '';
+  static String profileUrl = '';
   static String profileBio = '';
   static String username = '';
   final ImagePicker _picker = ImagePicker();
@@ -62,11 +63,19 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
         username = doc.get('username');
       }
-      setState(() {});
+      if (this.mounted) {
+        setState(() {
+          // Your state change code goes here
+        });
+      }
       return await username;
     }
 
     getUsername().then((value) => {username = value});
+
+
+
+//--------------------------------------------USER'S PROFILE PIC SECTION STARTS HERE--------------------------------------------------
 
 
     //method for uploading image to Firebase Storage
@@ -77,10 +86,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       final uuid = user?.uid;
 
       final timeNow = DateTime.now();
-      var refRoot = FirebaseStorage.instanceFor(
+      var refRoot = await FirebaseStorage.instanceFor(
               bucket: "gs://flutter-app-firebase-log-c1c41.appspot.com").ref();
 
-      var refDirImages = refRoot.child("profileImages/$uuid");
+      var refDirImages = await refRoot.child("profileImages/$uuid");
 
 
       Reference imageReference = refDirImages.child("$timeNow.jpg");
@@ -98,8 +107,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     }
 
 
-    String profileUrl = '';
-    void retrieveURLFromFirestore() async {
+    Future<String> retrieveURLFromFirestore() async {
       String url = '';
       QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
           .instance
@@ -108,32 +116,42 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           .get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
-        profileUrl = await doc.get('profilePicture');
+        url = doc.get('profilePicture');
       }
+      return await url;
     }
 
+    retrieveURLFromFirestore().then((value) => {profileUrl = value});
 
-    void takePhoto(ImageSource source) async {
-      final pickedFile = await _picker.pickImage(
-        source: source,
-      );
-
-      _imageFile = pickedFile;
-
-      uploadPhotoToStorage();
+    void sendAndRetrieveURL(){
       sendURLToFirestore();
       retrieveURLFromFirestore();
     }
 
-    ImageProvider<Object> getUserPicture() {
-    if(_imageFile == null)
-      {
+    void takePhoto(ImageSource source) async {
+      final pickedFile = await _picker.pickImage(requestFullMetadata: true,
+        source: source,
+      );
+
+      _imageFile = await pickedFile;
+
+      uploadPhotoToStorage();
+    }
+
+
+    ImageProvider<Object> getUserPicture(){
+
+      if (profileUrl.isNotEmpty)
+        {
+          print(profileUrl);
+          sendAndRetrieveURL();
+          return NetworkImage(profileUrl);
+        }
+
+      else{
         return AssetImage("images/geoeye.png");
       }
-    else
-      {
-        return NetworkImage(profilePhotoURL);
-      }
+
     }
 
     Widget bottomSheet() {
@@ -183,7 +201,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         child: Stack(children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              image: DecorationImage(image: getUserPicture(),fit: BoxFit.fill),
+              image: DecorationImage(image: getUserPicture(),fit: BoxFit.cover),
               color: Colors.white,
               shape: BoxShape.circle,
             ),
@@ -209,6 +227,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       );
     }
 
+    //--------------------------------------------USER'S PROFILE PIC SECTION ENDS HERE-------------------------------------------
+
+
+    //--------------------------------------------USER'S BIO SECTION STARTS HERE--------------------------------------------------
+
     Future<void> sendBioToFirestore() async {
       await FirebaseFirestore.instance
           .collection("users")
@@ -231,6 +254,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     }
 
     retrieveBioFromFirestore().then((value) => {profileBio = value});
+
+    //--------------------------------------------USER'S BIO SECTION ENDS HERE-----------------------------------------------------
+
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
