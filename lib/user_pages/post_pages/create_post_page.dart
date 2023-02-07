@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_widget.dart';
-
-import '../../util/post.dart';
+import 'package:firebase_core/firebase_core.dart' as fire_core;
+import 'package:flutter_app_firebase_login/root_dir.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreatePostPage extends StatefulWidget {
   // TODO: we will also need the currently logged in user
@@ -28,7 +32,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
           .instance
           .collection("users")
-          .where("uuid", isEqualTo: ProfileWidget().getUuid() as String)
+          .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
           .get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
@@ -46,6 +50,32 @@ class _CreatePostPageState extends State<CreatePostPage> {
         'video': ''
       });
       print("Post added!");
+    }
+
+
+    Future<File> pickImage(ImageSource imageSource) async {
+      XFile? imgXFile = await ImagePicker().pickImage(source: imageSource);
+      File imgFile = File('');
+      if(imgXFile != null) {
+        imgFile = File(imgXFile.path);
+      }
+      final String path = (await getApplicationDocumentsDirectory()).absolute.path;
+      final finalImage = await imgFile.copy('$path/postPic.png');
+      return finalImage;
+    }
+
+    Future<String> uploadPicture(File picture) async{
+      final storageRef = FirebaseStorage.instance.ref();
+      final imgRef = storageRef.child('images/img.png');
+      String picStoragePath = '';
+
+      try {
+        picStoragePath = await imgRef.putFile(picture).snapshot.ref.getDownloadURL().toString();
+      } on fire_core.FirebaseException catch (e) {
+        print(e.toString());
+      }
+      print(picStoragePath);
+      return picStoragePath;
     }
 
     return Scaffold(
@@ -90,11 +120,25 @@ class _CreatePostPageState extends State<CreatePostPage> {
                           (states) => Colors.black),
                       textStyle: MaterialStateTextStyle.resolveWith(
                           (states) => TextStyle(color: Colors.white))),
-                  onPressed: () {
+                  onPressed: () async {
                     // TODO: Implement uploading pictures and videos with a post
                     addPost(titleTextController.text, descTextController.text);
                     titleTextController.clear();
                     descTextController.clear();
+                    /*
+                    Directory appDocDir = await getApplicationDocumentsDirectory();
+                    String picturePath = appDocDir.absolute.path.toString() + '/add_img.png';
+                    File pictureFile = File(picturePath);
+                    Image image = Image(image: AssetImage('images/add_img.png'));
+
+
+
+                    bool t = await pictureFile.exists();
+                    print(t.toString());
+
+                     */
+
+                    //uploadPicture(pictureFile);
                   },
                   child: Text("Post")),
             ],

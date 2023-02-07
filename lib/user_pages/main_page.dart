@@ -59,7 +59,7 @@ class _MainUserPageState extends State<MainUserPage> {
   Widget getSelectedPage({required int index}){
     Widget widgetPage;
     if (index == 0) {
-      widgetPage = ProfileWidget();
+      widgetPage = ProfilePage();
     }
     else if (index == 2){
       widgetPage = NotificationsWidget();
