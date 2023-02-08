@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/util/util.dart';
 import 'package:video_player/video_player.dart';
 import '../../post_widgets/post_tile.dart';
 import '../post.dart';
@@ -20,7 +21,8 @@ Future<void> timeoutUserFromPost(QueryDocumentSnapshot post) async {
 
 Future<void> banUserFromPost(QueryDocumentSnapshot post) async {
   print("banning user ${post.get("user")} for post ${post.id}");
-  DocumentReference user = FirebaseFirestore.instance.doc(post.get("user"));
+  String path = getUserDocumentPathFromPost(post);
+  DocumentReference user = FirebaseFirestore.instance.doc(path);
   user.update({'banned': true});
 }
 
@@ -142,7 +144,7 @@ PopupMenuButton createDropDownMenu(QueryDocumentSnapshot post, String user) {
                   deletePost(post);
                 }),
             PopupMenuItem(
-              child: Text("ban user (beta) ${user}"),
+              child: Text("ban user ${user}"),
               value: 2,
               onTap: () {
                 banUserFromPost(post);

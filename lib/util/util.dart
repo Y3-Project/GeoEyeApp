@@ -21,6 +21,11 @@ String getUserDocumentIDFromPost(QueryDocumentSnapshot snap) {
   return userDoc.id;
 }
 
+String getUserDocumentPathFromPost(QueryDocumentSnapshot post) {
+  DocumentReference userDoc = post.get("user");
+  return userDoc.path;
+}
+
 String getUserDocumentFromUsername(String username) {
   String ref = "";
   FirebaseFirestore.instance

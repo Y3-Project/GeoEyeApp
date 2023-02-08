@@ -5,6 +5,7 @@ import 'package:flutter_app_firebase_login/create_account_page.dart';
 import 'package:flutter_app_firebase_login/moderator_page.dart';
 import 'forgot_password_page.dart';
 import 'user_pages/main_page.dart';
+import 'banned_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function(User?) onSignIn;
@@ -60,16 +61,33 @@ class _LoginPageState extends State<LoginPage> {
         // TODO: if user is banned, then throw an exception here!
         // get userCredential.user?.uid; then use this uid to ask firestore whether the
         // user document with this uid has banned == true, if so then throw an exception
-
+        bool banned = false;
+        final userBanned = await FirebaseFirestore.instance
+            .collection("users")
+            .where("banned", isEqualTo: true)
+            .where("username", isEqualTo: _controllerUsername.text)
+            .get();
+        for (var doc in userBanned.docs) {
+          banned = doc.get("banned");
+        }
+        print("banned: ${banned}");
+        if (banned == true) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => BannedPage(
+                    onSignOut: (userCred) {
+                      onRefresh(userCred);
+                    },
+                  )));
+        }
         // TODO: if timeoutStart field of user is within a certain range, then don't allow them in
         widget.onSignIn(userCredential.user);
         bool moderator = false;
-        final snap = await FirebaseFirestore.instance
+        final userMod = await FirebaseFirestore.instance
             .collection('users')
             .where("moderator", isEqualTo: true)
             .where("username", isEqualTo: _controllerUsername.text)
             .get();
-        for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snap.docs) {
+        for (var doc in userMod.docs) {
           moderator = doc.get('moderator');
         }
         if (moderator == true) {
@@ -79,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                       onRefresh(userCred);
                     },
                   )));
-        } else {
+        } else if (banned == false) {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MainUserPage(
