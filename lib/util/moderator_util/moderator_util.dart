@@ -15,7 +15,9 @@ Future<void> deletePost(QueryDocumentSnapshot post) async {
 Future<void> timeoutUserFromPost(QueryDocumentSnapshot post) async {
   print("timing out user ${post.get("user")} from document: ${post.id}");
   var date = DateTime.now();
-  DocumentReference user = FirebaseFirestore.instance.doc(post.get("user"));
+  print("DATE: ${date.toString()},  ${date}}");
+  String path = getUserDocumentPathFromPost(post);
+  DocumentReference user = FirebaseFirestore.instance.doc(path);
   user.update({"timeoutStart": date.toString()});
 }
 
@@ -151,7 +153,7 @@ PopupMenuButton createDropDownMenu(QueryDocumentSnapshot post, String user) {
               },
             ),
             PopupMenuItem(
-              child: Text("timeout user (beta) ${user}"),
+              child: Text("timeout user ${user}"),
               value: 3,
               onTap: () {
                 timeoutUserFromPost(post);

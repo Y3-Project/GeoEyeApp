@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app_firebase_login/create_account_page.dart';
 import 'package:flutter_app_firebase_login/moderator_page.dart';
+import 'package:flutter_app_firebase_login/timed_out_page.dart';
 import 'forgot_password_page.dart';
 import 'user_pages/main_page.dart';
+import 'util/util.dart';
 import 'banned_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -58,9 +60,7 @@ class _LoginPageState extends State<LoginPage> {
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
                 email: userEmail, password: _controllerPassword.text);
-        // TODO: if user is banned, then throw an exception here!
-        // get userCredential.user?.uid; then use this uid to ask firestore whether the
-        // user document with this uid has banned == true, if so then throw an exception
+        // find out if user is banned
         bool banned = false;
         final userBanned = await FirebaseFirestore.instance
             .collection("users")
@@ -79,7 +79,36 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   )));
         }
-        // TODO: if timeoutStart field of user is within a certain range, then don't allow them in
+        // find out if user is timed out
+        bool timedOut = false;
+        final userForTimeout = await FirebaseFirestore.instance
+            .collection("users")
+            .where("username", isEqualTo: _controllerUsername.text)
+            .get();
+
+        var timeout = "";
+        for (var doc in userForTimeout.docs) {
+          timedOut = doc.get("timeoutStart") != ""
+              ? true
+              : false; // we have already if the user has a timeout
+          timeout = doc.get("timeoutStart"); // save timeoutStart
+        }
+
+        if (timedOut == true) {
+          if (timedOutUserOverLimit(_controllerUsername.text, timeout)) {
+            timedOut = false;
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => TimedOutPage(
+                      onSignOut: (userCred) {
+                        onRefresh(userCred);
+                      },
+                      timeout: timeout,
+                    )));
+          }
+        }
+
+        // find out if user is moderator
         widget.onSignIn(userCredential.user);
         bool moderator = false;
         final userMod = await FirebaseFirestore.instance
@@ -97,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                       onRefresh(userCred);
                     },
                   )));
-        } else if (banned == false) {
+        } else if (banned == false && timedOut == false) {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MainUserPage(

@@ -34,7 +34,7 @@ String getUserDocumentFromUsername(String username) {
       .snapshots()
       .listen((event) {
     for (var document in event.docs) {
-      ref = document.reference.toString();
+      ref = document.reference.path.toString();
     }
   });
   return ref;
@@ -48,17 +48,17 @@ void createPostPicture(
     "picture": pictureURL,
     "reports": [],
     "text": caption,
-    "timestamp": FieldValue.serverTimestamp(),
+    "timestamp": DateTime.now(),
     "title": title,
     "user": user, // this is a document reference as a string
     "video": ""
   });
 }
 
+// TODO: integrate with other one?
 void createPostVideo(
     String title, String caption, String videoURL, String username) {
   String user = getUserDocumentFromUsername(username);
-  FieldValue.serverTimestamp();
   FirebaseFirestore.instance.collection("posts").add({
     "likes": [],
     "picture": "",
@@ -69,6 +69,12 @@ void createPostVideo(
     "user": user, // this is a document reference as a string
     "video": videoURL
   });
+}
+
+bool timedOutUserOverLimit(String username, String timeoutStart) {
+  DateTime start = DateTime.parse(timeoutStart);
+  // check if 2 times are more than 24 hours apart, then that will return true
+  return start.difference(DateTime.now()).inDays < 0 ? true : false;
 }
 
 /*
