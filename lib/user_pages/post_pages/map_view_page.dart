@@ -15,8 +15,8 @@ class _MapViewPageState extends State<MapViewPage> {
   Widget build(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
-        center: LatLng(51.509364, -0.128928),
-        zoom: 9.2
+        center: LatLng(55.9508, -003.200197),
+        zoom: 14
       ),
       nonRotatedChildren: [
         AttributionWidget.defaultWidget(
@@ -28,6 +28,16 @@ class _MapViewPageState extends State<MapViewPage> {
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.example.app',
+        ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              point: LatLng(55.9508, -003.200197),
+              width: 40,
+              height: 40,
+              builder: (context) => FlutterLogo(),
+            ),
+          ],
         ),
       ],
     );

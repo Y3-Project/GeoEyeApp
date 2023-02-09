@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/welcome_page.dart';
+import 'package:flutter_app_firebase_login/user_authentication_widgets/welcome_page.dart';
 
-import '../../login_page.dart';
+import '../../user_authentication_widgets/login_page.dart';
+
+//TODO Redesign this page to make it more attractive
 
 class AccountSettingsPage extends StatelessWidget {
   const AccountSettingsPage({Key? key}) : super(key: key);

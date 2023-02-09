@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/create_account_page.dart';
-import 'package:flutter_app_firebase_login/login_page.dart';
+import 'package:flutter_app_firebase_login/user_authentication_widgets/create_account_page.dart';
+import 'package:flutter_app_firebase_login/user_authentication_widgets/login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -8,6 +8,8 @@ class WelcomePage extends StatefulWidget {
   @override
   State<WelcomePage> createState() => _WelcomePageState();
 }
+
+//TODO make some animation for the "welcome to GeoEye" text and do something about all the whitespace below the two buttons
 
 class _WelcomePageState extends State<WelcomePage> {
   @override

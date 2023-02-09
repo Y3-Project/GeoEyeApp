@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/login_page.dart';
+import 'package:flutter_app_firebase_login/user_authentication_widgets/login_page.dart';
 import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
-import 'generator.dart';
+import '../username_generator_widgets/generator.dart';
 //generate a random username with UsernameGen().generate()
 
 class SignUpPage extends StatefulWidget {

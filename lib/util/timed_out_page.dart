@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'login_page.dart';
+import '../user_authentication_widgets/login_page.dart';
 
 class TimedOutPage extends StatefulWidget {
   final Function(User?) onSignOut;

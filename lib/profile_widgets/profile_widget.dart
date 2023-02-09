@@ -6,13 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/image_widgets/image_uploader_widget.dart';
 import 'package:flutter_app_firebase_login/image_widgets/image_profile.dart';
-import 'package:flutter_app_firebase_login/user_pages/settings_pages/account_settings_page.dart';
-import 'package:flutter_app_firebase_login/user_pages/settings_pages/help_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../login_page.dart';
+import '../account_settings_help_pages/account_settings_page.dart';
+import '../account_settings_help_pages/help_page.dart';
+import '../user_authentication_widgets/login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../user_pages/profile_widget.dart';
 import '../util/user_model.dart';
 
@@ -102,7 +101,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20))),
                         )
-                        //add profile/biography text box here
                       ],
                     ),
                     Column(
@@ -177,7 +175,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             ),
                             onPressed: () {},
                             child: Text(
-                              "My Posts",
+                              "My Scrapbooks",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
                             )),

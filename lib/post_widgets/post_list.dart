@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_tile.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_widget.dart';
 import 'package:provider/provider.dart';
-import '../util/post.dart';
+import 'post.dart';
 
-// TODO: make this a scrapbook list
+// TODO: create another dart file called scrapbook_list.dart
 class PostList extends StatefulWidget {
   const PostList({Key? key}) : super(key: key);
 

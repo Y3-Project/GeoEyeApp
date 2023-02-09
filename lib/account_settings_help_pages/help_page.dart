@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+
+//TODO This page will show users how to navigate around the app, etc
+
+
 class HelpPage extends StatelessWidget {
   const HelpPage({Key? key}) : super(key: key);
 

@@ -6,7 +6,7 @@ import 'package:flutter_app_firebase_login/user_pages/home_widget.dart';
 import 'package:flutter_app_firebase_login/user_pages/notifications_widget.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_widget.dart';
 
-import '../login_page.dart';
+import '../user_authentication_widgets/login_page.dart';
 
 class MainUserPage extends StatefulWidget {
   final Function(User?) onSignOut;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/forgot_password_page.dart';
+import 'package:flutter_app_firebase_login/user_authentication_widgets/forgot_password_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -31,7 +31,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         padding: EdgeInsets.all(16),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
-            "Enter the email you signed-up with to reset your password",
+            "Enter the email you signed-up with to reset your password", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           TextFormField(
@@ -43,11 +43,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     : null,
           ),
           ElevatedButton.icon(
+            style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.green)),
             onPressed: () {
               resetPassword();
             },
             icon: const Icon(Icons.email_outlined),
-            label: const Text('Reset Password'),
+            label: const Text('Reset Password', style: TextStyle(fontSize: 25),),
           )
         ]),
       ),

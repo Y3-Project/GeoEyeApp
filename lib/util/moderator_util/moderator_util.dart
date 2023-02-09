@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/util/util.dart';
 import 'package:video_player/video_player.dart';
 import '../../post_widgets/post_tile.dart';
-import '../post.dart';
+import '../../post_widgets/post.dart';
 
 Future<void> deletePost(QueryDocumentSnapshot post) async {
   print("DELETING POST: ${post.id}");

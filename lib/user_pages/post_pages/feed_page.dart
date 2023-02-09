@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_list.dart';
-import 'package:flutter_app_firebase_login/user_pages/post_pages/create_post_page.dart';
+import 'package:flutter_app_firebase_login/user_pages/post_pages/plus_button_on_feed.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_widget.dart';
 import 'package:provider/provider.dart';
-import '../../util/post.dart';
+import '../../post_widgets/post.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
