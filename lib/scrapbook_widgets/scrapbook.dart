@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Scrapbook {
   String creatorid = '';
   String scrapbookTitle = '';
+  String scrapbookThumbnail = '';
+  String currentUsername = '';
   GeoPoint location = GeoPoint(0, 0);
   Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(0);
   bool public = false; // scrapbooks are private by default
@@ -11,6 +13,8 @@ class Scrapbook {
   Scrapbook(
       {required this.creatorid,
       required this.scrapbookTitle,
+      required this.scrapbookThumbnail,
+      required this.currentUsername,
       required this.location,
       required this.timestamp,
       required this.public});
@@ -19,6 +23,8 @@ class Scrapbook {
   Scrapbook.fromDocument(DocumentSnapshot doc) {
     this.creatorid = doc['creatorid'];
     this.scrapbookTitle = doc['scrapbookTitle'];
+    this.scrapbookThumbnail = doc['scrapbookThumbnail'];
+    this.currentUsername = doc['currentUsername'];
     this.location = doc['location'];
     this.timestamp = doc['timestamp'];
     this.public = doc['public'];

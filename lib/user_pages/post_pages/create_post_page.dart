@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_widget.dart';
 import 'package:firebase_core/firebase_core.dart' as fire_core;
-import 'package:flutter_app_firebase_login/image_widgets/root_dir.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,7 +23,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
   @override
   Widget build(BuildContext context) {
-
 
     Future<void> addPost(String title, String desc) async {
       CollectionReference posts = FirebaseFirestore.instance.collection('posts');

@@ -1,0 +1,1 @@
+//todo this page allows the user to make a completely new scrapbook

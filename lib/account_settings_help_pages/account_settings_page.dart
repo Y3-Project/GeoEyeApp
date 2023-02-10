@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/user_authentication_widgets/forgot_password_page.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/welcome_page.dart';
 
 import '../../user_authentication_widgets/login_page.dart';
@@ -112,6 +113,20 @@ class AccountSettingsPage extends StatelessWidget {
               },
               child: const Text(
                 'Delete Account',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              )),
+          ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.black)),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ForgotPasswordPage()
+                  ),
+                );
+              },
+              child: const Text(
+                'Reset Password',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ))
         ]));

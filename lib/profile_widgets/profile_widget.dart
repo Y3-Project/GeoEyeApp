@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/image_widgets/image_uploader_widget.dart';
 import 'package:flutter_app_firebase_login/image_widgets/image_profile.dart';
+import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_list.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../account_settings_help_pages/account_settings_page.dart';
@@ -173,7 +174,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                               minimumSize: Size.fromHeight(ProfileWidget
                                   .SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
                             ),
-                            onPressed: () {},
+                            onPressed: () {Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ScrapbookList()
+                              ),
+                            );},
                             child: Text(
                               "My Scrapbooks",
                               style: TextStyle(
