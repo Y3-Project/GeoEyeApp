@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/create_account_page.dart';
 import 'package:flutter_app_firebase_login/util/moderator_page.dart';
+import 'package:flutter_app_firebase_login/util/moderator_widget.dart';
 import 'package:flutter_app_firebase_login/util/timed_out_page.dart';
 import 'forgot_password_page.dart';
 import '../user_pages/main_page.dart';
@@ -121,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
         }
         if (moderator == true) {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ModeratorPage(
+              builder: (context) => ModeratorWidget(
                     onSignOut: (userCred) {
                       onRefresh(userCred);
                     },
