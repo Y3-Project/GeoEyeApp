@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_app_firebase_login/user_authentication_widgets/login_page.dart';
-import 'package:flutter_app_firebase_login/util/moderator_util/moderator_util.dart';
+import 'package:flutter_app_firebase_login/util/moderator_util/reported_comments_util.dart';
 
 class ModeratorCommentsPage extends StatefulWidget {
   const ModeratorCommentsPage({Key? key});
