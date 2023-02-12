@@ -1,27 +1,28 @@
 import 'dart:async';
-import 'moderator_util/moderator_util.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../user_authentication_widgets/login_page.dart';
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ModeratorPage extends StatefulWidget {
-  const ModeratorPage();
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import 'package:flutter_app_firebase_login/user_authentication_widgets/login_page.dart';
+import 'package:flutter_app_firebase_login/util/moderator_util/reported_comments_util.dart';
+
+class ModeratorCommentsPage extends StatefulWidget {
+  const ModeratorCommentsPage({Key? key});
 
   @override
-  State<StatefulWidget> createState() => _ModeratorPageState();
+  State<StatefulWidget> createState() => _moderatorCommentsState();
 }
 
-class _ModeratorPageState extends State<ModeratorPage> {
+class _moderatorCommentsState extends State<ModeratorCommentsPage> {
   late StreamSubscription<QuerySnapshot> _querySnapshot;
   List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
   List<Container> _display = List.empty(growable: true);
-  int index = 0;
 
   @override
   void initState() {
     _querySnapshot = FirebaseFirestore.instance
-        .collection("posts")
+        .collection("postComments")
         .snapshots()
         .listen((snapshot) {
       setState(() {
@@ -42,7 +43,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
 
   Future<void> initDisplay(int i) async {
     print("data: ${_snapshots[i].data().toString()}");
-    _display.add(await getPost(_snapshots[i]));
+    _display.add(await getComment(_snapshots[i]));
   }
 
   @override
@@ -53,8 +54,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
 
   @override
   Widget build(BuildContext context) {
-    //method to log the user out
-    Future<void> _logout() async {
+    Future<void> logout() async {
       await FirebaseAuth.instance.signOut();
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -63,26 +63,10 @@ class _ModeratorPageState extends State<ModeratorPage> {
       );
     }
 
-    print("TOTAL REPORTED ITEMS TO DISPLAY: ${_display.length}");
     return Scaffold(
-      body: _display.length != 0
-          ? ListView.builder(
-              itemCount: _display.length - _display.length + 1,
-              itemBuilder: ((context, index) {
-                return Container(
-                  child: Column(children: _display),
-                );
-              }))
-          : Center(
-              child: CircularProgressIndicator(
-              color: Color.fromARGB(255, 2, 2, 2),
-            )),
-      bottomSheet: ElevatedButton(
-        onPressed: () {
-          _logout();
-        },
-        child: Text("logout"),
-      ),
+      body: Text("To be Completed"),
+      bottomSheet:
+          ElevatedButton(onPressed: () => logout(), child: Text("logout")),
     );
   }
 }
