@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_list.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_list.dart';
-import 'package:flutter_app_firebase_login/user_pages/post_pages/choose_existing_scrapbook.dart';
 import 'package:provider/provider.dart';
 import '../../post_widgets/post.dart';
 import 'package:popup_card/popup_card.dart';
@@ -49,10 +48,10 @@ class _FeedPageState extends State<FeedPage> {
           TextButton(
             onPressed: () {Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ChooseScrapbookPage(),
+                builder: (context) => ScrapbookList(),
               ),
             );},
-            child: const Text('CHOOSE THE SCRAPBOOK TO ADD A POST TO', style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.bold)),
+            child: const Text('CHOOSE THE SCRAPBOOK TO ADD A POST TO \n [MAY REMOVE THIS BUTTON LATER]', style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.bold)),
           ),
           const Divider(
             color: Colors.white,
