@@ -42,7 +42,7 @@ class _moderatorCommentsState extends State<ModeratorCommentsPage> {
   }
 
   Future<void> initDisplay(int i) async {
-    print("data: ${_snapshots[i].data().toString()}");
+    print("comments: ${_snapshots[i].data().toString()}");
     _display.add(await getComment(_snapshots[i]));
   }
 
@@ -63,8 +63,20 @@ class _moderatorCommentsState extends State<ModeratorCommentsPage> {
       );
     }
 
+    print("TOTAL REPORTED ITEMS TO DISPLAY (comments): ${_display.length}");
     return Scaffold(
-      body: Text("To be Completed"),
+      body: _display.length != 0
+          ? ListView.builder(
+              itemCount: _display.length - _display.length + 1,
+              itemBuilder: ((context, index) {
+                return Container(
+                  child: Column(children: _display),
+                );
+              }))
+          : Center(
+              child: CircularProgressIndicator(
+              color: Color.fromARGB(255, 2, 2, 2),
+            )),
       bottomSheet:
           ElevatedButton(onPressed: () => logout(), child: Text("logout")),
     );

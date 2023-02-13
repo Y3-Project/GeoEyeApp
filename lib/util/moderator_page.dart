@@ -63,7 +63,7 @@ class _ModeratorPageState extends State<ModeratorPage> {
       );
     }
 
-    print("TOTAL REPORTED ITEMS TO DISPLAY: ${_display.length}");
+    print("TOTAL REPORTED ITEMS TO DISPLAY (posts): ${_display.length}");
     return Scaffold(
       body: _display.length != 0
           ? ListView.builder(
