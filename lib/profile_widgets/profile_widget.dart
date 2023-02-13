@@ -5,15 +5,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/image_widgets/image_uploader_widget.dart';
-import 'package:flutter_app_firebase_login/image_widgets/image_profile.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_list.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../account_settings_help_pages/account_settings_page.dart';
 import '../account_settings_help_pages/help_page.dart';
-import '../user_authentication_widgets/login_page.dart';
+import '../image_widgets/profile_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../user_pages/profile_widget.dart';
 import '../util/user_model.dart';
 
 class ProfileWidget extends StatefulWidget {
@@ -176,7 +174,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             ),
                             onPressed: () {Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => ScrapbookList()
+                                  builder: (context) => ScrapbookList()
                               ),
                             );},
                             child: Text(
