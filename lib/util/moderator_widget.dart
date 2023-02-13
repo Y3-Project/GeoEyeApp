@@ -15,7 +15,7 @@ class _moderatorWidgetState extends State<ModeratorWidget> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2, // FIXME: user page needs added
       initialIndex: 0,
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -33,15 +33,14 @@ class _moderatorWidgetState extends State<ModeratorWidget> {
                 Tab(
                   text: "Comments",
                 ),
-                Tab(
-                  text: "Users",
-                )
+                // Tab(
+                //   text: "Users",
+                // )
               ],
             )),
         body: const TabBarView(children: <Widget>[
           ModeratorPage(),
           ModeratorCommentsPage(),
-          ModeratorUserPage()
         ]),
       ),
     );
