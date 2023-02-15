@@ -30,6 +30,9 @@ class _moderatorCommentsState extends State<ModeratorCommentsPage> {
         _snapshots.clear();
         _snapshots.addAll(snapshot.docs);
         for (int i = 0; i < _snapshots.length; i++) {
+          // TODO: check that the "user" field actually leads to a path
+          // TODO: check that the reported posts creator isn't timedout / banned,
+          // as they've been checked already
           List<dynamic> reports = _snapshots[i].get("reports");
           if (reports.length == 0) {
             continue;

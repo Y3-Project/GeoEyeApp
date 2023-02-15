@@ -85,6 +85,7 @@ PopupMenuButton createCommentDropDownMenu(
 
 void allowComment(QueryDocumentSnapshot comment) {
   print("allow comment ${comment.id}, all reports will be removed");
+  // TODO
   return;
 }
 

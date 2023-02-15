@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../user_authentication_widgets/login_page.dart';
-import 'moderator_util/reported_comments_util.dart';
+import 'moderator_util/reported_users_util.dart';
 
 class ModeratorUserPage extends StatefulWidget {
   const ModeratorUserPage({Key? key});
@@ -30,8 +30,10 @@ class _moderatorUserState extends State<ModeratorUserPage> {
         _snapshots.clear();
         _snapshots.addAll(snapshot.docs);
         for (int i = 0; i < _snapshots.length; i++) {
+          // no need to see if user is banned as allow will make us be able
+          // to unban a user?
           List<dynamic> reports = _snapshots[i].get("reports");
-          if (reports.length == 0) {
+          if (reports.length == 0 || reports == null) {
             continue;
           }
           initDisplay(i);
@@ -43,7 +45,7 @@ class _moderatorUserState extends State<ModeratorUserPage> {
 
   Future<void> initDisplay(int i) async {
     print("data: ${_snapshots[i].data().toString()}");
-    _display.add(await getComment(_snapshots[i]));
+    _display.add(await getUser(_snapshots[i]));
   }
 
   @override
@@ -64,7 +66,18 @@ class _moderatorUserState extends State<ModeratorUserPage> {
     }
 
     return Scaffold(
-      body: Text("To Be Completed..."),
+      body: _display.length != 0
+          ? ListView.builder(
+              itemCount: _display.length - _display.length + 1,
+              itemBuilder: ((context, index) {
+                return Container(
+                  child: Column(children: _display),
+                );
+              }))
+          : Center(
+              child: CircularProgressIndicator(
+              color: Color.fromARGB(255, 2, 2, 2),
+            )),
       bottomSheet:
           ElevatedButton(child: Text("logout"), onPressed: () => logout()),
     );
