@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_list.dart';
+import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_list.dart';
 import 'package:provider/provider.dart';
 import '../../post_widgets/post.dart';
@@ -51,7 +52,7 @@ class _FeedPageState extends State<FeedPage> {
                 builder: (context) => ScrapbookList(),
               ),
             );},
-            child: const Text('CHOOSE THE SCRAPBOOK TO ADD A POST TO \n [MAY REMOVE THIS BUTTON LATER]', style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.bold)),
+            child: const Text('CHOOSE THE SCRAPBOOK TO ADD A POST TO \n [MAY REMOVE THIS BUTTON LATER]', style: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.bold)),
           ),
           const Divider(
             color: Colors.white,
@@ -62,7 +63,11 @@ class _FeedPageState extends State<FeedPage> {
             thickness: 0.1,
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => NewScrapbookPage(),
+              ),
+            );},
             child: const Text('MAKE A NEW SCRAPBOOK', style: TextStyle(color: Colors.green, fontSize: 15, fontWeight: FontWeight.bold)),
           ),
         ],
