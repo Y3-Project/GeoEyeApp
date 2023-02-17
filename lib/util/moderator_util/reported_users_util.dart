@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'moderator_util.dart';
 
 Future<Container> getUser(QueryDocumentSnapshot snap) async {
   String id = snap.id;
@@ -55,36 +55,27 @@ PopupMenuButton createUserDropDownMenu(snap, id) {
               },
             ),
             PopupMenuItem(
-              child: Text("Allow comment (beta)${snap.id}"),
+              child: Text("Allow user ${snap.id}"),
               value: 4,
               onTap: () {
-                allowUser(snap);
+                allowPostOrCommentOrUser(snap);
               },
             )
           ]);
 }
 
-void deleteUser(QueryDocumentSnapshot userDocument) {
-  //TODO: test
+Future<void> deleteUser(QueryDocumentSnapshot userDocument) async {
   print("DELETING USER ${userDocument.id}");
   var inst = FirebaseFirestore.instance.collection("users");
   inst.doc(userDocument.id).delete();
 }
 
-void banUser(QueryDocumentSnapshot userDocument) {
-  //TODO: test
-  print("BANNING USER: ${userDocument.id}");
-  var inst = FirebaseFirestore.instance.collection("users");
-  inst.doc(userDocument.id).update({"banned": true});
+Future<void> banUser(QueryDocumentSnapshot user) async {
+  FirebaseFirestore.instance.doc(user.reference.path).update({"banned": true});
 }
 
-void timeoutUser(QueryDocumentSnapshot userDocument) {
-  //TODO: test
-  print("TIMEOUT USER: ${userDocument.id}");
-  var inst = FirebaseFirestore.instance.collection("users");
-  inst.doc(userDocument.id).update({"timeoutStart": DateTime.now().toString()});
-}
-
-void allowUser(QueryDocumentSnapshot userDocument) {
-  // TODO
+Future<void> timeoutUser(QueryDocumentSnapshot user) async {
+  FirebaseFirestore.instance
+      .doc(user.reference.path)
+      .update({"timeoutStart": Timestamp.now()});
 }

@@ -49,7 +49,7 @@ void createPostPicture(
     "picture": pictureURL,
     "reports": [],
     "text": caption,
-    "timestamp": DateTime.now(),
+    "timestamp": Timestamp.now(),
     "title": title,
     "user": user, // this is a document reference as a string
     "video": ""
@@ -65,7 +65,7 @@ void createPostVideo(
     "picture": "",
     "reports": [],
     "text": caption,
-    "timestamp": DateTime.now(),
+    "timestamp": Timestamp.now(),
     "title": title,
     "user": user, // this is a document reference as a string
     "video": videoURL

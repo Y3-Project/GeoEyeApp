@@ -63,57 +63,22 @@ PopupMenuButton createCommentDropDownMenu(
               child: Text("ban user ${user}"),
               value: 2,
               onTap: () {
-                banUserFromComment(comment);
+                banUserFromPostOrComment(comment);
               },
             ),
             PopupMenuItem(
               child: Text("timeout user ${user}"),
               value: 3,
               onTap: () {
-                timeoutUserFromComment(comment);
+                timeoutUserFromPostOrComment(comment);
               },
             ),
             PopupMenuItem(
               child: Text("Allow comment (beta)${comment.id}"),
               value: 4,
               onTap: () {
-                allowComment(comment);
+                allowPostOrCommentOrUser(comment);
               },
             )
           ]);
-}
-
-void allowComment(QueryDocumentSnapshot comment) {
-  print("allow comment ${comment.id}, all reports will be removed");
-  // TODO
-  return;
-}
-
-void timeoutUserFromComment(QueryDocumentSnapshot comment) {
-  print("timing out user ${comment.get("user")} from document: ${comment.id}");
-  var date = DateTime.now();
-  print("DATE: ${date.toString()},  ${date}}");
-  // FIXME: similar to getUserDocumentPathFromPost
-  String path = getUserDocumentPathFromComment(comment);
-  DocumentReference user = FirebaseFirestore.instance.doc(path);
-  user.update({"timeoutStart": date.toString()});
-}
-
-void banUserFromComment(QueryDocumentSnapshot comment) {
-  print("banning user ${comment.get("user")} for comment ${comment.id}");
-  // FIXME: similar to getUserDocumentPathFromPost
-  String path = getUserDocumentPathFromComment(comment);
-  DocumentReference user = FirebaseFirestore.instance.doc(path);
-  user.update({'banned': true});
-}
-
-void deleteComment(QueryDocumentSnapshot comment) {
-  print("DELETING COMMENT ${comment.id}");
-  var inst = FirebaseFirestore.instance.collection('postComments');
-  inst.doc("${comment.id}").delete();
-}
-
-String getUserDocumentPathFromComment(QueryDocumentSnapshot comment) {
-  DocumentReference userDoc = comment.get("user");
-  return userDoc.path;
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'moderator_util/moderator_util.dart';
+import 'moderator_util/reported_posts_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../user_authentication_widgets/login_page.dart';
 import 'package:flutter/material.dart';
