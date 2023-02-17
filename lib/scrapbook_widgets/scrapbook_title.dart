@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ScrapbookTitle extends StatefulWidget {
-  const ScrapbookTitle({Key? key}) : super(key: key);
+  ScrapbookTitle({Key? key}) : super(key: key);
+  static String scrapbookTitle = '';
 
-  String getTitle(){
-    return _ScrapbookTitleState().scrapbookTitle;
-  }
 
   @override
   State<ScrapbookTitle> createState() => _ScrapbookTitleState();
@@ -13,7 +11,6 @@ class ScrapbookTitle extends StatefulWidget {
 
 class _ScrapbookTitleState extends State<ScrapbookTitle> {
   TextEditingController _scrapbookTitleController = new TextEditingController();
-  String scrapbookTitle = '';
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +18,7 @@ class _ScrapbookTitleState extends State<ScrapbookTitle> {
     return TextField(
       onEditingComplete: () {
         setState(() {
-          scrapbookTitle = _scrapbookTitleController.text;
+          ScrapbookTitle.scrapbookTitle = _scrapbookTitleController.text;
         });
         _scrapbookTitleController.clear();
       },

@@ -83,13 +83,6 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
       ),
       child: Column(
         children: <Widget>[
-          Text(
-            "Choose a picture",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                color: Colors.white),
-          ),
           SizedBox(
             height: 25,
           ),

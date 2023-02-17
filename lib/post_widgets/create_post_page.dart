@@ -8,6 +8,19 @@ import 'package:firebase_core/firebase_core.dart' as fire_core;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
+
+/*
+NOT
+IN
+USE
+CURRENTLY
+GO
+TO
+add_post.dart
+ */
+
+
+
 class CreatePostPage extends StatefulWidget {
   // TODO: we will also need the currently logged in user
   const CreatePostPage({Key? key}) : super(key: key);

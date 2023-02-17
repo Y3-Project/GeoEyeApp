@@ -1,13 +1,19 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/image_widgets/scrapbook_thumbnail.dart';
+import 'package:flutter_app_firebase_login/post_widgets/add_post.dart';
+import 'package:flutter_app_firebase_login/post_widgets/image_or_video_post.dart';
+import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_title.dart';
+
+import '../user_pages/profile_widget.dart';
 
 //todo this page allows the user to make a completely new scrapbook
 
 class NewScrapbookPage extends StatefulWidget {
   NewScrapbookPage({Key? key}) : super(key: key);
-
-  String scrapbookTitle = '';
 
   @override
   State<NewScrapbookPage> createState() => _NewScrapbookPageState();
@@ -31,17 +37,23 @@ class _NewScrapbookPageState extends State<NewScrapbookPage> {
                   children: [
                     ElevatedButton(
                       onPressed: details.onStepCancel,
-                      child: Text('Back', style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: Text(
+                        'Back',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    Divider(height: 100,indent: 250),
+                    Divider(color: Colors.white, height: 100, indent: 200),
                     ElevatedButton(
                       onPressed: details.onStepContinue,
-                      child: Text('Next', style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: Text(
+                        'Next',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 );
               },
-              type: StepperType.horizontal,
+              type: StepperType.vertical,
               steps: getSteps(),
               currentStep: currentStep,
               onStepContinue: () {
@@ -76,8 +88,16 @@ class _NewScrapbookPageState extends State<NewScrapbookPage> {
             content: titleStep()),
         Step(
             isActive: currentStep == 2,
-            title: Text('Add a Post'),
-            content: postStep())
+            title: Text('Post Title And Caption'),
+            content: postTitleCaptionStep()),
+        Step(
+            isActive: currentStep == 3,
+            title: Text('Add an image or a video as your post'),
+            content: imageOrVideoPostStep()),
+        Step(
+            isActive: currentStep == 4,
+            title: Text("Publish your scrapbook"),
+            content: finalStep()),
       ];
 }
 
@@ -94,7 +114,8 @@ Widget thumbnailStep() {
       //goes to another file called scrapbook_thumbnail.dart
       ScrapbookThumbnail(),
       Divider(color: Colors.white, height: 20),
-      Text('Or leave it as the default one shown below', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      Text('Or leave it as the default one shown below',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       Divider(color: Colors.white, height: 20),
       Image.asset('images/default_image.png', height: 100)
     ],
@@ -102,23 +123,40 @@ Widget thumbnailStep() {
 }
 
 Widget titleStep() {
-
   return Container(
       child: Column(
-        children: [
-          Text(
-            'Choose A Title For Your Scrapbook',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Divider(color: Colors.white,height: 20),
-          ScrapbookTitle(),
-        ],
-      ));
+    children: [
+      Text(
+        'Write A Title For Your Scrapbook',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      Divider(color: Colors.white, height: 20),
+      ScrapbookTitle(),
+    ],
+  ));
 }
 
+Widget postTitleCaptionStep() {
+  return Container(
+      child: Column(
+    children: [
+      Text(
+        'Write A Title And A Caption For Your Post',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      Divider(color: Colors.white, height: 10),
+      titleCaptionForPost()
+    ],
+  ));
+}
 
+Widget imageOrVideoPostStep() {
+  return Column(children: [
+    Text("Note: Your post can either be a photo or a video, but not both", style: TextStyle(fontSize: 12),),
+    ImageVideoPost()
+  ]);
+}
 
-
-Widget postStep() {
-  return Container();
+Widget finalStep() {
+  return Container(child: AddPost());
 }
