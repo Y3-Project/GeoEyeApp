@@ -3,15 +3,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 Future<void> deletePost(QueryDocumentSnapshot post) async {
   print("DELETING POST: ${post.id}");
   var inst = FirebaseFirestore.instance.collection('posts');
+  // FIXME: doesn't work
+  await deletePostFromScrapbookPosts(post.reference);
   inst.doc("${post.id}").delete();
-  deletePostFromScrapbookPosts(post.reference);
 }
 
-void deletePostFromScrapbookPosts(DocumentReference postReference) {
+Future<void> deletePostFromScrapbookPosts(
+    DocumentReference postReference) async {
   var scrapInst = FirebaseFirestore.instance.collection("scrapbooksPosts");
-  var cond = scrapInst.where("post", isEqualTo: postReference);
-  var doc = cond.snapshots().first;
-  doc.then((value) => scrapInst.doc(value.docs.first.reference.path).delete());
+  scrapInst.snapshots().listen((event) {
+    for (var doc in event.docs) {
+      print(doc.get("posts").toString());
+      print(doc.get("posts"));
+      print(postReference.path);
+      if (doc.get("post").toString() == postReference.path) {
+        print("deleting scrapbook post ${doc.reference.path}");
+        FirebaseFirestore.instance.doc(doc.reference.path).delete();
+      }
+    }
+  });
 }
 
 void allowPostOrCommentOrUser(QueryDocumentSnapshot postCommentUser) {
