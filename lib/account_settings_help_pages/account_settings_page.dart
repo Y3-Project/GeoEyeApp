@@ -93,42 +93,59 @@ class AccountSettingsPage extends StatelessWidget {
                   "Account Settings",
                   style: TextStyle(fontSize: 25),
                 ))),
-        body: Column(children: [
-          ElevatedButton(
-              style: ButtonStyle(
-                  fixedSize: MaterialStatePropertyAll(Size(150, 20)),
-                  backgroundColor: MaterialStatePropertyAll(Colors.black)),
-              onPressed: () {
-                logout();
-              },
-              child: const Text(
-                'Logout',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              )),
-          ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.black)),
-              onPressed: () {
-                _showMyDialog();
-              },
-              child: const Text(
-                'Delete Account',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              )),
-          ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.black)),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ForgotPasswordPage()
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Flexible(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      fixedSize: MaterialStatePropertyAll(Size(150, 20)),
+                      backgroundColor: MaterialStatePropertyAll(Colors.black)),
+                  onPressed: () {
+                    logout();
+                  },
+                  child: const Text(
+                    'Logout',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                );
-              },
-              child: const Text(
-                'Reset Password',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ))
-        ]));
+                ),
+                flex: 1,
+                fit: FlexFit.loose,
+              ),
+              Flexible(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.black)),
+                  onPressed: () {
+                    _showMyDialog();
+                  },
+                  child: const Text(
+                    'Delete Account',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ),
+                flex: 1,
+                fit: FlexFit.loose,
+              ),
+              Flexible(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.black)),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => ForgotPasswordPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Reset Password',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ),
+                flex: 1,
+                fit: FlexFit.loose,
+              )
+            ]));
   }
 }

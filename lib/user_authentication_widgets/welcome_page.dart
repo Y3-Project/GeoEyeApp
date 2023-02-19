@@ -15,51 +15,74 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
-        AppBar(
-          centerTitle: true,
-          title: Text('GeoEye', style: TextStyle(fontSize: 25)),
-        ),
-        Column(children: [
-          Text(
-            textAlign: TextAlign.center,
-            'Hello, welcome to GeoEye.',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+      body: Column(
+        children: [
+          AppBar(
+            centerTitle: true,
+            title: Text('GeoEye', style: TextStyle(fontSize: 25)),
           ),
-          ElevatedButton(
-              style: ButtonStyle(
-                  alignment: Alignment.center,
-                  foregroundColor: MaterialStatePropertyAll(Colors.white),
-                  backgroundColor: MaterialStatePropertyAll(Colors.black)),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => SignUpPage(onSignIn: (user) {}),
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    'Hello, welcome to GeoEye.',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
-                );
-              },
-              child: Text(
-                'Sign-up',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )),
-          ElevatedButton(
-              style: ButtonStyle(
-                  alignment: Alignment.center,
-                  foregroundColor: MaterialStatePropertyAll(Colors.white),
-                  backgroundColor: MaterialStatePropertyAll(Colors.black)),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(onSignIn: (user) {}),
+                  flex: 3,
+                  fit: FlexFit.tight,
+                ),
+                Flexible(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        alignment: Alignment.center,
+                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                        backgroundColor:
+                            MaterialStatePropertyAll(Colors.black)),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SignUpPage(onSignIn: (user) {}),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Sign-up',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                );
-              },
-              child: Text(
-                'Login',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ))
-        ]),
-      ]),
+                  flex: 2,
+                  fit: FlexFit.loose,
+                ),
+                Flexible(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        alignment: Alignment.center,
+                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                        backgroundColor:
+                            MaterialStatePropertyAll(Colors.black)),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(onSignIn: (user) {}),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Login',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  flex: 2,
+                  fit: FlexFit.loose,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
