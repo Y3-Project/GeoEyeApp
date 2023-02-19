@@ -161,44 +161,63 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextFormField(
-              controller: _controllerUsername,
-              decoration: const InputDecoration(labelText: "Username")),
-          TextFormField(
-              controller: _controllerPassword,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: "Password")),
+          Flexible(
+            child: TextFormField(
+                controller: _controllerUsername,
+                decoration: const InputDecoration(labelText: "Username")),
+            flex: 1,
+            fit: FlexFit.tight,
+          ),
+          Flexible(
+            child: TextFormField(
+                controller: _controllerPassword,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Password")),
+            flex: 1,
+            fit: FlexFit.tight,
+          ),
           Text(error!),
-          ElevatedButton(
-            style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.green)),
-            onPressed: () {
-              loginUser();
-            },
-            child: const Text(style: TextStyle(fontSize: 25), "Login"),
+          Flexible(
+            child: ElevatedButton(
+              style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.green)),
+              onPressed: () {
+                loginUser();
+              },
+              child: const Text(style: TextStyle(fontSize: 25), "Login"),
+            ),
+            flex: 1,
+            fit: FlexFit.loose,
           ),
-          GestureDetector(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ForgotPasswordPage(),
+          Flexible(
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ForgotPasswordPage(),
+                ),
+              ),
+              child: const Text(
+                "Forgot Password?",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            child: const Text(
-              "Forgot Password?",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
           ),
-          GestureDetector(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SignUpPage(onSignIn: (user) {}),
+          Flexible(
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SignUpPage(onSignIn: (user) {}),
+                ),
+              ),
+              child: const Text(
+                "Don't have an account?",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            child: const Text(
-              "Don't have an account?",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+            flex: 1,
+            fit: FlexFit.loose,
           )
         ],
       ),
