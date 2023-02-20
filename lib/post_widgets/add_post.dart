@@ -3,24 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/image_or_video_post.dart';
 import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_title.dart';
+import 'package:provider/provider.dart';
 
 import '../user_pages/profile_widget.dart';
+import '../util/user_model.dart';
 
 class AddPost extends StatefulWidget {
-  const AddPost({Key? key}) : super(key: key);
+  AddPost({Key? key}) : super(key: key);
+
+  static String username = '';
 
   @override
   State<AddPost> createState() => _AddPostState();
 }
 
 class _AddPostState extends State<AddPost> {
-
   //todo add third argument to addPost method below for url of image/video
   Future<void> addPost(String title, String desc) async {
     CollectionReference posts = FirebaseFirestore.instance.collection('posts');
     String userDocID = '';
-    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
-        .instance
+    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
         .collection("users")
         .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
         .get();
@@ -28,7 +30,8 @@ class _AddPostState extends State<AddPost> {
     for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
       userDocID = doc.id;
     }
-    DocumentReference userDocRef = FirebaseFirestore.instance.doc('/users/' + userDocID);
+    DocumentReference userDocRef =
+        FirebaseFirestore.instance.doc('/users/' + userDocID);
     await posts.add({
       'likes': List.empty(growable: true),
       'picture': '',
@@ -41,16 +44,18 @@ class _AddPostState extends State<AddPost> {
     });
     print("Post added!");
 
+    //todo add the newly created scrapbook to the "scrapbook" collection in Firestore as well,
+    //so create a method here called addScrapbook like above
 
-    //todo add the newly created scrapbook to the "scrapbook" collection in Firestore as well
+
+
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Column(
+
+    return Container(
+        child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
@@ -59,15 +64,42 @@ class _AddPostState extends State<AddPost> {
             ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.black),
+                        (states) => Colors.black),
                     textStyle: MaterialStateTextStyle.resolveWith(
-                            (states) => TextStyle(color: Colors.white))),
+                        (states) => TextStyle(color: Colors.white))),
                 onPressed: () async {
                   // TODO: Implement uploading pictures and videos with a post
-                 //print(ScrapbookTitle.scrapbookTitle);
-                  //print(titleCaptionForPost.postTitle);
-                  //print(titleCaptionForPost.postCaption);
-                  //addPost(titleCaptionForPost().getPostTitle(), titleCaptionForPost().getPostCaption());
+
+                  //----------------------------ARGUMENTS NEEDED FOR MAKING A SCRAPBOOK-----------------------------------------
+                  //for getting the uuid of the current user; ProfilePage().getUuid())
+                  //for accessing the scrapbook's Title; ScrapbookTitle.scrapbookTitle
+                  //for accessing the download url of the scrapbook thumbnail: [INSERT HERE] [IF NULL, FILL IT WITH "images/default_image.png"
+
+                  QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
+                      .collection("users")
+                      .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
+                      .get();
+                  List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
+                  for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
+                    AddPost.username = doc['username'];
+                  }
+                  //for accessing the current user's username; AddPost.username
+                  //for getting the user's current location, [USE METHOD FROM map_view.dart]
+
+                  //CALL THE METHOD addScrapbook HERE (NOT CREATED YET)
+
+                  //----------------------------ARGUMENTS NEEDED FOR MAKING A SCRAPBOOK-----------------------------------------
+
+
+                  //----------------------------ARGUMENTS NEEDED FOR MAKING A POST-----------------------------------------
+                  //for getting the title of the post; titleCaptionForPost.postTitle;
+                  //for getting the caption of the post; titleCaptionForPost.postCaption;
+                  //for the getting the download url of either an image or a video; [INSERT HERE]
+
+                  //CALL THE METHOD addPost HERE (NOT CREATED YET)
+
+                  //----------------------------ARGUMENTS NEEDED FOR MAKING A POST-----------------------------------------
+
                   /*
                     Directory appDocDir = await getApplicationDocumentsDirectory();
                     String picturePath = appDocDir.absolute.path.toString() + '/add_img.png';
@@ -83,7 +115,9 @@ class _AddPostState extends State<AddPost> {
 
                   //uploadPicture(pictureFile);
                 },
-                child: Text("Create the scrapbook", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))),
+                child: Text("Create the scrapbook",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18))),
           ],
         ),
       ],

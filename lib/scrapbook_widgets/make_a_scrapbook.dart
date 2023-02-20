@@ -42,7 +42,7 @@ class _NewScrapbookPageState extends State<NewScrapbookPage> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Divider(color: Colors.white, height: 100, indent: 200),
+                    Divider(color: Colors.white, height: 100, indent: 180),
                     ElevatedButton(
                       onPressed: details.onStepContinue,
                       child: Text(

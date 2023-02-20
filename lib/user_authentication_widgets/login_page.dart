@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
         userEmail = await getEmailFromUsername();
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
-                email: userEmail, password: _controllerPassword.text);
+            email: userEmail, password: _controllerPassword.text);
         // find out if user is banned
         bool banned = false;
         final userBanned = await FirebaseFirestore.instance
@@ -75,10 +75,10 @@ class _LoginPageState extends State<LoginPage> {
         if (banned == true) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => BannedPage(
-                    onSignOut: (userCred) {
-                      onRefresh(userCred);
-                    },
-                  )));
+                onSignOut: (userCred) {
+                  onRefresh(userCred);
+                },
+              )));
         }
         // find out if user is timed out
         bool timedOut = false;
@@ -101,11 +101,11 @@ class _LoginPageState extends State<LoginPage> {
           } else {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => TimedOutPage(
-                      onSignOut: (userCred) {
-                        onRefresh(userCred);
-                      },
-                      timeout: timeout,
-                    )));
+                  onSignOut: (userCred) {
+                    onRefresh(userCred);
+                  },
+                  timeout: timeout,
+                )));
           }
         }
 
@@ -123,10 +123,10 @@ class _LoginPageState extends State<LoginPage> {
         if (moderator == true) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ModeratorWidget(
-                    onSignOut: (userCred) {
-                      onRefresh(userCred);
-                    },
-                  )));
+                onSignOut: (userCred) {
+                  onRefresh(userCred);
+                },
+              )));
         } else if (banned == false && timedOut == false) {
           Navigator.of(context).push(
             MaterialPageRoute(
