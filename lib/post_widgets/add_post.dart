@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/image_or_video_post.dart';
 import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
+import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_title.dart';
+import 'package:flutter_app_firebase_login/user_pages/post_pages/map_view_page.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import '../user_pages/profile_widget.dart';
@@ -18,6 +21,7 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
+
   //todo add third argument to addPost method below for url of image/video
   Future<void> addPost(String title, String desc) async {
     CollectionReference posts = FirebaseFirestore.instance.collection('posts');
@@ -84,7 +88,8 @@ class _AddPostState extends State<AddPost> {
                     AddPost.username = doc['username'];
                   }
                   //for accessing the current user's username; AddPost.username
-                  //for getting the user's current location, [USE METHOD FROM map_view.dart]
+
+                  //for getting the user's current location, NewScrapbookPage.currentLat AND NewScrapbookPage.currentLong
 
                   //CALL THE METHOD addScrapbook HERE (NOT CREATED YET)
 
@@ -96,7 +101,7 @@ class _AddPostState extends State<AddPost> {
                   //for getting the caption of the post; titleCaptionForPost.postCaption;
                   //for the getting the download url of either an image or a video; [INSERT HERE]
 
-                  //CALL THE METHOD addPost HERE (NOT CREATED YET)
+                  //CALL THE METHOD addPost HERE
 
                   //----------------------------ARGUMENTS NEEDED FOR MAKING A POST-----------------------------------------
 

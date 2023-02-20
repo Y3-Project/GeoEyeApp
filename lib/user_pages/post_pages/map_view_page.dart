@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
@@ -7,21 +10,29 @@ import 'package:geolocator/geolocator.dart';
 class MapViewPage extends StatefulWidget {
   const MapViewPage({Key? key}) : super(key: key);
 
+  static double? currentLat = 0;
+  static double? currentLong = 0;
+
   @override
   State<MapViewPage> createState() => _MapViewPageState();
 }
 
 class _MapViewPageState extends State<MapViewPage> {
+  StreamSubscription<Position>? positionStream;
+
+  @override
+  void dispose() {
+    super.dispose();
+    positionStream?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-
     /// Determine the current position of the device.
     ///
     /// When the location services are not enabled or permissions
     /// are denied the `Future` will return an error.
-    Future<Position> _determinePosition() async {
+    void _determinePosition() async {
       bool serviceEnabled;
       LocationPermission permission;
 
@@ -55,14 +66,19 @@ class _MapViewPageState extends State<MapViewPage> {
 
       // When we reach here, permissions are granted and we can
       // continue accessing the position of the device.
-      return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      //print("Current position: $position");
+      MapViewPage.currentLat = position?.latitude;
+      MapViewPage.currentLong = position?.longitude;
     }
 
+    _determinePosition();
+
+
+
     return FlutterMap(
-      options: MapOptions(
-        center: LatLng(55.9508, -003.200197),
-        zoom: 14
-      ),
+      options: MapOptions(center: LatLng(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!), zoom: 14),
       nonRotatedChildren: [
         AttributionWidget.defaultWidget(
           source: 'OpenStreetMap contributors',
@@ -77,7 +93,7 @@ class _MapViewPageState extends State<MapViewPage> {
         MarkerLayer(
           markers: [
             Marker(
-              point: LatLng(55.9508, -003.200197),
+              point: LatLng(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
               width: 40,
               height: 40,
               builder: (context) => FlutterLogo(),
