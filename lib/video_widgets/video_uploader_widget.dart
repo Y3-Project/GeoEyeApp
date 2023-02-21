@@ -10,65 +10,65 @@ import 'package:firebase_core/firebase_core.dart' as fire_core;
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class ImageUploaderWidget extends StatefulWidget {
+class VideoUploaderWidget extends StatefulWidget {
   final String storagePath;
-  ImageUploaderWidget({required this.storagePath, required Key key})
+  VideoUploaderWidget({required this.storagePath, required Key key})
       : super(key: key);
 
   @override
-  State<ImageUploaderWidget> createState() => ImageUploaderWidgetState();
+  State<VideoUploaderWidget> createState() => VideoUploaderWidgetState();
 }
 
-class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
-  late File image = File('');
-  String imageURL = '';
+class VideoUploaderWidgetState extends State<VideoUploaderWidget> {
+  late File video = File('');
+  String videoURL = '';
 
-  Future<File> pickImage(ImageSource imageSource) async {
-    XFile? imgXFile = await ImagePicker().pickImage(source: imageSource);
-    File imgFile = File('');
-    if (imgXFile != null) {
-      imgFile = File(imgXFile.path);
+  Future<File> pickVideo(ImageSource imageSource) async {
+    XFile? videoXFile = await ImagePicker().pickVideo(source: imageSource);
+    File videoFile = File('');
+    if (videoXFile != null) {
+      videoFile = File(videoXFile.path);
     }
     final String path =
         (await getApplicationDocumentsDirectory()).absolute.path;
-    final finalImage = await imgFile.copy('$path/pickedPicture.png');
-    return finalImage;
+    final finalVideo = await videoFile.copy('$path/pickedVideo.png');
+    return finalVideo;
   }
 
-  Future<String> uploadPicture(ImageSource imageSource) async {
-    File picture = await pickImage(imageSource);
+  Future<String> uploadVideo(ImageSource imageSource) async {
+    File picture = await pickVideo(imageSource);
 
     final storageRef = FirebaseStorage.instance.ref();
-    final imgRef = storageRef.child(widget.storagePath);
-    String picStoragePath = '';
+    final videoRef = storageRef.child(widget.storagePath);
+    String videoStoragePath = '';
 
     try {
-      await imgRef
+      await videoRef
           .putFile(picture)
           .snapshot
           .ref
           .getDownloadURL()
-          .then((value) => picStoragePath = value);
+          .then((value) => videoStoragePath = value);
     } on fire_core.FirebaseException catch (e) {
       print(e.toString());
     }
 
-    //print(picStoragePath);
+    //print(videoStoragePath);
 
-    imageURL = picStoragePath;
+    videoURL = videoStoragePath;
 
     showTopSnackBar(
       animationDuration: Duration(microseconds: 1000002),
       displayDuration: Duration(milliseconds: 95),
       Overlay.of(context)!,
       CustomSnackBar.info(
-        backgroundColor: Colors.black,
-        message:
-            "Photo Selected"
+          backgroundColor: Colors.black,
+          message:
+          "Video Selected"
       ),
     );
 
-    return picStoragePath;
+    return videoStoragePath;
   }
 
   @override
@@ -92,7 +92,7 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
                   backgroundColor: MaterialStatePropertyAll(Colors.white)),
               icon: Icon(Icons.camera),
               onPressed: () {
-                uploadPicture(ImageSource.camera);
+                uploadVideo(ImageSource.camera);
               },
               label: Text("Camera", style: TextStyle(color: Colors.black)),
             ),
@@ -102,7 +102,7 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
                   backgroundColor: MaterialStatePropertyAll(Colors.white)),
               icon: Icon(Icons.image),
               onPressed: () {
-                uploadPicture(ImageSource.gallery);
+                uploadVideo(ImageSource.gallery);
               },
               label: Text("Gallery", style: TextStyle(color: Colors.black)),
             ),
