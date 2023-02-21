@@ -5,6 +5,7 @@ import 'package:flutter_app_firebase_login/user_authentication_widgets/create_ac
 import 'package:flutter_app_firebase_login/util/moderator_page.dart';
 import 'package:flutter_app_firebase_login/util/moderator_widget.dart';
 import 'package:flutter_app_firebase_login/util/timed_out_page.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'forgot_password_page.dart';
 import '../user_pages/main_page.dart';
 import '../util/util.dart';
@@ -21,7 +22,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   User? user;
   //final TextEditingController _controllerEmail = TextEditingController();
+  final storage = new FlutterSecureStorage();
   String userEmail = '';
+  String userPw = '';
+  bool rememberMe = false;
   final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   String? error = '';
@@ -57,7 +61,13 @@ class _LoginPageState extends State<LoginPage> {
     //method for logging the user in
     Future<void> loginUser() async {
       try {
-        userEmail = '';
+        print('Logging in user');
+
+        /*
+        // attempt to read credentials from secure storage
+        userEmail = await storage.read(key: 'email') ?? '';
+        userPw = await storage.read(key: 'password') ?? '';
+        */
 
         // check if username field contains '@', this means it is an email as usernames do not contain this char
         if (_controllerUsername.text.contains('@')) {
@@ -65,12 +75,21 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           userEmail = await getEmailFromUsername();
         }
-
-        print(userEmail);
+        userPw = _controllerPassword.text;
 
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
-            email: userEmail, password: _controllerPassword.text);
+            email: userEmail, password: userPw);
+
+        if (rememberMe) {
+          print('Writing credentials to secure storage');
+          await storage.write(key: 'email', value: userEmail);
+          await storage.write(key: 'password', value: _controllerPassword.text);
+        } else {
+          print('Erasing credentials from secure storage');
+          await storage.delete(key: 'email');
+          await storage.delete(key: 'password');
+        }
 
         // find out if user is banned
         bool banned = false;
@@ -190,6 +209,22 @@ class _LoginPageState extends State<LoginPage> {
             fit: FlexFit.tight,
           ),
           Text(error!),
+          Flexible(
+            // remember me checkbox
+            child: Row(
+              children: [
+                const Text(style: TextStyle(fontSize: 18), "Remember me"),
+                Checkbox(
+                  value: rememberMe,
+                  onChanged: (value) {
+                    setState(() {
+                      rememberMe = value!;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
           Flexible(
             child: ElevatedButton(
               style: const ButtonStyle(
