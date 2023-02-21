@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/create_account_page.dart';
-import 'package:flutter_app_firebase_login/util/moderator_page.dart';
 import 'package:flutter_app_firebase_login/util/moderator_widget.dart';
 import 'package:flutter_app_firebase_login/util/timed_out_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
