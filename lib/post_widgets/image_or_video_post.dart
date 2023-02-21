@@ -72,8 +72,7 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
               '/videos/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
                   postNumber.toString() +
                   "-" +
-                  getUuid().toString() +
-                  '.png');
+                  getUuid().toString());
           checkVideoUploader(videoUploaderWidget);},
           child: Icon(Icons.video_call_rounded, size: 100))
     ]);
