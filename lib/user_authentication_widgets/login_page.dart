@@ -57,10 +57,21 @@ class _LoginPageState extends State<LoginPage> {
     //method for logging the user in
     Future<void> loginUser() async {
       try {
-        userEmail = await getEmailFromUsername();
+        userEmail = '';
+
+        // check if username field contains '@', this means it is an email as usernames do not contain this char
+        if (_controllerUsername.text.contains('@')) {
+          userEmail = _controllerUsername.text;
+        } else {
+          userEmail = await getEmailFromUsername();
+        }
+
+        print(userEmail);
+
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
             email: userEmail, password: _controllerPassword.text);
+
         // find out if user is banned
         bool banned = false;
         final userBanned = await FirebaseFirestore.instance
@@ -145,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
           } else if (e.code == 'wrong-password') {
             error = 'Please enter the correct password';
           } else {
-            error = 'Please enter the correct username';
+            error = 'An unknown error occurred';
           }
         });
       }
