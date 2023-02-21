@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
           Flexible(
             child: TextFormField(
                 controller: _controllerUsername,
-                decoration: const InputDecoration(labelText: "Username")),
+                decoration: const InputDecoration(labelText: "Username or Email")),
             flex: 1,
             fit: FlexFit.tight,
           ),

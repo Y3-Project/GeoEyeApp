@@ -59,7 +59,7 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
           onTap: () {ImageUploaderWidget imageUploaderWidget = ImageUploaderWidget(
               key: imageUploaderWidgetStateKey,
               storagePath:
-              '/images/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
+              '/videos/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
                   postNumber.toString() +
                   "-" +
                   getUuid().toString() +

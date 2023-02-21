@@ -19,6 +19,7 @@ class MapViewPage extends StatefulWidget {
 
 class _MapViewPageState extends State<MapViewPage> {
   StreamSubscription<Position>? positionStream;
+  Position? currentPosition;
 
   @override
   void dispose() {
@@ -27,7 +28,15 @@ class _MapViewPageState extends State<MapViewPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    listenToLocationChanges();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    LatLng latAndLong = LatLng(0.0, 0.0);
+
     /// Determine the current position of the device.
     ///
     /// When the location services are not enabled or permissions
@@ -75,10 +84,18 @@ class _MapViewPageState extends State<MapViewPage> {
 
     _determinePosition();
 
-
+    if (NewScrapbookPage.currentLat == 0.0 &&
+        NewScrapbookPage.currentLong == 0.0) {
+      latAndLong = LatLng(MapViewPage.currentLat!, MapViewPage.currentLong!);
+      setState(() {});
+    } else {
+      latAndLong =
+          LatLng(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!);
+      setState(() {});
+    }
 
     return FlutterMap(
-      options: MapOptions(center: LatLng(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!), zoom: 14),
+      options: MapOptions(center: latAndLong, zoom: 14),
       nonRotatedChildren: [
         AttributionWidget.defaultWidget(
           source: 'OpenStreetMap contributors',
@@ -93,7 +110,8 @@ class _MapViewPageState extends State<MapViewPage> {
         MarkerLayer(
           markers: [
             Marker(
-              point: LatLng(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
+              point: LatLng(
+                  NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
               width: 40,
               height: 40,
               builder: (context) => FlutterLogo(),
@@ -101,6 +119,23 @@ class _MapViewPageState extends State<MapViewPage> {
           ],
         ),
       ],
+    );
+  }
+
+  void listenToLocationChanges() {
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+    positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+      (Position? position) {
+        print(position == null ? 'Unknown' : '$position');
+        setState(() {
+          MapViewPage.currentLat = position?.latitude;
+          MapViewPage.currentLong = position?.longitude;
+        });
+      },
     );
   }
 }

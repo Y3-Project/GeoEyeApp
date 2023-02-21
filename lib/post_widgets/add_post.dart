@@ -105,6 +105,10 @@ class _AddPostState extends State<AddPost> {
 
                   //----------------------------ARGUMENTS NEEDED FOR MAKING A POST-----------------------------------------
 
+
+                  //
+
+
                   /*
                     Directory appDocDir = await getApplicationDocumentsDirectory();
                     String picturePath = appDocDir.absolute.path.toString() + '/add_img.png';
