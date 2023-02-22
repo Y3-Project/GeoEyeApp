@@ -49,6 +49,7 @@ dependencies:
   popup_card: ^0.1.0
   top_snackbar_flutter: ^3.0.0+1
   flutter_secure_storage: ^8.0.0
+  video_thumbnail: ^0.5.3
 
 dev_dependencies:
   flutter_test:

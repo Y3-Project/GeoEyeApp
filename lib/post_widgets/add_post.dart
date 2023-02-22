@@ -99,7 +99,9 @@ class _AddPostState extends State<AddPost> {
                   //----------------------------ARGUMENTS NEEDED FOR MAKING A POST-----------------------------------------
                   //for getting the title of the post; titleCaptionForPost.postTitle;
                   //for getting the caption of the post; titleCaptionForPost.postCaption;
-                  //for the getting the download url of either an image or a video; [INSERT HERE]
+                  //for the getting the download url of an image, if an image was selected as the post [INSERT HERE]
+                  //OR alternatively, see below comment
+                  //for the getting the download url of a video, if a video was selected as the post [INSERT HERE]
 
                   //CALL THE METHOD addPost HERE
 
