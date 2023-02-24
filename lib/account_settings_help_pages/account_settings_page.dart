@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/forgot_password_page.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/welcome_page.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../user_authentication_widgets/login_page.dart';
 
@@ -17,6 +18,13 @@ class AccountSettingsPage extends StatelessWidget {
     //method to log the user out
     Future<void> logout() async {
       await FirebaseAuth.instance.signOut();
+
+      // remove cached credentials
+      final storage = new FlutterSecureStorage();
+      print('Deleting credentials from secure storage');
+      storage.delete(key: 'email');
+      storage.delete(key: 'password');
+
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => LoginPage(onSignIn: (user) {}),

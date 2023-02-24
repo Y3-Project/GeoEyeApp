@@ -26,7 +26,7 @@ class ProfilePage extends StatefulWidget {
     String userDocID = '';
     QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
         .collection("users")
-        .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
+        .where("uuid", isEqualTo: ProfilePage().getUuid())
         .get();
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
     for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
