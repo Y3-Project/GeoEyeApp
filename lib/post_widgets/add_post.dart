@@ -74,6 +74,8 @@ class _AddPostState extends State<AddPost> {
                 onPressed: () async {
                   // TODO: Implement uploading pictures and videos with a post
 
+
+
                   //----------------------------ARGUMENTS NEEDED FOR MAKING A SCRAPBOOK-----------------------------------------
                   //for getting the uuid of the current user; ProfilePage().getUuid())
                   //for accessing the scrapbook's Title; ScrapbookTitle.scrapbookTitle
