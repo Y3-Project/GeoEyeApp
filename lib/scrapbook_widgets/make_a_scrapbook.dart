@@ -9,7 +9,7 @@ import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.d
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_title.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../user_pages/profile_widget.dart';
+import '../user_pages/profile_page.dart';
 
 //todo this page allows the user to make a completely new scrapbook
 

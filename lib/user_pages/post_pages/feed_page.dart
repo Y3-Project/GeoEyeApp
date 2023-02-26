@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/post_widgets/post_list.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_list.dart';
 import 'package:provider/provider.dart';
-import '../../post_widgets/post.dart';
 import 'package:popup_card/popup_card.dart';
+
+import '../../scrapbook_widgets/scrapbook.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -16,27 +16,24 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  final CollectionReference postCollection =
-      FirebaseFirestore.instance.collection('posts');
+  final CollectionReference scrapbookCollection =
+      FirebaseFirestore.instance.collection('scrapbooks');
 
-  Stream<List<Post>> get posts {
-    return postCollection.snapshots().map(_postListFromSnapshot);
+  Stream<List<Scrapbook>> get scrapbooks {
+    return scrapbookCollection.snapshots().map(_scrapbookListFromSnapshot);
   }
 
-  List<Post> _postListFromSnapshot(QuerySnapshot snapshot) {
+  List<Scrapbook> _scrapbookListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      DocumentReference<Map<String, dynamic>> ref = doc.get('user');
-      String userRefDoc = '/users/' + ref.id;
-      return Post(
-        timestamp: doc.get('timestamp') as Timestamp,
-        picture: doc.get('picture').toString(),
-        video: doc.get('video').toString(),
-        likes: doc.get('likes'),
-        reports: doc.get('reports'),
-        user: userRefDoc,
-        text: doc.get('text').toString(),
-        title: doc.get('title').toString(),
+      return Scrapbook(
         id: doc.id,
+        creatorid: doc.get('creatorid').toString(),
+        scrapbookTitle: doc.get('scrapbookTitle'),
+        scrapbookThumbnail: doc.get('scrapbookThumbnail'),
+        currentUsername: doc.get('currentUsername'),
+        location: doc.get('location') as GeoPoint,
+        timestamp: doc.get('timestamp') as Timestamp,
+        public: doc.get('public'),
       );
     }).toList();
   }
@@ -77,12 +74,12 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Post>>.value(
-      value: posts,
+    return StreamProvider<List<Scrapbook>>.value(
+      value: scrapbooks,
       initialData: [],
       // todo: display scrapbooks instead of posts
       child: Scaffold(
-        body: PostList(),
+        body: ScrapbookList(),
         floatingActionButton: PopupItemLauncher(
           tag: 'test',
           child: Material(

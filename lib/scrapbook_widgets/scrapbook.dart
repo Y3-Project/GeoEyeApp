@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Scrapbook {
+  String id = '';
   String creatorid = '';
   String scrapbookTitle = '';
   String scrapbookThumbnail = '';
@@ -11,7 +12,8 @@ class Scrapbook {
 
   /* Constructor */
   Scrapbook(
-      {required this.creatorid,
+      {required this.id,
+      required this.creatorid,
       required this.scrapbookTitle,
       required this.scrapbookThumbnail,
       required this.currentUsername,
@@ -21,7 +23,8 @@ class Scrapbook {
 
   /* Convert a document to a Scrapbook object */
   Scrapbook.fromDocument(DocumentSnapshot doc) {
-    this.creatorid = doc['creatorid'];
+    this.id = doc.id;
+    this.creatorid = doc['creatorid'].toString();
     this.scrapbookTitle = doc['scrapbookTitle'];
     this.scrapbookThumbnail = doc['scrapbookThumbnail'];
     this.currentUsername = doc['currentUsername'];

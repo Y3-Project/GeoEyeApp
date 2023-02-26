@@ -8,7 +8,7 @@ import 'package:flutter_app_firebase_login/user_pages/post_pages/map_view_page.d
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../user_pages/profile_widget.dart';
+import '../user_pages/profile_page.dart';
 import '../util/user_model.dart';
 
 class AddPost extends StatefulWidget {
