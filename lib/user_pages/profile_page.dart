@@ -40,9 +40,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   static String userDocID = 'general';
-  DocumentReference userReference = FirebaseFirestore.instance.doc('/users/' + userDocID);
+  DocumentReference userReference =
+      FirebaseFirestore.instance.doc('/users/' + userDocID);
 
   Future<void> setUpRef() async {
     await ProfilePage().getUserDocumentID().then((value) => userDocID = value);
@@ -60,7 +60,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-
     setUpRef();
     return StreamProvider<UserModel>.value(
         value: userModelStream,

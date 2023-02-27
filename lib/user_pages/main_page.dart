@@ -17,11 +17,9 @@ class _MainUserPageState extends State<MainUserPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: getSelectedPage(index: index),
-
       bottomNavigationBar: CurvedNavigationBar(
         animationDuration: Duration(microseconds: 199900),
         backgroundColor: Colors.white,
@@ -37,21 +35,17 @@ class _MainUserPageState extends State<MainUserPage> {
             index = selectedIndex;
           });
         }, //Handle button tap
-
       ),
-
     );
   }
 
-  Widget getSelectedPage({required int index}){
+  Widget getSelectedPage({required int index}) {
     Widget widgetPage;
     if (index == 0) {
       widgetPage = ProfilePage();
-    }
-    else if (index == 2){
+    } else if (index == 2) {
       widgetPage = NotificationsWidget();
-    }
-    else {
+    } else {
       widgetPage = HomeWidget();
     }
     return widgetPage;

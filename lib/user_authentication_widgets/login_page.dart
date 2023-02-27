@@ -12,6 +12,7 @@ import '../util/banned_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function(User?) onSignIn;
+
   const LoginPage({required this.onSignIn});
 
   @override
@@ -20,6 +21,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   User? user;
+
   //final TextEditingController _controllerEmail = TextEditingController();
   //final storage = new FlutterSecureStorage();
   String userEmail = '';
@@ -77,13 +79,12 @@ class _LoginPageState extends State<LoginPage> {
         userPw = _controllerPassword.text;
 
         UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-            email: userEmail, password: userPw);
+            .signInWithEmailAndPassword(email: userEmail, password: userPw);
 
         if (rememberMe) {
           print('Writing credentials to secure storage');
           //await storage.write(key: 'email', value: userEmail);
-         // await storage.write(key: 'password', value: _controllerPassword.text);
+          // await storage.write(key: 'password', value: _controllerPassword.text);
         } else {
           print('Erasing credentials from secure storage');
           //await storage.delete(key: 'email');
@@ -104,10 +105,10 @@ class _LoginPageState extends State<LoginPage> {
         if (banned == true) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => BannedPage(
-                onSignOut: (userCred) {
-                  onRefresh(userCred);
-                },
-              )));
+                    onSignOut: (userCred) {
+                      onRefresh(userCred);
+                    },
+                  )));
         }
         // find out if user is timed out
         bool timedOut = false;
@@ -130,11 +131,11 @@ class _LoginPageState extends State<LoginPage> {
           } else {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => TimedOutPage(
-                  onSignOut: (userCred) {
-                    onRefresh(userCred);
-                  },
-                  timeout: timeout,
-                )));
+                      onSignOut: (userCred) {
+                        onRefresh(userCred);
+                      },
+                      timeout: timeout,
+                    )));
           }
         }
 
@@ -152,16 +153,14 @@ class _LoginPageState extends State<LoginPage> {
         if (moderator == true) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ModeratorWidget(
-                onSignOut: (userCred) {
-                  onRefresh(userCred);
-                },
-              )));
+                    onSignOut: (userCred) {
+                      onRefresh(userCred);
+                    },
+                  )));
         } else if (banned == false && timedOut == false) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => MainUserPage(
-
-              ),
+              builder: (context) => MainUserPage(),
             ),
           );
         }
@@ -193,7 +192,8 @@ class _LoginPageState extends State<LoginPage> {
           Flexible(
             child: TextFormField(
                 controller: _controllerUsername,
-                decoration: const InputDecoration(labelText: "Username or Email")),
+                decoration:
+                    const InputDecoration(labelText: "Username or Email")),
             flex: 1,
             fit: FlexFit.tight,
           ),

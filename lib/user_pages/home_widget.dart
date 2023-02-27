@@ -39,12 +39,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               ],
             )),
         body: const TabBarView(
-            children: <Widget>[
-              FeedPage(),
-              MapViewPage(),
-              ARViewPage()
-            ]
-        ),
+            children: <Widget>[FeedPage(), MapViewPage(), ARViewPage()]),
       ),
     );
   }

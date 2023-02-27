@@ -8,6 +8,7 @@ import '../username_generator_widgets/generator.dart';
 
 class SignUpPage extends StatefulWidget {
   final Function(User?) onSignIn;
+
   const SignUpPage({required this.onSignIn});
 
   @override
@@ -40,7 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   /** sends user information to the firestore database
-   * 
+   *
    */
   Future<void> sendUserInformationToFirestore(
       String email, bool moderator, String username, User? user) async {
@@ -75,9 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
             selectedUsername, userCredential.user);
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => MainUserPage(
-
-            ),
+            builder: (context) => MainUserPage(),
           ),
         );
       } on FirebaseAuthException catch (e) {

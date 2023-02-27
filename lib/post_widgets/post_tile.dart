@@ -29,8 +29,7 @@ class PostTile extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) => ExpandedPostPage(post)),
+            MaterialPageRoute(builder: (context) => ExpandedPostPage(post)),
           );
         },
         child: Card(

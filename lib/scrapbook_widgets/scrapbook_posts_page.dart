@@ -11,6 +11,7 @@ import '../user_pages/main_page.dart';
 
 class ScrapbookPostsPage extends StatefulWidget {
   final Scrapbook scrapbook;
+
   const ScrapbookPostsPage({required this.scrapbook});
 
   @override
@@ -19,10 +20,12 @@ class ScrapbookPostsPage extends StatefulWidget {
 
 class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
   final CollectionReference scrapbookPostCollection =
-  FirebaseFirestore.instance.collection('scrapbookPosts');
+      FirebaseFirestore.instance.collection('scrapbookPosts');
 
   Stream<List<ScrapbookPost>> get scrapbookPosts {
-    return scrapbookPostCollection.snapshots().map(_scrapbookPostListFromSnapshot);
+    return scrapbookPostCollection
+        .snapshots()
+        .map(_scrapbookPostListFromSnapshot);
   }
 
   List<ScrapbookPost> _scrapbookPostListFromSnapshot(QuerySnapshot snapshot) {
@@ -44,10 +47,9 @@ class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
           automaticallyImplyLeading: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: (){
+            onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => MainUserPage()),
+                MaterialPageRoute(builder: (context) => MainUserPage()),
               );
             },
           ),

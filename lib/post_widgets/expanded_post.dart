@@ -8,6 +8,7 @@ import '../util/getScrapbookFromPost.dart';
 
 class ExpandedPostPage extends StatefulWidget {
   Post post;
+
   ExpandedPostPage(this.post);
 
   @override
@@ -23,11 +24,12 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
         automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: (){
-            getScrapbook(widget.post).then((scrapbook){
+          onPressed: () {
+            getScrapbook(widget.post).then((scrapbook) {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => ScrapbookPostsPage(scrapbook: scrapbook)),
+                    builder: (context) =>
+                        ScrapbookPostsPage(scrapbook: scrapbook)),
               );
             });
           },
@@ -42,7 +44,9 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.network(widget.post.picture == "" ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg" : widget.post.picture),
+          Image.network(widget.post.picture == ""
+              ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
+              : widget.post.picture),
         ],
       ),
     );

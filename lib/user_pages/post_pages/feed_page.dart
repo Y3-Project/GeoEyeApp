@@ -44,12 +44,19 @@ class _FeedPageState extends State<FeedPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextButton(
-            onPressed: () {Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ScrapbookList(),
-              ),
-            );},
-            child: const Text('CHOOSE THE SCRAPBOOK TO ADD A POST TO \n [MAY REMOVE THIS BUTTON LATER]', style: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.bold)),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ScrapbookList(),
+                ),
+              );
+            },
+            child: const Text(
+                'CHOOSE THE SCRAPBOOK TO ADD A POST TO \n [MAY REMOVE THIS BUTTON LATER]',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold)),
           ),
           const Divider(
             color: Colors.white,
@@ -60,12 +67,18 @@ class _FeedPageState extends State<FeedPage> {
             thickness: 0.1,
           ),
           TextButton(
-            onPressed: () {Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NewScrapbookPage(),
-              ),
-            );},
-            child: const Text('MAKE A NEW SCRAPBOOK', style: TextStyle(color: Colors.green, fontSize: 15, fontWeight: FontWeight.bold)),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => NewScrapbookPage(),
+                ),
+              );
+            },
+            child: const Text('MAKE A NEW SCRAPBOOK',
+                style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold)),
           ),
         ],
       ),
