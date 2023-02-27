@@ -64,6 +64,7 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
               right: 10.0,
               child: InkWell(
                 onTap: () {
+                  // TODO: fix the Firestore storage path for profile pictures
                   ImageUploaderWidget imageUploaderWidget = ImageUploaderWidget(key: imageUploaderWidgetStateKey, storagePath: '/images/' + user.id + '.png');
                   checkImageUploader(imageUploaderWidget);
                 },
