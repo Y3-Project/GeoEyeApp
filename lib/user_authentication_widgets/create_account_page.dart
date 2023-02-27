@@ -76,9 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => MainUserPage(
-              onSignOut: (userCred) {
-                onRefresh(userCred);
-              },
+
             ),
           ),
         );

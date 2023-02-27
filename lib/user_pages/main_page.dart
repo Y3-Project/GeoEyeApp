@@ -1,16 +1,12 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_pages/home_widget.dart';
 import 'package:flutter_app_firebase_login/user_pages/notifications_widget.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_page.dart';
 
-import '../user_authentication_widgets/login_page.dart';
-
 class MainUserPage extends StatefulWidget {
-  final Function(User?) onSignOut;
-  const MainUserPage({Key? key, required this.onSignOut}) : super(key: key);
+  const MainUserPage({Key? key}) : super(key: key);
 
   @override
   State<MainUserPage> createState() => _MainUserPageState();
@@ -21,15 +17,6 @@ class _MainUserPageState extends State<MainUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    //method to log the user out
-    Future<void> logout() async {
-      await FirebaseAuth.instance.signOut();
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => LoginPage(onSignIn: (user) {}),
-        ),
-      );
-    }
 
     return Scaffold(
       backgroundColor: Colors.white,

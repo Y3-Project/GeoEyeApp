@@ -25,19 +25,11 @@ class _WelcomePageState extends State<WelcomePage> {
     if (email != '' && password != '') {
       print('Retrieved credentials from secure storage');
       UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-          email: email, password: password);
+          .signInWithEmailAndPassword(email: email, password: password);
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => MainUserPage(
-            onSignOut: (userCred) {
-              // do nothing (?)
-
-
-
-            },
-          ),
+          builder: (context) => MainUserPage(),
         ),
       );
     } else {

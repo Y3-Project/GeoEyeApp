@@ -21,6 +21,7 @@ class Scrapbook {
       required this.timestamp,
       required this.public});
 
+
   /* Convert a document to a Scrapbook object */
   Scrapbook.fromDocument(DocumentSnapshot doc) {
     this.id = doc.id;
