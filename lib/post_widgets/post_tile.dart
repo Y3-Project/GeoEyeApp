@@ -25,7 +25,6 @@ class PostTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
-      // TODO: make cards redirect to expanded post
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
