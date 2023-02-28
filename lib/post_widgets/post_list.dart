@@ -27,17 +27,18 @@ class _PostListState extends State<PostList> {
       List<Post> tempPosts = [];
 
       for (int i = 0; i < scrapbookPosts.length; i++) {
-        DocumentSnapshot currScrapbookId =
+        DocumentSnapshot currScrapbook =
             await scrapbookPosts[i].scrapbookRef.get();
-        if (currScrapbookId.id == widget.scrapbook.id) {
+        if (currScrapbook.id == widget.scrapbook.id) {
           DocumentSnapshot postSnap = await scrapbookPosts[i].postRef.get();
-          tempPosts.add(Post.fromDocument(postSnap));
+          Post currPost = Post.fromDocument(postSnap);
+          if (currPost.reports.isEmpty){
+            tempPosts.add(currPost);
+          }
         }
       }
       return tempPosts;
-    }
-
-    ;
+    };
 
     getPosts(scrapbookPosts).then((value) {
       posts = value;
