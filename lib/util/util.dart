@@ -97,3 +97,22 @@ void addFollower(String newFollower, String user) {
     'following': FieldValue.arrayUnion([user])
   });
 }
+
+/* 
+  @param: postID - the id of the post to add the comment to
+  @param: comment - the comment to add to the post
+  @param: commentAuthor - the user who is adding the comment
+
+  @return: void
+ */
+void addComment(String post, String comment, String commentAuthor) {
+  FirebaseFirestore.instance.collection('postComments').add({
+    'content': comment,
+    'post': post,
+    'reports': [],
+    'user': commentAuthor,
+  });
+}
+
+
+
