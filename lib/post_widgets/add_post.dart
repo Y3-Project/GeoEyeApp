@@ -93,6 +93,9 @@ class _AddPostState extends State<AddPost> {
 
                   //for getting the user's current location, NewScrapbookPage.currentLat AND NewScrapbookPage.currentLong
 
+                  //for getting the boolean value for the field "public" (which is false as default), NewScrapbookPage.visibility
+
+
                   //CALL THE METHOD addScrapbook HERE (NOT CREATED YET)
 
                   //----------------------------ARGUMENTS NEEDED FOR MAKING A SCRAPBOOK-----------------------------------------

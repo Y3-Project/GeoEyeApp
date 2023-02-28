@@ -17,10 +17,12 @@ class NewScrapbookPage extends StatefulWidget {
   NewScrapbookPage({Key? key}) : super(key: key);
   static double? currentLat = 0;
   static double? currentLong = 0;
+  static String visibility = '';
 
   @override
   State<NewScrapbookPage> createState() => _NewScrapbookPageState();
 }
+
 
 class _NewScrapbookPageState extends State<NewScrapbookPage> {
   int currentStep = 0;
@@ -99,6 +101,10 @@ class _NewScrapbookPageState extends State<NewScrapbookPage> {
             content: imageOrVideoPostStep()),
         Step(
             isActive: currentStep == 4,
+            title: Text('Scrapbook Visibility'),
+            content: visibilityStep()),
+        Step(
+            isActive: currentStep == 5,
             title: Text("Publish your scrapbook"),
             content: finalStep()),
       ];
@@ -161,6 +167,31 @@ Widget imageOrVideoPostStep() {
     ),
     ImageVideoPost()
   ]);
+}
+
+Widget visibilityStep() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        'Make your scrapbook public or private',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      Divider(height: 20, color: Colors.white),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(style: ButtonStyle(enableFeedback: true),onPressed: (){NewScrapbookPage.visibility = 'true';}, child: Text('Public')),
+          ElevatedButton(style: ButtonStyle(enableFeedback: true),onPressed: (){NewScrapbookPage.visibility = 'false';}, child: Text('Private'))
+        ],
+      ),
+      Divider(height: 20, color: Colors.white),
+      Text(
+        'Note: If you don\'t choose either, then your scrapbook will be private by default',
+        style: TextStyle(fontSize: 12),
+      ),
+    ],
+  );
 }
 
 Widget finalStep() {

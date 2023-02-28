@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 class ScrapbookList extends StatefulWidget {
   //TODO: Add fields for filtering by username and location
+  //for filtering by location, geolocator package may be useful; it has "distanceFilter"
+  //distanceFilter: the minimum distance (measured in meters) a device must move horizontally before an update event is generated;
   const ScrapbookList({Key? key}) : super(key: key);
 
   @override
