@@ -13,16 +13,29 @@ class ScrapbookList extends StatefulWidget {
 }
 
 class _ScrapbookListState extends State<ScrapbookList> {
+  List<Scrapbook> getPublicScrapbooks(List<Scrapbook> scrapbooks){
+    List<Scrapbook> publicScrapbooks = [];
+
+    scrapbooks.forEach((scrapbook) {
+      if (scrapbook.public){
+        publicScrapbooks.add(scrapbook);
+      }
+    });
+
+    return publicScrapbooks;
+  }
+
   @override
   Widget build(BuildContext context) {
     final scrapbooks = Provider.of<List<Scrapbook>>(context);
-    //TODO: Only display public scrapbooks
-    //List<Scrapbook> visibleScrapbooks =
+    List<Scrapbook> publicScrapbooks = getPublicScrapbooks(scrapbooks);
+
+
 
     return ListView.builder(
-      itemCount: scrapbooks.length,
+      itemCount: publicScrapbooks.length,
       itemBuilder: (context, index){
-        return ScrapbookTile(scrapbooks[index]);
+        return ScrapbookTile(publicScrapbooks[index]);
       },
     );
   }
