@@ -37,6 +37,7 @@ class _NewScrapbookPageState extends State<NewScrapbookPage> {
             child: Stepper(
               controlsBuilder: (BuildContext context, ControlsDetails details) {
                 return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
                       onPressed: details.onStepCancel,
@@ -45,7 +46,6 @@ class _NewScrapbookPageState extends State<NewScrapbookPage> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Divider(color: Colors.white, height: 100, indent: 160),
                     ElevatedButton(
                       onPressed: details.onStepContinue,
                       child: Text(
@@ -155,13 +155,15 @@ Widget postTitleCaptionStep() {
 
 Widget imageOrVideoPostStep() {
   return Column(children: [
-    Text("Note: Your post can either be a photo or a video, but not both", style: TextStyle(fontSize: 12),),
+    Text(
+      "Note: Your post can either be a photo or a video, but not both",
+      style: TextStyle(fontSize: 12),
+    ),
     ImageVideoPost()
   ]);
 }
 
 Widget finalStep() {
-
   void _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -201,6 +203,7 @@ Widget finalStep() {
     NewScrapbookPage.currentLat = position?.latitude;
     NewScrapbookPage.currentLong = position?.longitude;
   }
+
   _determinePosition();
   return Container(child: AddPost());
 }
