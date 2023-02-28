@@ -88,18 +88,21 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
           style: TextStyle(fontSize: 25),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.network(widget.post.picture == ""
-              ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
-              : widget.post.picture),
-          Text(widget.post.likes.length.toString() + " likes",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-
-          for (int i = 0; i < comments.length; i++)
-            Text(comments[i].content, style: TextStyle(fontSize: 20)),
-        ],
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.network(widget.post.picture == ""
+                  ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
+                  : widget.post.picture),
+              Text(widget.post.likes.length.toString() + " likes",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              for (int i = 0; i < comments.length; i++)
+                Text(comments[i].content, style: TextStyle(fontSize: 20)),
+            ],
+          ),
+        ),
       ),
     );
   }
