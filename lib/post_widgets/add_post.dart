@@ -51,8 +51,8 @@ class _AddPostState extends State<AddPost> {
     //todo add the newly created scrapbook to the "scrapbook" collection in Firestore as well,
     //so create a method here called addScrapbook like above
 
-
-
+    //todo add the relevant post and this newly created scrapbook to "scrapbookPosts" as well
+    //so create a method here called addScrapbookPost
   }
 
   @override
