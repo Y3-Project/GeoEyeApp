@@ -37,6 +37,18 @@ class _MapViewPageState extends State<MapViewPage> {
   Widget build(BuildContext context) {
     LatLng latAndLong = LatLng(0.0, 0.0);
 
+    //todo add to this marker list when the user clicks on the button "Create Scrapbook"
+    List<Marker> markerList = <Marker>[];
+
+    //example Marker added just for testing purposes, remove later
+    markerList.add(Marker(
+      point:
+          LatLng(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
+      width: 40,
+      height: 40,
+      builder: (context) => FlutterLogo(),
+    ));
+
     /// Determine the current position of the device.
     ///
     /// When the location services are not enabled or permissions
@@ -108,15 +120,7 @@ class _MapViewPageState extends State<MapViewPage> {
           userAgentPackageName: 'com.example.app',
         ),
         MarkerLayer(
-          markers: [
-            Marker(
-              point: LatLng(
-                  NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
-              width: 40,
-              height: 40,
-              builder: (context) => FlutterLogo(),
-            ),
-          ],
+          markers: markerList
         ),
       ],
     );
