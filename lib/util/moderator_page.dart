@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../user_authentication_widgets/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'util.dart';
+import '../post_widgets/post.dart';
 
 class ModeratorPage extends StatefulWidget {
   const ModeratorPage();
@@ -29,9 +31,6 @@ class _ModeratorPageState extends State<ModeratorPage> {
         _snapshots.clear();
         _snapshots.addAll(snapshot.docs);
         for (int i = 0; i < _snapshots.length; i++) {
-          // TODO: check that the "user" field actually leads to a path
-          // TODO: check that the reported posts creator isn't timedout / banned,
-          // as they've been checked already
           List<dynamic> reports = _snapshots[i].get("reports");
           if (reports.length == 0) {
             continue;
