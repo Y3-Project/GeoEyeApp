@@ -30,16 +30,15 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
 
   @override
   Widget build(BuildContext context) {
-
-
     Future<void> checkImageUploader(
         ImageUploaderWidget imageUploaderWidget) async {
       await showModalBottomSheet(
         context: context,
         builder: ((builder) => imageUploaderWidget),
       );
-    };
+    }
 
+    ;
 
     Future<void> checkVideoUploader(
         VideoUploaderWidget videoUploaderWidget) async {
@@ -49,8 +48,7 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
       );
     }
 
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       InkWell(
           onTap: () {
             ImageUploaderWidget imageUploaderWidget = ImageUploaderWidget(
@@ -64,17 +62,19 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
             checkImageUploader(imageUploaderWidget);
           },
           child: Image.asset('images/add_img.png', height: 100)),
-      Divider(indent: 100),
+      // Divider(indent: 90),
       InkWell(
           //todo : upload videos to Storage in onTap function below
-          onTap: () {VideoUploaderWidget videoUploaderWidget = VideoUploaderWidget(
-              key: imageUploaderWidgetStateKey,
-              storagePath:
-              '/videos/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
-                  postNumber.toString() +
-                  "-" +
-                  getUuid().toString());
-          checkVideoUploader(videoUploaderWidget);},
+          onTap: () {
+            VideoUploaderWidget videoUploaderWidget = VideoUploaderWidget(
+                key: imageUploaderWidgetStateKey,
+                storagePath:
+                    '/videos/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
+                        postNumber.toString() +
+                        "-" +
+                        getUuid().toString());
+            checkVideoUploader(videoUploaderWidget);
+          },
           child: Icon(Icons.video_call_rounded, size: 100))
     ]);
   }
