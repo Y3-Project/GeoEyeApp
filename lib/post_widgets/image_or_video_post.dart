@@ -49,23 +49,24 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
       );
     }
 
-    return SingleChildScrollView(child: Row(children: [
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
       InkWell(
           onTap: () {
             ImageUploaderWidget imageUploaderWidget = ImageUploaderWidget(
                 key: imageUploaderWidgetStateKey,
                 storagePath:
-                '/images/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
-                    postNumber.toString() +
-                    "-" +
-                    getUuid().toString() +
-                    '.png');
+                    '/images/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
+                        postNumber.toString() +
+                        "-" +
+                        getUuid().toString() +
+                        '.png');
             checkImageUploader(imageUploaderWidget);
           },
           child: Image.asset('images/add_img.png', height: 100)),
       Divider(indent: 100),
       InkWell(
-        //todo : upload videos to Storage in onTap function below
+          //todo : upload videos to Storage in onTap function below
           onTap: () {VideoUploaderWidget videoUploaderWidget = VideoUploaderWidget(
               key: imageUploaderWidgetStateKey,
               storagePath:
@@ -75,6 +76,6 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
                   getUuid().toString());
           checkVideoUploader(videoUploaderWidget);},
           child: Icon(Icons.video_call_rounded, size: 100))
-    ]));
+    ]);
   }
 }
