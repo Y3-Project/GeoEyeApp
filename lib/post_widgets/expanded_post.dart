@@ -54,13 +54,11 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     for (int i = 0; i < _snapshots.length; i++) {
       comments.add(new Comment(
         content: _snapshots[i].get('content'),
-        post: _snapshots[i].get('post'),
+        post: _snapshots[i].get('post').toString(),
         reports: _snapshots[i].get('reports'),
-        user: _snapshots[i].get('user'),
+        user: _snapshots[i].get('user').toString(),
       ));
     }
-
-    print("comments: ${comments.toString()}");
   }
 
   @override
@@ -93,13 +91,27 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(widget.post.likes.length.toString() + " likes",
+                  style: TextStyle(fontSize: 20)),
               Image.network(widget.post.picture == ""
                   ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
                   : widget.post.picture),
-              Text(widget.post.likes.length.toString() + " likes",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                    comments.length > 0
+                        ? "Comments (" + comments.length.toString() + "):"
+                        : "",
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ),
               for (int i = 0; i < comments.length; i++)
-                Text(comments[i].content, style: TextStyle(fontSize: 20)),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                        "    " +
+                            comments[i].content,
+                        style: TextStyle(fontSize: 20))),
             ],
           ),
         ),
