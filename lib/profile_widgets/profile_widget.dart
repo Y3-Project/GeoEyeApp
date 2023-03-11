@@ -85,6 +85,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     ),
                     TextField(
                       onEditingComplete: () {
+                        // close keyboard
+                        FocusScope.of(context).unfocus();
                         sendBioToFirestore();
                       },
                       controller: _profileBioController,
