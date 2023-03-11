@@ -41,6 +41,7 @@ class PostTile extends StatelessWidget {
         FirebaseFirestore.instance.collection("posts").doc(post.id).update({
           "reports": FieldValue.arrayUnion([user!.uid])
         });
+        print("reported post: " + post.id);
 
         ScaffoldMessenger.of(context).showSnackBar(reportedSnackBar);
         Navigator.of(context).pop(); // dismiss dialog
