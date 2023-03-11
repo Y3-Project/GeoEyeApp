@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
@@ -9,7 +10,6 @@ import 'package:geolocator/geolocator.dart';
 
 class MapViewPage extends StatefulWidget {
   const MapViewPage({Key? key}) : super(key: key);
-
   static double? currentLat = 0;
   static double? currentLong = 0;
 
@@ -18,6 +18,7 @@ class MapViewPage extends StatefulWidget {
 }
 
 class _MapViewPageState extends State<MapViewPage> {
+  List<Marker> allMarkers = [];
   StreamSubscription<Position>? positionStream;
   Position? currentPosition;
 
@@ -35,19 +36,8 @@ class _MapViewPageState extends State<MapViewPage> {
 
   @override
   Widget build(BuildContext context) {
+
     LatLng latAndLong = LatLng(0.0, 0.0);
-
-    //todo add to this marker list when the user clicks on the button "Create Scrapbook"
-    List<Marker> markerList = <Marker>[];
-
-    //example Marker added just for testing purposes, remove later
-    markerList.add(Marker(
-      point:
-          LatLng(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
-      width: 40,
-      height: 40,
-      builder: (context) => FlutterLogo(),
-    ));
 
     /// Determine the current position of the device.
     ///
@@ -106,24 +96,54 @@ class _MapViewPageState extends State<MapViewPage> {
       setState(() {});
     }
 
-    return FlutterMap(
-      options: MapOptions(center: latAndLong, zoom: 14),
-      nonRotatedChildren: [
-        AttributionWidget.defaultWidget(
-          source: 'OpenStreetMap contributors',
-          onSourceTapped: null,
-        ),
-      ],
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.example.app',
-        ),
-        MarkerLayer(
-          markers: markerList
-        ),
-      ],
-    );
+
+    Widget loadMap() {
+      return StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('markers').snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            int? docsLength = snapshot.data?.docs.length;
+
+            if (!snapshot.hasData) {
+              return Text('Loading Map...PLease wait');
+            }
+            for (int i = 0; i < docsLength!; i++) {
+              allMarkers.add(new Marker(
+                  width: 45.0,
+                  height: 45.0,
+                  point: new LatLng(snapshot.data?.docs[i]['location'].latitude,
+                      snapshot.data?.docs[i]['location'].longitude),
+                  builder: (context) => new Container(
+                        child: IconButton(
+                            onPressed: () {
+                              //print("Marker clicked!");
+                              /*when pressed, add code here for the popup over the marker*/
+                            },
+                            icon: Icon(Icons.location_on),
+                            iconSize: 40.0,),
+                      )));
+            }
+            return FlutterMap(
+              options: MapOptions(center: latAndLong, zoom: 14),
+              nonRotatedChildren: [
+                AttributionWidget.defaultWidget(
+                  source: 'OpenStreetMap contributors',
+                  onSourceTapped: null,
+                ),
+              ],
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.app',
+                ),
+                MarkerLayer(markers: allMarkers),
+              ],
+            );
+
+          });
+    }
+
+    return loadMap();
+
   }
 
   void listenToLocationChanges() {

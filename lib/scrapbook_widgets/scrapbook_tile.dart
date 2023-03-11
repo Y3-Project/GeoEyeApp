@@ -9,11 +9,18 @@ import 'package:provider/provider.dart';
 import '../user_pages/profile_page.dart';
 import '../util/user_model.dart';
 
-class ScrapbookTile extends StatelessWidget {
+class ScrapbookTile extends StatefulWidget {
   static String profileUrl = '';
   final Scrapbook scrapbook;
 
 
+  ScrapbookTile(this.scrapbook);
+
+  @override
+  State<ScrapbookTile> createState() => _ScrapbookTileState();
+}
+
+class _ScrapbookTileState extends State<ScrapbookTile> {
   void getProfilePic() async {
     QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
         .collection("users")
@@ -25,22 +32,18 @@ class ScrapbookTile extends StatelessWidget {
     }
   }
 
-
-  ScrapbookTile(this.scrapbook);
-
   Widget imageHandler() {
-    if (scrapbook.scrapbookThumbnail != '') {
-      return Image.network(scrapbook.scrapbookThumbnail);
+    if (widget.scrapbook.scrapbookThumbnail != '') {
+      return Image.network(widget.scrapbook.scrapbookThumbnail);
     } else {
       // default image file from images/default_image.png
       return Image.asset('images/default_image.png');
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-
-    getProfilePic();
 
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
@@ -49,7 +52,7 @@ class ScrapbookTile extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) =>
-                    ScrapbookPostsPage(scrapbook: this.scrapbook)),
+                    ScrapbookPostsPage(scrapbook: this.widget.scrapbook)),
           );
         },
         child: Card(
@@ -57,9 +60,9 @@ class ScrapbookTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(30)),
           margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0),
           child: ListTile(
-            leading: CircleAvatar(backgroundImage: NetworkImage(profileUrl)),
-            title: Text(scrapbook.scrapbookTitle),
-            subtitle: Text(scrapbook.currentUsername),
+            leading: CircleAvatar(backgroundImage: NetworkImage(ScrapbookTile.profileUrl)),
+            title: Text(widget.scrapbook.scrapbookTitle),
+            subtitle: Text(widget.scrapbook.currentUsername),
             trailing: imageHandler(),
           ),
         ),

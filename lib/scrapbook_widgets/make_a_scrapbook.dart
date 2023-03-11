@@ -17,7 +17,7 @@ class NewScrapbookPage extends StatefulWidget {
   NewScrapbookPage({Key? key}) : super(key: key);
   static double? currentLat = 0;
   static double? currentLong = 0;
-  static String visibility = '';
+  static bool visibility = false;
 
   @override
   State<NewScrapbookPage> createState() => _NewScrapbookPageState();
@@ -181,8 +181,8 @@ Widget visibilityStep() {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ElevatedButton(style: ButtonStyle(enableFeedback: true),onPressed: (){NewScrapbookPage.visibility = 'true';}, child: Text('Public')),
-          ElevatedButton(style: ButtonStyle(enableFeedback: true),onPressed: (){NewScrapbookPage.visibility = 'false';}, child: Text('Private'))
+          ElevatedButton(style: ButtonStyle(enableFeedback: true),onPressed: (){NewScrapbookPage.visibility = true;}, child: Text('Public')),
+          ElevatedButton(style: ButtonStyle(enableFeedback: true),onPressed: (){NewScrapbookPage.visibility = false;}, child: Text('Private'))
         ],
       ),
       Divider(height: 20, color: Colors.white),

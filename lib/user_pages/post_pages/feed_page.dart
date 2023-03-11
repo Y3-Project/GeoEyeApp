@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_list.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:provider/provider.dart';
 import 'package:popup_card/popup_card.dart';
 
@@ -11,13 +12,15 @@ import '../../scrapbook_widgets/scrapbook.dart';
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
 
+  //static List<Marker> markerList = <Marker>[];
+
   @override
   State<FeedPage> createState() => _FeedPageState();
 }
 
 class _FeedPageState extends State<FeedPage> {
   final CollectionReference scrapbookCollection =
-      FirebaseFirestore.instance.collection('scrapbooks');
+  FirebaseFirestore.instance.collection('scrapbooks');
 
   Stream<List<Scrapbook>> get scrapbooks {
     return scrapbookCollection.snapshots().map(_scrapbookListFromSnapshot);
@@ -25,6 +28,7 @@ class _FeedPageState extends State<FeedPage> {
 
   List<Scrapbook> _scrapbookListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
+
       return Scrapbook(
         id: doc.id,
         creatorid: doc.get('creatorid').toString(),
@@ -99,7 +103,7 @@ class _FeedPageState extends State<FeedPage> {
             color: Colors.black,
             elevation: 2,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
             child: const Icon(
               color: Colors.white,
               Icons.add_rounded,
@@ -110,7 +114,7 @@ class _FeedPageState extends State<FeedPage> {
             padding: EdgeInsets.all(8),
             color: Colors.white,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
             elevation: 2,
             tag: 'test',
             child: popUpItemBody(),

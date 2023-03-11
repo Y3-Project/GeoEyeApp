@@ -122,7 +122,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       height: 40,
                       alignment: Alignment.centerLeft,
                       decoration: BoxDecoration(border: Border.symmetric()),
-                      child: Text("Post Count: ",
+                      child: Text("Scrapbook Count: ",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20)),
                     )),
