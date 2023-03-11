@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post.dart';
@@ -34,6 +35,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     duration: Duration(seconds: 2),
   );
 
+  TextEditingController commentBox = new TextEditingController();
+
   @override
   void initState() {
     _querySnapshot = FirebaseFirestore.instance
@@ -63,7 +66,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
           post: _snapshots[i].get('post').toString(),
           reports: _snapshots[i].get('reports'),
           user: _snapshots[i].get('user').toString(),
-          timestamp: _snapshots[i].get('timestamp')));
+          timestamp: _snapshots[i].get('timestamp'),
+          id: _snapshots[i].id));
     }
   }
 
@@ -89,21 +93,28 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
    */
 
   String getLikesString(List<dynamic> likes) {
+    String heart = "❤️ ";
     if (likes.length == 0) {
-      return "Be the first to like this post!";
+      return heart + "Be the first to like this post!";
     } else if (likes.length == 1) {
-      return "Liked by " + likes[0].toString();
+      return heart + "Liked by " + likes[0].toString();
     } else if (likes.length == 2) {
-      return "Liked by " + likes[0].toString() + " and " + likes[1].toString();
+      return heart +
+          "Liked by " +
+          likes[0].toString() +
+          " and " +
+          likes[1].toString();
     } else if (likes.length == 3) {
-      return "Liked by " +
+      return heart +
+          "Liked by " +
           likes[0].toString() +
           ", " +
           likes[1].toString() +
           " and " +
           likes[2].toString();
     } else {
-      return "Liked by " +
+      return heart +
+          "Liked by " +
           likes[0].toString() +
           ", " +
           likes[1].toString() +
@@ -214,9 +225,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-              for (int i = 0;
-                  i < comments.length;
-                  i++) // there is a better way to do this proposed by jacob but i couldnt get it working
+              // there is a better way to do this proposed by jacob but i couldnt get it working
+              for (int i = 0; i < comments.length; i++)
                 Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -243,6 +253,22 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                     ),
                   ),
                 ),
+              TextField(
+                onEditingComplete: () {
+                  // todo: add new document to postComments collection
+
+                  // close keyboard
+                  FocusScope.of(context).unfocus();
+                },
+                controller: commentBox,
+                maxLength: 40,
+                style: TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 18),
+                    hintText: 'Enter a comment...',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20))),
+              )
             ],
           ),
         ),
