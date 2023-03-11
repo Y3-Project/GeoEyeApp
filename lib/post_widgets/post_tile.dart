@@ -21,6 +21,45 @@ class PostTile extends StatelessWidget {
     }
   }
 
+  SnackBar reportedSnackBar = SnackBar(
+    content: Text("Reported post to moderators"),
+    duration: Duration(seconds: 2),
+  );
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelBtn = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+    Widget yesBtn = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        // todo: report the post
+        ScaffoldMessenger.of(context).showSnackBar(reportedSnackBar);
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Report Post"),
+      content: Text("Are you sure you want to report this post?"),
+      actions: [
+        cancelBtn,
+        yesBtn,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,6 +72,9 @@ class PostTile extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => ExpandedPostPage(post)),
             );
+          },
+          onLongPress: () {
+            showAlertDialog(context);
           },
           child: ListTile(
             leading: imageHandler(),
