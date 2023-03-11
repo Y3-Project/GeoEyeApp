@@ -29,6 +29,11 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     duration: Duration(seconds: 1),
   );
 
+  SnackBar reportedSnackBar = SnackBar(
+    content: Text("Reported comment to moderators"),
+    duration: Duration(seconds: 2),
+  );
+
   @override
   void initState() {
     _querySnapshot = FirebaseFirestore.instance
@@ -108,6 +113,39 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     }
   }
 
+  showAlertDialog(BuildContext context) {
+    Widget cancelBtn = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+    Widget yesBtn = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        // todo: report the comment
+        ScaffoldMessenger.of(context).showSnackBar(reportedSnackBar);
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Report Comment"),
+      content: Text("Are you sure you want to report this comment?"),
+      actions: [
+        cancelBtn,
+        yesBtn,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,21 +214,29 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-              for (int i = 0; i < comments.length; i++)
+              for (int i = 0;
+                  i < comments.length;
+                  i++) // there is a better way to do this proposed by jacob but i couldnt get it working
                 Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(8),
-                    onTap: () => print('clicked on comment: ' + i.toString()), // go to user profile
-                    onLongPress: () => print('long pressed comment: ' + i.toString()), // report comment (maybe open a menu first?)
+                    onTap: () => print('clicked on comment: ' + i.toString()),
+                    // go to user profile
+                    onLongPress: () {
+                      print('long pressed comment: ' + i.toString());
+                      showAlertDialog(context);
+                    },
+                    // report comment (maybe open a menu first?)
                     child: Container(
                       height: 50,
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              "user" + i.toString() + //getUsername(comments[i].user).toString() +
+                              "user" +
+                                  i.toString() + //getUsername(comments[i].user).toString() +
                                   ": " +
                                   comments[i].content,
                               style: TextStyle(fontSize: 20))),
