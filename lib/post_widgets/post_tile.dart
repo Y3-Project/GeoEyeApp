@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/expanded_post.dart';
@@ -36,7 +37,11 @@ class PostTile extends StatelessWidget {
     Widget yesBtn = TextButton(
       child: Text("Yes"),
       onPressed: () {
-        // todo: report the post
+        User? user = FirebaseAuth.instance.currentUser;
+        FirebaseFirestore.instance.collection("posts").doc(post.id).update({
+          "reports": FieldValue.arrayUnion([user!.uid])
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(reportedSnackBar);
         Navigator.of(context).pop(); // dismiss dialog
       },
@@ -58,7 +63,6 @@ class PostTile extends StatelessWidget {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
