@@ -13,7 +13,6 @@ class ScrapbookTile extends StatefulWidget {
   static String profileUrl = '';
   final Scrapbook scrapbook;
 
-
   ScrapbookTile(this.scrapbook);
 
   @override
@@ -41,26 +40,29 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) =>
-                    ScrapbookPostsPage(scrapbook: this.widget.scrapbook)),
-          );
-        },
-        child: Card(
-          shape: ContinuousRectangleBorder(
-              borderRadius: BorderRadius.circular(30)),
-          margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0),
+      child: Card(
+        shape:
+            ContinuousRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onLongPress: () {
+            // here we want to open up a menu for reporting the scrapbook
+          },
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ScrapbookPostsPage(scrapbook: this.widget.scrapbook)),
+            );
+          },
           child: ListTile(
-            leading: CircleAvatar(backgroundImage: NetworkImage(ScrapbookTile.profileUrl)),
+            leading: CircleAvatar(
+                backgroundImage: NetworkImage(ScrapbookTile.profileUrl)),
             title: Text(widget.scrapbook.scrapbookTitle),
             subtitle: Text(widget.scrapbook.currentUsername),
             trailing: imageHandler(),
