@@ -31,7 +31,7 @@ class VideoUploaderWidgetState extends State<VideoUploaderWidget> {
     }
     final String path =
         (await getApplicationDocumentsDirectory()).absolute.path;
-    final finalVideo = await videoFile.copy('$path/pickedVideo.png');
+    final finalVideo = await videoFile.copy('$path/video');
     return finalVideo;
   }
 
