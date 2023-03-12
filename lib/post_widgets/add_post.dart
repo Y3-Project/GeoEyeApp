@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
+import 'package:flutter_app_firebase_login/user_pages/home_widget.dart';
 
 import '../scrapbook_widgets/scrapbook_title.dart';
 import '../user_pages/profile_page.dart';
@@ -135,23 +136,15 @@ class _AddPostState extends State<AddPost> {
                 onPressed: () async {
 
                   addScrapbookPostMarker();
-                  /*
-                  MapViewPage.markerList.add(Marker(
-                    point: LatLng(NewScrapbookPage.currentLat!,
-                        NewScrapbookPage.currentLong!),
-                    width: 40,
-                    height: 40,
-                    builder: (context) => Icon(
-                      Icons.location_on,
-                      size: 30,
-                    ),
-                  ));
-                   */
 
-                  //---FOR NAVIGATING TO THE MAP VIEW PAGE ON THE LOCATION OF THE MARKER WHEN CREATE SCRAPBOOK BUTTON PRESSED---
-
-                  //---FOR NAVIGATING TO THE MAP VIEW PAGE ON THE LOCATION OF THE MARKER WHEN CREATE SCRAPBOOK BUTTON PRESSED---
-
+                  //---FOR NAVIGATING TO THE HOME PAGE---
+                  setState(() {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => HomeWidget()),
+                    );
+                  });
+                  //---FOR NAVIGATING TO THE HOME PAGE---
 
                 },
                 child: Text("Create the scrapbook",
