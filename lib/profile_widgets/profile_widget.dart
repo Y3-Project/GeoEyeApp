@@ -1,12 +1,5 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/image_widgets/image_uploader_widget.dart';
-import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_list.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_app_firebase_login/scrapbook_widgets/current_user_scrapbook_list.dart';
 import 'package:provider/provider.dart';
 import '../account_settings_help_pages/account_settings_page.dart';
 import '../account_settings_help_pages/help_page.dart';
@@ -37,6 +30,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           .doc(user.id)
           .update({'biography': _profileBioController.text});
     }
+
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -124,9 +118,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       height: 40,
                       alignment: Alignment.centerLeft,
                       decoration: BoxDecoration(border: Border.symmetric()),
-                      child: Text("Scrapbook Count: ",
+                      child: Text("Scrapbook Count: [remove this, as value is refreshing]",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20)),
+                              fontWeight: FontWeight.bold, fontSize: 17)),
                     )),
                     Align(
                         child: Container(
@@ -165,7 +159,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => ScrapbookList()),
+                                builder: (context) => CurrentUserScrapbookList()),
                           );
                         },
                         child: Text(
@@ -210,9 +204,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           );
                         },
                         child: Text(
-                          "Help",
+                          "Help Page [REMOVE, IF WE DON'T ADD ANYTHING HERE]",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
+                              fontWeight: FontWeight.bold, fontSize: 20),
                         )),
                   ),
                 ],
