@@ -43,10 +43,14 @@ class _ARViewPageState extends State<ARViewPage> {
             borderRadius: const BorderRadius.all(Radius.circular(20))),
         child: cameraController == null
             ? Center(child: Text("Loading Camera..."))
-            : !cameraController!.value.isInitialized
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : CameraPreview(cameraController!));
+            : Stack(
+                children: [
+                  !cameraController!.value.isInitialized
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : CameraPreview(cameraController!)
+                ],
+              ));
   }
 }
