@@ -119,7 +119,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
           ", " +
           likes[1].toString() +
           " and " +
-          (likes.length - 3).toString() +
+          (likes.length - 2).toString() +
           " others";
     }
   }
