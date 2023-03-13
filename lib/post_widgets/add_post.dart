@@ -1,29 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/post_widgets/image_or_video_post.dart';
 import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
-import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_title.dart';
-import 'package:flutter_app_firebase_login/user_pages/post_pages/map_view_page.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_app_firebase_login/user_pages/home_widget.dart';
+import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
 
+import '../profile_widgets/profile_widget.dart';
+import '../scrapbook_widgets/scrapbook_title.dart';
 import '../user_pages/profile_page.dart';
-import '../util/user_model.dart';
 
 class AddPost extends StatefulWidget {
   AddPost({Key? key}) : super(key: key);
 
   static String username = '';
+  static String userDocID = '';
+  static late DocumentReference scrapbookRef;
+  static late DocumentReference postRef;
 
   @override
   State<AddPost> createState() => _AddPostState();
 }
 
 class _AddPostState extends State<AddPost> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
-  //todo add third argument to addPost method below for url of image/video
-  Future<void> addPost(String title, String desc) async {
+  Future<void> addScrapbookPostMarker() async {
+    //-------------------------POST SECTION STARTS--------------------------------------
     CollectionReference posts = FirebaseFirestore.instance.collection('posts');
     String userDocID = '';
     QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
@@ -36,28 +38,81 @@ class _AddPostState extends State<AddPost> {
     }
     DocumentReference userDocRef =
         FirebaseFirestore.instance.doc('/users/' + userDocID);
-    await posts.add({
+    AddPost.postRef = await posts.add({
       'likes': List.empty(growable: true),
-      'picture': '',
+      'picture':
+          '', //todo get the download url from Storage and put it here IF user uploaded video,
+      //todo IF NULL, FILL IT WITH "images/default_image.png"
       'reports': List.empty(growable: true),
-      'text': desc,
+      'text': titleCaptionForPost.postCaption,
       'timestamp': Timestamp.now(),
-      'title': title,
+      'title': titleCaptionForPost.postTitle,
       'user': userDocRef,
-      'video': ''
+      'video':
+          '' //todo get the download url from Storage and put it here IF user uploaded video,
+      //todo IF NULL, FILL IT WITH "images/default_image.png"
     });
-    print("Post added!");
+    print("Post added!" + "with postRef: " + AddPost.postRef.toString());
+    //-------------------------POST SECTION ENDS--------------------------------------
 
-    //todo add the newly created scrapbook to the "scrapbook" collection in Firestore as well,
-    //so create a method here called addScrapbook like above
+    //-------------------------SCRAPBOOK SECTION STARTS--------------------------------------
+    //for getting the "creatorid" field of the scrapbook; ('/users/' + AddPost.userDocID);
+    CollectionReference posts1 = FirebaseFirestore.instance.collection('posts');
+    QuerySnapshot<Map<String, dynamic>> snap2 = await FirebaseFirestore.instance
+        .collection("users")
+        .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
+        .get();
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> docList2 = snap2.docs;
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList2) {
+      AddPost.userDocID = doc.id;
+    }
 
-    //todo add the relevant post and this newly created scrapbook to "scrapbookPosts" as well
-    //so create a method here called addScrapbookPost
+    //for accessing the current user's username; AddPost.username
+    QuerySnapshot<Map<String, dynamic>> snap3 = await FirebaseFirestore.instance
+        .collection("users")
+        .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
+        .get();
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> docList3 = snap3.docs;
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList3) {
+      AddPost.username = doc['username'];
+    }
+
+    AddPost.scrapbookRef = await db.collection('scrapbooks').add({
+      'creatorid': '/users/' + AddPost.userDocID,
+      'currentUsername': AddPost.username,
+      'location':
+          GeoPoint(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
+      'public': NewScrapbookPage.visibility,
+      'scrapbookThumbnail':
+          '', //todo get the download url from Storage and put it here, IF NULL, FILL IT WITH "images/default_image.png"
+      'scrapbookTitle': ScrapbookTitle.scrapbookTitle,
+      'timestamp': Timestamp.now()
+    });
+    print("Scrapbook added!" +
+        "with scrapbookRef: " +
+        AddPost.scrapbookRef.toString());
+    //-------------------------SCRAPBOOK SECTION ENDS--------------------------------------
+
+    //-------------------------MARKER SECTION STARTS--------------------------------------
+    //add its corresponding marker
+    await db.collection("markers").add({
+      'location':
+          GeoPoint(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
+      'uuid': ProfilePage().getUuid(),
+      'scrapbookRef': AddPost.scrapbookRef
+    }).then((documentSnapshot) => print("Marker added"));
+    //-------------------------MARKER SECTION ENDS--------------------------------------
+
+    //-------------------------SCRAPBOOKPOST SECTION STARTS--------------------------------------
+    await db
+        .collection('scrapbookPosts')
+        .add({'post': AddPost.postRef, 'scrapbook': AddPost.scrapbookRef}).then(
+            (documentSnapshot) => print("Scrapbook and Post linked!"));
+    //-------------------------SCRAPBOOKPOST SECTION ENDS--------------------------------------
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -72,64 +127,19 @@ class _AddPostState extends State<AddPost> {
                     textStyle: MaterialStateTextStyle.resolveWith(
                         (states) => TextStyle(color: Colors.white))),
                 onPressed: () async {
-                  // TODO: Implement uploading pictures and videos with a post
 
+                  //------MAIN METHOD BELOW-------//
+                  addScrapbookPostMarker();
+                  //------MAIN METHOD BELOW-------//
 
+                  //---FOR NAVIGATING TO THE HOME PAGE---
+                  setState(() {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => MainUserPage()),
+                    );
+                  });
+                  //---FOR NAVIGATING TO THE HOME PAGE---
 
-                  //----------------------------ARGUMENTS NEEDED FOR MAKING A SCRAPBOOK-----------------------------------------
-                  //for getting the uuid of the current user; ProfilePage().getUuid())
-                  //for accessing the scrapbook's Title; ScrapbookTitle.scrapbookTitle
-                  //for accessing the download url of the scrapbook thumbnail: [INSERT HERE] [IF NULL, FILL IT WITH "images/default_image.png"
-
-                  QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
-                      .collection("users")
-                      .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
-                      .get();
-                  List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
-                  for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
-                    AddPost.username = doc['username'];
-                  }
-                  //for accessing the current user's username; AddPost.username
-
-                  //for getting the user's current location, NewScrapbookPage.currentLat AND NewScrapbookPage.currentLong
-
-                  //for getting the boolean value for the field "public" (which is false as default), NewScrapbookPage.visibility
-
-
-                  //CALL THE METHOD addScrapbook HERE (NOT CREATED YET)
-
-                  //----------------------------ARGUMENTS NEEDED FOR MAKING A SCRAPBOOK-----------------------------------------
-
-
-                  //----------------------------ARGUMENTS NEEDED FOR MAKING A POST-----------------------------------------
-                  //for getting the title of the post; titleCaptionForPost.postTitle;
-                  //for getting the caption of the post; titleCaptionForPost.postCaption;
-                  //for the getting the download url of an image, if an image was selected as the post [INSERT HERE]
-                  //OR alternatively, see below comment
-                  //for the getting the download url of a video, if a video was selected as the post [INSERT HERE]
-
-                  //CALL THE METHOD addPost HERE
-
-                  //----------------------------ARGUMENTS NEEDED FOR MAKING A POST-----------------------------------------
-
-
-                  //
-
-
-                  /*
-                    Directory appDocDir = await getApplicationDocumentsDirectory();
-                    String picturePath = appDocDir.absolute.path.toString() + '/add_img.png';
-                    File pictureFile = File(picturePath);
-                    Image image = Image(image: AssetImage('images/add_img.png'));
-
-
-
-                    bool t = await pictureFile.exists();
-                    print(t.toString());
-
-                     */
-
-                  //uploadPicture(pictureFile);
                 },
                 child: Text("Create the scrapbook",
                     style:
