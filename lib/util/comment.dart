@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Comment {
   String content = ''; // the actual comment
-  String post = ''; // the post which the comment is attached to
+  String post = '/posts/'; // the post which the comment is attached to
   List<dynamic> reports = List.empty(
       growable:
           true); // this is an array of refs to users who have reported the post
-  String user = ''; // the author of the comment
+  String user = '/users/'; // the author of the comment
   Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(0);
   String id = '/postComments/'; // document id
 
