@@ -23,7 +23,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserModel>(context);
-
     Future<void> sendBioToFirestore() async {
       await FirebaseFirestore.instance
           .collection("users")
