@@ -14,7 +14,7 @@ class Post {
   String user = '/users/'; // path to author document eg '/users/abcdefg'
   String text = '';
   String title = '';
-  String id = '/posts/'; // document id
+  late DocumentReference id; // document id
   List<dynamic> likes = List.empty(
       growable:
           true); // this is an array of references to users who liked the post
@@ -43,6 +43,6 @@ class Post {
     this.user = doc['user'].toString();
     this.title = doc['title'];
     this.text = doc['text'];
-    this.id = doc.id;
+    this.id = doc.reference;
   }
 }
