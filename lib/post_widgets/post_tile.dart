@@ -18,7 +18,6 @@ class PostTile extends StatelessWidget {
     if (post.picture != '') {
       return Image.network(post.picture);
     } else {
-      // default image file from images/default_image.png
       return Image.asset('images/default_image.png');
     }
   }
