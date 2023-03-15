@@ -15,7 +15,7 @@ class ImageUploaderWidget extends StatefulWidget {
   ImageUploaderWidget({required Key key})
       : super(key: key);
 
-  Future<void> buildImageUploader(
+  Future<void> buildImageUploader (
       ImageUploaderWidget imageUploaderWidget, BuildContext context) async {
     await showModalBottomSheet(
       context: context,
@@ -63,21 +63,18 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
   Future<String> uploadPicture(String storagePath, String collection, String docId, String field) async {
     final storageRef = FirebaseStorage.instance.ref();
     final imgRef = storageRef.child(storagePath);
-    String picStoragePath = '';
+    String picUrl = '';
 
     try {
-      await imgRef
-          .putFile(picture)
-          .snapshot
-          .ref
-          .getDownloadURL()
-          .then((value) => picStoragePath = value);
+      TaskSnapshot taskSnapshot = await imgRef
+          .putFile(picture);
+      picUrl = await taskSnapshot.ref.getDownloadURL();
     } on fire_core.FirebaseException catch (e) {
       print(e.toString());
     }
-    //print(picStoragePath);
-    _sendPicToFirestore(picStoragePath, collection, docId, field);
-    return picStoragePath;
+    print(picUrl);
+    _sendPicToFirestore(picUrl, collection, docId, field);
+    return picUrl;
   }
 
 
