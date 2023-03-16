@@ -215,23 +215,26 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
               ),
               // LOOPING THROUGH ALL COMMENTS
               for (var commentTile in _displayComments)
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () => {
-                      // todo: here we want to go to the profile of the user who authored this comment
-                    },
-                    onLongPress: () {
-                      reportDialog(context, commentTile.getComment());
-                    },
-                    child: Container(
-                        height: 50,
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: commentTile)),
+                Container(
+                  height: 80,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () => {
+                        // todo: here we want to go to the profile of the user who authored this comment
+                      },
+                      onLongPress: () {
+                        reportDialog(context, commentTile.getComment());
+                      },
+                      child: Container(
+                          height: 50,
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: commentTile)),
+                    ),
                   ),
                 ),
               // ADDING COMMENT

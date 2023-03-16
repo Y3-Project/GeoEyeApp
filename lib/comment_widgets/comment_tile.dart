@@ -43,8 +43,14 @@ class _CommentTileState extends State<CommentTile> {
       return Image.network(_profilePicture);
     } else {
       // default image file from images/default_image.png
-      return Image.asset('images/geoeye.png');
+      return Image.asset("images/default_avatar.png");
     }
+  }
+
+  CircleAvatar getAvatar() {
+    return CircleAvatar(
+      backgroundImage: getCommenterProfilePicture().image,
+    );
   }
 
   @override
@@ -52,7 +58,7 @@ class _CommentTileState extends State<CommentTile> {
     return Scaffold(
       body: Container(
         child: ListTile(
-          leading: getCommenterProfilePicture(),
+          leading: getAvatar(),
           title: Text(this.widget.comment.content),
           subtitle: Text(_commenter),
         ),
