@@ -29,22 +29,16 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
       );
     }
 
-    NetworkImage getUserPicture() {
-      if (user.profilePicture == "")
-        return NetworkImage(
-            "https://firebasestorage.googleapis.com/v0/b/flutter-app-firebase-log-c1c41.appspot.com/o/images%2Fgeneral%2Fgeoeye.png?alt=media&token=d2fd885b-f0c5-409c-8ba0-23b3bf3195f2");
-      else {
-        NetworkImage image = NetworkImage(user.profilePicture);
-        return image;
-      }
-    }
-
     return Center(
       child: Stack(children: <Widget>[
         CircleAvatar(
           backgroundColor: Colors.black,
           radius: 80.0,
-          backgroundImage: getUserPicture(),
+          backgroundImage: user.profilePicture == ''
+              ? Image(
+                  image: AssetImage('images/default_avatar.png'),
+                ).image
+              : NetworkImage(user.profilePicture),
         ),
         Positioned(
           bottom: 10.0,

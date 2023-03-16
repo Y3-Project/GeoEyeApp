@@ -72,7 +72,6 @@ class _CurrentUserScrapbookListState extends State<CurrentUserScrapbookList> {
 
   @override
   Widget build(BuildContext context) {
-    print("ITEMS TO DISPLAY ${_display.length}");
     return Scaffold(
         appBar: AppBar(title: Text("My Scrapbooks")),
         body: _display.length != 0

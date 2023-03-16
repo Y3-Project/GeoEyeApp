@@ -96,9 +96,9 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
 
   String getLikesString(List<dynamic> likes) {
     var usernames = List.empty(growable: true);
-    for (int i = 0; i < likes.length; i++) {
-      usernames.add(getUsername(likes[i]));
-    }
+    // for (int i = 0; i < likes.length; i++) {
+    //   usernames.add(getUsername(likes[i]));
+    // }
 
     String heart = "❤️ ";
     if (usernames.length == 0) {

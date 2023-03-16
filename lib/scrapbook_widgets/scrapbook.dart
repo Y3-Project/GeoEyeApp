@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Scrapbook {
-  String id = '';
+  String id =
+      ''; // todo: we should probably change this to a DocumentReference rather than a String
   String creatorid = '';
   String scrapbookTitle = '';
   String scrapbookThumbnail = '';
