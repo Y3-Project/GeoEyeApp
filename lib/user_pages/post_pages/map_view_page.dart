@@ -4,9 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
+import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+import 'popup_card_style.dart';
 
 class MapViewPage extends StatefulWidget {
   const MapViewPage({Key? key}) : super(key: key);
@@ -22,6 +25,8 @@ class _MapViewPageState extends State<MapViewPage> {
   StreamSubscription<Position>? positionStream;
   Position? currentPosition;
 
+  final PopupController _popupLayerController = PopupController();
+
   @override
   void dispose() {
     super.dispose();
@@ -36,7 +41,6 @@ class _MapViewPageState extends State<MapViewPage> {
 
   @override
   Widget build(BuildContext context) {
-
     LatLng latAndLong = LatLng(0.0, 0.0);
 
     /// Determine the current position of the device.
@@ -96,11 +100,11 @@ class _MapViewPageState extends State<MapViewPage> {
       setState(() {});
     }
 
-
     Widget loadMap() {
       return StreamBuilder(
           stream: FirebaseFirestore.instance.collection('markers').snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          builder: (context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             int? docsLength = snapshot.data?.docs.length;
 
             if (!snapshot.hasData) {
@@ -112,18 +116,14 @@ class _MapViewPageState extends State<MapViewPage> {
                   height: 45.0,
                   point: new LatLng(snapshot.data?.docs[i]['location'].latitude,
                       snapshot.data?.docs[i]['location'].longitude),
-                  builder: (context) => new Container(
-                        child: IconButton(
-                            onPressed: () {
-                              //print("Marker clicked!");
-                              /*when pressed, add code here for the popup over the marker*/
-                            },
-                            icon: Icon(Icons.location_on),
-                            iconSize: 40.0,),
-                      )));
+                  builder: (context) => new Icon(Icons.location_on)));
             }
             return FlutterMap(
-              options: MapOptions(center: latAndLong, zoom: 14),
+              options: MapOptions(
+                center: latAndLong,
+                zoom: 14,
+                onTap: (_, __) => _popupLayerController.hideAllPopups(),
+              ),
               nonRotatedChildren: [
                 AttributionWidget.defaultWidget(
                   source: 'OpenStreetMap contributors',
@@ -135,15 +135,24 @@ class _MapViewPageState extends State<MapViewPage> {
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.app',
                 ),
-                MarkerLayer(markers: allMarkers),
+                PopupMarkerLayerWidget(
+                  options: PopupMarkerLayerOptions(
+                    popupAnimation: PopupAnimation.fade(curve: Curves.bounceIn),
+                    popupController: _popupLayerController,
+                    markers: allMarkers,
+                    markerRotateAlignment:
+                        PopupMarkerLayerOptions.rotationAlignmentFor(
+                            AnchorAlign.top),
+                    popupBuilder: (BuildContext context, Marker marker) =>
+                        MarkerPopup(marker),
+                  ),
+                ),
               ],
             );
-
           });
     }
 
     return loadMap();
-
   }
 
   void listenToLocationChanges() {
