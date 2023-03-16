@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/comment_widgets/comment_tile.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post.dart';
@@ -25,7 +26,12 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   late StreamSubscription _querySnapshot;
   List<CommentTile> _displayComments = List.empty(growable: true);
   List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
-
+  String currentUUID = "";
+  // this is really annoying
+  // basically you can declare a document refence object normally
+  // so I'm doing this lmao
+  // this list will only ever have one item!!
+  List<DocumentReference> userDocument = List.empty(growable: true);
   List<Comment> comments = List.empty(growable: true);
 
   SnackBar likedSnackBar = SnackBar(
@@ -62,8 +68,24 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     });
   }
 
+  Future<void> getCurrentUserReference() async {
+    currentUUID = FirebaseAuth.instance.currentUser!.uid;
+    print("current UUID: " + currentUUID);
+    await FirebaseFirestore.instance
+        .collection("users")
+        .where("uuid", isEqualTo: currentUUID)
+        .snapshots()
+        .listen((event) {
+      for (var doc in event.docs) {
+        print(doc.id);
+        userDocument.add(doc.reference);
+      }
+    });
+  }
+
   @override
   void initState() {
+    getCurrentUserReference();
     loadComments();
     super.initState();
   }
@@ -240,9 +262,9 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
               // ADDING COMMENT
               TextField(
                 onEditingComplete: () {
-                  addComment(widget.post.id, commentBox.text,
-                      getCurrentUserDocRef() as DocumentReference<Object?>);
+                  addComment(widget.post.id, commentBox.text, userDocument[0]);
                   FocusScope.of(context).unfocus(); // close the keyboard
+                  commentBox.clear(); // clear the commentBox
                 },
                 controller: commentBox,
                 maxLength: 40,
