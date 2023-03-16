@@ -7,7 +7,8 @@ import '../image_widgets/image_uploader_widget.dart';
 import '../video_widgets/video_uploader_widget.dart';
 
 final imageUploaderWidgetStateKey = new GlobalKey<ImageUploaderWidgetState>();
-final String SCRAPBOOK_THUMBNAIL_STORAGE_DIRECTORY_PATH = "";
+final String SCRAPBOOK_THUMBNAIL_STORAGE_DIRECTORY_PATH = "/scrapbooks/";
+final String SCRAPBOOK_THUMBNAIL_NAME = "scrapbook_thumbnail.png";
 
 class ImageVideoPost extends StatefulWidget {
   const ImageVideoPost({Key? key}) : super(key: key);
@@ -28,51 +29,52 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
     return uuid;
   }
 
+  Future<void> checkImageUploader(
+      ImageUploaderWidget imageUploaderWidget) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: ((builder) => imageUploaderWidget),
+    );
+  }
+
+  Future<void> checkVideoUploader(
+      VideoUploaderWidget videoUploaderWidget) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: ((builder) => videoUploaderWidget),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future<void> checkImageUploader(
-        ImageUploaderWidget imageUploaderWidget) async {
-      await showModalBottomSheet(
-        context: context,
-        builder: ((builder) => imageUploaderWidget),
-      );
-    }
-
-    ;
-
-    Future<void> checkVideoUploader(
-        VideoUploaderWidget videoUploaderWidget) async {
-      await showModalBottomSheet(
-        context: context,
-        builder: ((builder) => videoUploaderWidget),
-      );
-    }
-
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       InkWell(
           onTap: () {
+            /*
             ImageUploaderWidget imageUploaderWidget = ImageUploaderWidget(
                 key: imageUploaderWidgetStateKey,
                 storagePath:
-                '/images/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
-                    postNumber.toString() +
-                    "-" +
-                    getUuid().toString() +
-                    '.png');
+                    '/images/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
+                        postNumber.toString() +
+                        "-" +
+                        getUuid().toString() +
+                        '.png');
             checkImageUploader(imageUploaderWidget);
+
+             */
           },
           child: Image.asset('images/add_img.png', height: 100)),
       // Divider(indent: 90),
       InkWell(
-        //todo : upload videos to Storage in onTap function below
+          //todo : upload videos to Storage in onTap function below
           onTap: () {
             VideoUploaderWidget videoUploaderWidget = VideoUploaderWidget(
                 key: imageUploaderWidgetStateKey,
                 storagePath:
-                '/videos/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
-                    postNumber.toString() +
-                    "-" +
-                    getUuid().toString());
+                    '/videos/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
+                        postNumber.toString() +
+                        "-" +
+                        getUuid().toString());
             checkVideoUploader(videoUploaderWidget);
           },
           child: Icon(Icons.video_call_rounded, size: 100))

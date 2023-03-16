@@ -41,12 +41,15 @@ class _ScrapbookThumbnailState extends State<ScrapbookThumbnail> {
 
     return InkWell(
         onTap: () {
+          /*
           ImageUploaderWidget imageUploaderWidget = ImageUploaderWidget(
               key: imageUploaderWidgetStateKey,
               storagePath: '/images/scrapBookThumbnail' + scrapbookNumber.toString() + "-"+ getUuid().toString() + '.png');
           checkImageUploader(imageUploaderWidget);
 
           //todo get the download url here (maybe?)
+
+           */
         },
         child: Icon(Icons.add_a_photo, size: 40));
   }

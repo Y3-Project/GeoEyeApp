@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/comment_widgets/comment_tile.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_posts_page.dart';
 
@@ -22,9 +24,14 @@ class ExpandedPostPage extends StatefulWidget {
 
 class _ExpandedPostPageState extends State<ExpandedPostPage> {
   late StreamSubscription _querySnapshot;
-  List<Container> _display = List.empty(growable: true);
+  List<CommentTile> _displayComments = List.empty(growable: true);
   List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
-
+  String currentUUID = "";
+  // this is really annoying
+  // basically you can declare a document refence object normally
+  // so I'm doing this lmao
+  // this list will only ever have one item!!
+  List<DocumentReference> userDocument = List.empty(growable: true);
   List<Comment> comments = List.empty(growable: true);
 
   SnackBar likedSnackBar = SnackBar(
@@ -39,14 +46,13 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
 
   TextEditingController commentBox = new TextEditingController();
 
-  @override
-  void initState() {
+  Future<void> loadComments() async {
     _querySnapshot = FirebaseFirestore.instance
         .collection("postComments")
         .snapshots()
         .listen((snapshot) {
       setState(() {
-        _display.clear();
+        _displayComments.clear();
         _snapshots.clear();
         _snapshots.addAll(snapshot.docs);
         for (int i = 0; i < _snapshots.length; i++) {
@@ -54,24 +60,38 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
           if (reports.length != 0) {
             continue;
           }
-          initDisplay(i);
+          if (_snapshots[i].get("post") == this.widget.post.id) {
+            initComments(i);
+          }
         }
       });
     });
+  }
+
+  Future<void> getCurrentUserReference() async {
+    currentUUID = FirebaseAuth.instance.currentUser!.uid;
+    print("current UUID: " + currentUUID);
+    await FirebaseFirestore.instance
+        .collection("users")
+        .where("uuid", isEqualTo: currentUUID)
+        .snapshots()
+        .listen((event) {
+      for (var doc in event.docs) {
+        print(doc.id);
+        userDocument.add(doc.reference);
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    getCurrentUserReference();
+    loadComments();
     super.initState();
   }
 
-  Future<void> initDisplay(int i) async {
-    for (int i = 0; i < _snapshots.length; i++) {
-      comments.add(new Comment(
-          content: _snapshots[i].get('content'),
-          post: _snapshots[i].get('post'),
-          reports: _snapshots[i].get('reports'),
-          user: _snapshots[i].get('user'),
-          timestamp: _snapshots[i].get('timestamp'),
-          id: _snapshots[i].reference
-      ));
-    }
+  Future<void> initComments(int i) async {
+    _displayComments.add(CommentTile(Comment.fromDocument(_snapshots[i])));
   }
 
   String getLikesString(List<dynamic> likes) {
@@ -182,10 +202,12 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                   likePost(this.widget.post.id),
                   ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
                 },
+                // TODO, might be a video
                 child: Image.network(widget.post.picture == ""
                     ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
                     : widget.post.picture),
               ),
+              // LIKES / LIKING
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -206,44 +228,43 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                   ),
                 ),
               ),
+              // START OF COMMENT SECTION
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Comments (" + comments.length.toString() + "):",
+                child: Text("Comments (${_displayComments.length}):",
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-
-              // TODO: DO THIS THE PROPER WAY
-              for (int i = 0; i < comments.length; i++)
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () => {
-                      // todo: here we want to go to the profile of the user who authored this comment
-                    },
-                    onLongPress: () {
-                      reportDialog(context, comments[i]);
-                    },
-                    child: Container(
-                      height: 50,
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                              getUsername(comments[i].user) +
-                                  ": " +
-                                  comments[i].content,
-                              style: TextStyle(fontSize: 20))),
+              // LOOPING THROUGH ALL COMMENTS
+              for (var commentTile in _displayComments)
+                Container(
+                  height: 80,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () => {
+                        // todo: here we want to go to the profile of the user who authored this comment
+                      },
+                      onLongPress: () {
+                        reportDialog(context, commentTile.getComment());
+                      },
+                      child: Container(
+                          height: 50,
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: commentTile)),
                     ),
                   ),
                 ),
+              // ADDING COMMENT
               TextField(
                 onEditingComplete: () {
-                  addComment(widget.post.id, commentBox.text,
-                      getCurrentUserDocRef() as DocumentReference<Object?>);
+                  addComment(widget.post.id, commentBox.text, userDocument[0]);
                   FocusScope.of(context).unfocus(); // close the keyboard
+                  commentBox.clear(); // clear the commentBox
                 },
                 controller: commentBox,
                 maxLength: 40,

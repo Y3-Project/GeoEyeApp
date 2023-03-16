@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +12,23 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ImageUploaderWidget extends StatefulWidget {
-  final String storagePath;
-  ImageUploaderWidget({required this.storagePath, required Key key})
+  ImageUploaderWidget({required Key key})
       : super(key: key);
+
+  Future<void> buildImageUploader (
+      ImageUploaderWidget imageUploaderWidget, BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: ((builder) => imageUploaderWidget),
+    );
+  }
 
   @override
   State<ImageUploaderWidget> createState() => ImageUploaderWidgetState();
 }
 
 class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
-  late File image = File('');
-  String imageURL = '';
+  File picture = File('');
 
   Future<File> pickImage(ImageSource imageSource) async {
     XFile? imgXFile = await ImagePicker().pickImage(source: imageSource);
@@ -32,44 +39,45 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
     final String path =
         (await getApplicationDocumentsDirectory()).absolute.path;
     final finalImage = await imgFile.copy('$path/pickedPicture.png');
-    return finalImage;
-  }
-
-  Future<String> uploadPicture(ImageSource imageSource) async {
-    File picture = await pickImage(imageSource);
-
-    final storageRef = FirebaseStorage.instance.ref();
-    final imgRef = storageRef.child(widget.storagePath);
-    String picStoragePath = '';
-
-    try {
-      await imgRef
-          .putFile(picture)
-          .snapshot
-          .ref
-          .getDownloadURL()
-          .then((value) => picStoragePath = value);
-    } on fire_core.FirebaseException catch (e) {
-      print(e.toString());
-    }
-
-    //print(picStoragePath);
-
-    imageURL = picStoragePath;
 
     showTopSnackBar(
       animationDuration: Duration(microseconds: 1000002),
       displayDuration: Duration(milliseconds: 95),
       Overlay.of(context)!,
       CustomSnackBar.info(
-        backgroundColor: Colors.black,
-        message:
-            "Photo Selected"
+          backgroundColor: Colors.black,
+          message:
+          "Photo Selected"
       ),
     );
-
-    return picStoragePath;
+    return await finalImage;
   }
+
+  Future<void> _sendPicToFirestore(String url, String collection, String docId, String field) async {
+    await FirebaseFirestore.instance
+        .collection(collection)
+        .doc(docId)
+        .update({field: url});
+  }
+
+  Future<String> uploadPicture(String storagePath, String collection, String docId, String field) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    final imgRef = storageRef.child(storagePath);
+    String picUrl = '';
+
+    try {
+      TaskSnapshot taskSnapshot = await imgRef
+          .putFile(picture);
+      picUrl = await taskSnapshot.ref.getDownloadURL();
+    } on fire_core.FirebaseException catch (e) {
+      print(e.toString());
+    }
+    print(picUrl);
+    _sendPicToFirestore(picUrl, collection, docId, field);
+    return picUrl;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +100,7 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
                   backgroundColor: MaterialStatePropertyAll(Colors.white)),
               icon: Icon(Icons.camera),
               onPressed: () {
-                uploadPicture(ImageSource.camera);
+                pickImage(ImageSource.camera).then((value) => picture = value);
               },
               label: Text("Camera", style: TextStyle(color: Colors.black)),
             ),
@@ -102,7 +110,7 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
                   backgroundColor: MaterialStatePropertyAll(Colors.white)),
               icon: Icon(Icons.image),
               onPressed: () {
-                uploadPicture(ImageSource.gallery);
+                pickImage(ImageSource.gallery).then((value) => picture = value);
               },
               label: Text("Gallery", style: TextStyle(color: Colors.black)),
             ),

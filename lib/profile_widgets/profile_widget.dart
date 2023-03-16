@@ -23,14 +23,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserModel>(context);
-
     Future<void> sendBioToFirestore() async {
       await FirebaseFirestore.instance
           .collection("users")
           .doc(user.id)
           .update({'biography': _profileBioController.text});
     }
-
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -118,7 +116,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       height: 40,
                       alignment: Alignment.centerLeft,
                       decoration: BoxDecoration(border: Border.symmetric()),
-                      child: Text("Scrapbook Count: [remove this, as value is refreshing]",
+                      child: Text(
+                          "Scrapbook Count: [remove this, as value is refreshing]",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 17)),
                     )),
@@ -159,7 +158,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => CurrentUserScrapbookList()),
+                                builder: (context) =>
+                                    CurrentUserScrapbookList()),
                           );
                         },
                         child: Text(
