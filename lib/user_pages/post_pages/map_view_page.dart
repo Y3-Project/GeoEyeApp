@@ -22,7 +22,7 @@ class MapViewPage extends StatefulWidget {
 
 class _MapViewPageState extends State<MapViewPage> {
   List<Marker> allMarkers = [];
-  StreamSubscription<Position>? positionStream;
+  late StreamSubscription<Position> positionStream;
   Position? currentPosition;
 
   final PopupController _popupLayerController = PopupController();
@@ -30,7 +30,7 @@ class _MapViewPageState extends State<MapViewPage> {
   @override
   void dispose() {
     super.dispose();
-    positionStream?.cancel();
+    positionStream.cancel();
   }
 
   @override
