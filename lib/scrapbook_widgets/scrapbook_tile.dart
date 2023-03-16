@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../user_pages/profile_page.dart';
 import '../util/user_model.dart';
+import '../util/util.dart';
 
 class ScrapbookTile extends StatefulWidget {
   static String profileUrl = '';
@@ -20,6 +21,12 @@ class ScrapbookTile extends StatefulWidget {
 }
 
 class _ScrapbookTileState extends State<ScrapbookTile> {
+  bool doesPostBelongToUser() {
+    print("current user: " + getCurrentUsername());
+    print("post user: " + widget.scrapbook.currentUsername);
+    return widget.scrapbook.currentUsername == getCurrentUsername();
+  }
+
   void getProfilePic() async {
     QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
         .collection("users")
@@ -40,6 +47,51 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
     }
   }
 
+  SnackBar reportedSnackBar = SnackBar(
+    content: Text("Reported post to moderators"),
+    duration: Duration(seconds: 2),
+  );
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelBtn = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+    Widget yesBtn = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        FirebaseFirestore.instance.doc('/posts/' + widget.scrapbook.id).update({
+          "reports": FieldValue.arrayUnion([getCurrentUserDocRef()])
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(reportedSnackBar);
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(doesPostBelongToUser() ? "Delete Post" : "Report Post"),
+      content: Text(
+          doesPostBelongToUser()
+              ? "Are you sure you want to delete this post?"
+              : "Are you sure you want to report this post?",
+          style: TextStyle(fontSize: 16, color: Colors.red)),
+      actions: [
+        cancelBtn,
+        yesBtn,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -51,7 +103,7 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
           onLongPress: () {
-            // here we want to open up a menu for reporting the scrapbook
+            showAlertDialog(context);
           },
           onTap: () {
             Navigator.of(context).push(
@@ -62,7 +114,11 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
           },
           child: ListTile(
             leading: CircleAvatar(
-                backgroundImage: NetworkImage(ScrapbookTile.profileUrl)),
+                backgroundImage: ScrapbookTile.profileUrl == ''
+                    ? Image(
+                        image: AssetImage('images/default_avatar.png'),
+                      ).image
+                    : NetworkImage(ScrapbookTile.profileUrl)),
             title: Text(widget.scrapbook.scrapbookTitle),
             subtitle: Text(widget.scrapbook.currentUsername),
             trailing: imageHandler(),

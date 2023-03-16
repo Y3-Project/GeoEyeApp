@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/create_account_page.dart';
 import 'package:flutter_app_firebase_login/util/moderator_widget.dart';
 import 'package:flutter_app_firebase_login/util/timed_out_page.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'forgot_password_page.dart';
 import '../user_pages/main_page.dart';
@@ -22,8 +23,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   User? user;
 
-  //final TextEditingController _controllerEmail = TextEditingController();
-  //final storage = new FlutterSecureStorage();
+  final TextEditingController _controllerEmail = TextEditingController();
+  final storage = new FlutterSecureStorage();
   String userEmail = '';
   String userPw = '';
   bool rememberMe = false;
@@ -64,11 +65,9 @@ class _LoginPageState extends State<LoginPage> {
       try {
         print('Logging in user');
 
-        /*
         // attempt to read credentials from secure storage
         userEmail = await storage.read(key: 'email') ?? '';
         userPw = await storage.read(key: 'password') ?? '';
-        */
 
         // check if username field contains '@', this means it is an email as usernames do not contain this char
         if (_controllerUsername.text.contains('@')) {
@@ -83,12 +82,12 @@ class _LoginPageState extends State<LoginPage> {
 
         if (rememberMe) {
           print('Writing credentials to secure storage');
-          //await storage.write(key: 'email', value: userEmail);
-          // await storage.write(key: 'password', value: _controllerPassword.text);
+          await storage.write(key: 'email', value: userEmail);
+          await storage.write(key: 'password', value: _controllerPassword.text);
         } else {
           print('Erasing credentials from secure storage');
-          //await storage.delete(key: 'email');
-          //await storage.delete(key: 'password');
+          await storage.delete(key: 'email');
+          await storage.delete(key: 'password');
         }
 
         // find out if user is banned
@@ -101,7 +100,6 @@ class _LoginPageState extends State<LoginPage> {
         for (var doc in userBanned.docs) {
           banned = doc.get("banned");
         }
-        print("banned: ${banned}");
         if (banned == true) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => BannedPage(

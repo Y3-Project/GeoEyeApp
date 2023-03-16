@@ -49,7 +49,8 @@ bool timedOutUserOverLimit(String username, String timeoutStart) {
   return start.difference(DateTime.now()).inDays < 0 ? true : false;
 }
 
-Future<DocumentReference<Map<String, dynamic>>> getCurrentUserDocRef() {
+// todo: MAKE THIS THING WORK
+Future<DocumentReference<Map<String, dynamic>>> getCurrentUserDocRef() async {
   // Get the document reference of the current user
   // we do this by getting the uuid from FirebaseAuth and then looking up the Users collection for matching uuid
   Query<Map<String, dynamic>> q = FirebaseFirestore.instance
@@ -105,6 +106,15 @@ String getUsername(DocumentReference documentReference) {
       .doc(documentReference.path)
       .get()
       .then((value) => username = value.get("username"));
+  return username;
+}
+
+String getCurrentUsername() {
+  Query<Map<String, dynamic>> q = FirebaseFirestore.instance
+      .collection("users")
+      .where("uuid", isEqualTo: FirebaseAuth.instance.currentUser!.uid);
+  String username = "Error";
+  q.get().then((value) => username = value.docs[0].get("username"));
   return username;
 }
 

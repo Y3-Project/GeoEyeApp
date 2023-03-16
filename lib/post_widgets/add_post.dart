@@ -42,7 +42,6 @@ class _AddPostState extends State<AddPost> {
       'likes': List.empty(growable: true),
       'picture':
           '', //todo get the download url from Storage and put it here IF user uploaded video,
-      //todo IF NULL, FILL IT WITH "images/default_image.png"
       'reports': List.empty(growable: true),
       'text': titleCaptionForPost.postCaption,
       'timestamp': Timestamp.now(),
@@ -50,7 +49,6 @@ class _AddPostState extends State<AddPost> {
       'user': userDocRef,
       'video':
           '' //todo get the download url from Storage and put it here IF user uploaded video,
-      //todo IF NULL, FILL IT WITH "images/default_image.png"
     });
     print("Post added!" + "with postRef: " + AddPost.postRef.toString());
     //-------------------------POST SECTION ENDS--------------------------------------
