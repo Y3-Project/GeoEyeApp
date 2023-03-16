@@ -2,16 +2,18 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/image_widgets/scrapbook_thumbnail.dart';
 import 'package:flutter_app_firebase_login/post_widgets/add_post.dart';
 import 'package:flutter_app_firebase_login/post_widgets/image_or_video_post.dart';
 import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_title.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../user_pages/profile_page.dart';
+import '../media_widgets/image_uploader_widget.dart';
+import '../media_widgets/scrapbook_thumbnail.dart';
+import '../util/enums/media_type.dart';
 
 //todo this page allows the user to make a completely new scrapbook
+MediaUploaderWidgetState thumbnailUploader = new MediaUploaderWidgetState();
 
 class NewScrapbookPage extends StatefulWidget {
   NewScrapbookPage({Key? key}) : super(key: key);
@@ -23,12 +25,12 @@ class NewScrapbookPage extends StatefulWidget {
   State<NewScrapbookPage> createState() => _NewScrapbookPageState();
 }
 
-
 class _NewScrapbookPageState extends State<NewScrapbookPage> {
   int currentStep = 0;
 
   @override
   Widget build(BuildContext context) {
+    //thumbnailUploader = new MediaUploaderWidget(key: thumbnailUploaderWidgetStateKey, mediaType: MediaType.picture, fileName: "scrapbook_thumbnail");
     return Scaffold(
         appBar: AppBar(
           title: Text("Create A New Scrapbook", style: TextStyle(fontSize: 25)),
@@ -121,7 +123,14 @@ Widget thumbnailStep() {
       Divider(color: Colors.white, height: 20),
 
       //goes to another file called scrapbook_thumbnail.dart
-      ScrapbookThumbnail(),
+
+      ScrapbookThumbnail(imageUploader:
+          (newImageUploader) {
+        thumbnailUploader = newImageUploader;
+        print(thumbnailUploader.mediaFile.path);
+      }),
+
+      //ScrapbookThumbnail(imageUploader: thumbnailUploader),
       Divider(color: Colors.white, height: 20),
       Text('Or leave it as the default one shown below',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -181,8 +190,18 @@ Widget visibilityStep() {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ElevatedButton(style: ButtonStyle(enableFeedback: true),onPressed: (){NewScrapbookPage.visibility = true;}, child: Text('Public')),
-          ElevatedButton(style: ButtonStyle(enableFeedback: true),onPressed: (){NewScrapbookPage.visibility = false;}, child: Text('Private'))
+          ElevatedButton(
+              style: ButtonStyle(enableFeedback: true),
+              onPressed: () {
+                NewScrapbookPage.visibility = true;
+              },
+              child: Text('Public')),
+          ElevatedButton(
+              style: ButtonStyle(enableFeedback: true),
+              onPressed: () {
+                NewScrapbookPage.visibility = false;
+              },
+              child: Text('Private'))
         ],
       ),
       Divider(height: 20, color: Colors.white),

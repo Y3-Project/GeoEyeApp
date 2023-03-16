@@ -4,42 +4,50 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/util/enums/media_type.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart' as fire_core;
+import 'package:path/path.dart' as p;
 
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class ImageUploaderWidget extends StatefulWidget {
-  ImageUploaderWidget({required Key key})
+
+
+
+
+class MediaUploaderWidget extends StatefulWidget {
+  final MediaType mediaType;
+  final String fileName;
+  MediaUploaderWidget({required Key key, required this.mediaType, required this.fileName})
       : super(key: key);
 
-  Future<void> buildImageUploader (
-      ImageUploaderWidget imageUploaderWidget, BuildContext context) async {
+  Future<void> buildMediaUploader (
+      MediaUploaderWidget mediaUploaderWidget, BuildContext context) async {
     await showModalBottomSheet(
       context: context,
-      builder: ((builder) => imageUploaderWidget),
+      builder: ((builder) => mediaUploaderWidget),
     );
   }
 
   @override
-  State<ImageUploaderWidget> createState() => ImageUploaderWidgetState();
+  State<MediaUploaderWidget> createState() => MediaUploaderWidgetState();
 }
 
-class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
-  File picture = File('');
+class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
+  File mediaFile = File('');
 
-  Future<File> pickImage(ImageSource imageSource) async {
-    XFile? imgXFile = await ImagePicker().pickImage(source: imageSource);
+  Future<File> pickMediaFile(ImageSource mediaSource) async {
+    XFile? imgXFile = widget.mediaType == MediaType.picture ? await ImagePicker().pickImage(source: mediaSource) : await ImagePicker().pickVideo(source: mediaSource);
     File imgFile = File('');
     if (imgXFile != null) {
       imgFile = File(imgXFile.path);
     }
+    String extension = p.extension(imgFile.path);
     final String path =
         (await getApplicationDocumentsDirectory()).absolute.path;
-    final finalImage = await imgFile.copy('$path/pickedPicture.png');
-
+    final finalImage = await imgFile.copy('$path/' + widget.fileName + extension);
     showTopSnackBar(
       animationDuration: Duration(microseconds: 1000002),
       displayDuration: Duration(milliseconds: 95),
@@ -53,28 +61,27 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
     return await finalImage;
   }
 
-  Future<void> _sendPicToFirestore(String url, String collection, String docId, String field) async {
+  Future<void> _sendMediaToFirestore(String url, String collection, String docId, String field) async {
     await FirebaseFirestore.instance
         .collection(collection)
         .doc(docId)
         .update({field: url});
   }
 
-  Future<String> uploadPicture(String storagePath, String collection, String docId, String field) async {
+  Future<String> uploadMedia(String storageDir, String collection, String docId, String field) async {
     final storageRef = FirebaseStorage.instance.ref();
-    final imgRef = storageRef.child(storagePath);
-    String picUrl = '';
+    final mediaStorageRef = storageRef.child(storageDir + widget.fileName);
+    String fileUrl = '';
 
     try {
-      TaskSnapshot taskSnapshot = await imgRef
-          .putFile(picture);
-      picUrl = await taskSnapshot.ref.getDownloadURL();
+      TaskSnapshot taskSnapshot = await mediaStorageRef
+          .putFile(mediaFile);
+      fileUrl = await taskSnapshot.ref.getDownloadURL();
     } on fire_core.FirebaseException catch (e) {
       print(e.toString());
     }
-    print(picUrl);
-    _sendPicToFirestore(picUrl, collection, docId, field);
-    return picUrl;
+    _sendMediaToFirestore(fileUrl, collection, docId, field);
+    return fileUrl;
   }
 
 
@@ -100,7 +107,7 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
                   backgroundColor: MaterialStatePropertyAll(Colors.white)),
               icon: Icon(Icons.camera),
               onPressed: () {
-                pickImage(ImageSource.camera).then((value) => picture = value);
+                pickMediaFile(ImageSource.camera).then((value) => mediaFile = value);
               },
               label: Text("Camera", style: TextStyle(color: Colors.black)),
             ),
@@ -110,7 +117,10 @@ class ImageUploaderWidgetState extends State<ImageUploaderWidget> {
                   backgroundColor: MaterialStatePropertyAll(Colors.white)),
               icon: Icon(Icons.image),
               onPressed: () {
-                pickImage(ImageSource.gallery).then((value) => picture = value);
+                if (widget.mediaType == MediaType.picture)
+                  pickMediaFile(ImageSource.gallery).then((value) => mediaFile = value);
+                else
+                  pickMediaFile(ImageSource.gallery).then((value) => mediaFile = value);
               },
               label: Text("Gallery", style: TextStyle(color: Colors.black)),
             ),

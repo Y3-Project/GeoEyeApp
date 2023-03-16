@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
-import '../image_widgets/image_uploader_widget.dart';
+import '../media_widgets/image_uploader_widget.dart';
 import '../video_widgets/video_uploader_widget.dart';
 
-final imageUploaderWidgetStateKey = new GlobalKey<ImageUploaderWidgetState>();
+final imageUploaderWidgetStateKey = new GlobalKey<MediaUploaderWidgetState>();
 final String SCRAPBOOK_THUMBNAIL_STORAGE_DIRECTORY_PATH = "/scrapbooks/";
 final String SCRAPBOOK_THUMBNAIL_NAME = "scrapbook_thumbnail.png";
 
@@ -30,7 +30,7 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
   }
 
   Future<void> checkImageUploader(
-      ImageUploaderWidget imageUploaderWidget) async {
+      MediaUploaderWidget imageUploaderWidget) async {
     await showModalBottomSheet(
       context: context,
       builder: ((builder) => imageUploaderWidget),

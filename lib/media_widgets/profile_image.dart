@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/util/enums/media_type.dart';
 import 'package:provider/provider.dart';
 
 import '../util/user_model.dart';
 import 'image_uploader_widget.dart';
 
-final imageUploaderWidgetStateKey = new GlobalKey<ImageUploaderWidgetState>();
+final imageUploaderWidgetStateKey = new GlobalKey<MediaUploaderWidgetState>();
 final String PROFILE_PICTURE_STORAGE_DIRECTORY_PATH = "/images/";
-final String PROFILE_PICTURE_NAME = "profile_picture.png";
 
 class ImageProfileWidget extends StatefulWidget {
   const ImageProfileWidget({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
     UserModel user = Provider.of<UserModel>(context);
 
     Future<void> buildImageUploader(
-        ImageUploaderWidget imageUploaderWidget) async {
+        MediaUploaderWidget imageUploaderWidget) async {
       await showModalBottomSheet(
         context: context,
         builder: ((builder) => imageUploaderWidget),
@@ -51,17 +51,16 @@ class _ImageProfileWidgetState extends State<ImageProfileWidget> {
           right: 10.0,
           child: InkWell(
             onTap: () {
-              // TODO: fix the Firestore storage path for profile pictures
-              String IMAGE_STORAGE_PATH =
-                  PROFILE_PICTURE_STORAGE_DIRECTORY_PATH +
-                      user.id +
-                      '/' +
-                      PROFILE_PICTURE_NAME;
-              ImageUploaderWidget imageUploaderWidget =
-                  ImageUploaderWidget(key: imageUploaderWidgetStateKey);
+              String IMAGE_STORAGE_DIR =
+                  PROFILE_PICTURE_STORAGE_DIRECTORY_PATH + user.id + '/';
+              MediaUploaderWidget imageUploaderWidget = MediaUploaderWidget(
+                key: imageUploaderWidgetStateKey,
+                mediaType: MediaType.picture,
+                fileName: 'profile_picture',
+              );
               buildImageUploader(imageUploaderWidget).then((value) {
-                imageUploaderWidgetStateKey.currentState!.uploadPicture(
-                    IMAGE_STORAGE_PATH, 'users', user.id, 'profilePicture');
+                imageUploaderWidgetStateKey.currentState!.uploadMedia(
+                    IMAGE_STORAGE_DIR, 'users', user.id, 'profilePicture');
               });
             },
             child: Icon(
