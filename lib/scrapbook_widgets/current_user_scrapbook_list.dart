@@ -13,61 +13,67 @@ class CurrentUserScrapbookList extends StatefulWidget {
   static String currentUsername = '';
   static List<Scrapbook> currentScrapbooks = [];
 
+
   @override
   State<CurrentUserScrapbookList> createState() =>
       _CurrentUserScrapbookListState();
 }
 
 class _CurrentUserScrapbookListState extends State<CurrentUserScrapbookList> {
-  Future<List<Scrapbook>> getCurrentUserScrapbooks() async {
-    List<Scrapbook> currentUserScrapbooks = [];
+  List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
+  List<Container> _display = List.empty(growable: true);
+  late StreamSubscription _stream; //stream for getting the current user's scarpbooks
+  List<Scrapbook> _scrapbooks = List.empty(growable: true);
 
-    //to get the current username
-    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
-        .collection("users")
-        .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
-        .get();
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> docList = snap.docs;
-    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
-      CurrentUserScrapbookList.currentUsername = await doc['username'];
-    }
 
-    QuerySnapshot<Map<String, dynamic>> snap2 = await FirebaseFirestore.instance
-        .collection("scrapbooks")
-        .where("currentUsername",
-            isEqualTo: await CurrentUserScrapbookList.currentUsername)
-        .get();
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> docList2 = snap2.docs;
-
-    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList2) {
-      currentUserScrapbooks.add(Scrapbook(
-          id: doc.id,
-          creatorid: doc['creatorid'].toString(),
-          scrapbookTitle: doc['scrapbookTitle'],
-          scrapbookThumbnail: doc['scrapbookThumbnail'],
-          currentUsername: doc['currentUsername'],
-          location: doc['location'],
-          timestamp: doc['timestamp'],
-          public: doc['public']));
-    }
-
-    return await currentUserScrapbooks;
+  Future<Container> makeContainer(Scrapbook scrapbook) async {
+    return await Container(
+      child: ScrapbookTile(scrapbook),
+    );
   }
-  
+
+  Future<void> initDisplay(int i) async {
+    print(_snapshots[i].data().toString());
+    _display.add(await makeContainer(_scrapbooks[i]));
+  }
+
+  @override
+  void initState() {
+    String currentUsername = "";
+    var inst = FirebaseFirestore.instance.collection("users")
+    .where("uuid", isEqualTo: ProfilePage().getUuid().toString());
+    inst.snapshots().listen((event) {
+      for (var doc in event.docs) {
+        currentUsername = doc.get("username");
+      }
+    });
+
+    _stream = FirebaseFirestore.instance.collection("scrapbooks")
+              .where("currentUsername", isEqualTo: currentUsername)
+    .snapshots().listen((event) {
+      setState(() {
+        _display.clear();
+        _snapshots.clear();
+        _snapshots.addAll(event.docs);
+        for (int i = 0; i < _snapshots.length; ++i) {
+          _scrapbooks.add(Scrapbook.fromDocument(_snapshots[i]));
+          initDisplay(i);
+        }
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    getCurrentUserScrapbooks().then((value) => CurrentUserScrapbookList.currentScrapbooks = value);
-
     return Scaffold(
       appBar: AppBar(title: Text("My Scrapbooks")),
-      body: /*ElevatedButton(onPressed: (){print(CurrentUserScrapbookList.currentScrapbooks.length);}, child: Text('Test'))*/
-
+      body:
       ListView.builder(
-        itemCount: CurrentUserScrapbookList.currentScrapbooks.length,
+        itemCount: _display.length - _display.length + 1,
         itemBuilder: (context, index){
-          return ScrapbookTile(CurrentUserScrapbookList.currentScrapbooks[index]);
+          return Container(child: Column(children: _display));
         },
       )
     );

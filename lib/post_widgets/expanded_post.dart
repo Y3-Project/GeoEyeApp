@@ -1,29 +1,31 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_posts_page.dart';
 
-import '../scrapbook_widgets/scrapbook.dart';
 import '../util/comment.dart';
 import '../util/getScrapbookFromPost.dart';
+import '../util/util.dart';
 
 class ExpandedPostPage extends StatefulWidget {
-  Post post;
+  late Post post;
 
-  ExpandedPostPage(this.post);
+  ExpandedPostPage(Post post) {
+    this.post = post;
+  }
 
   @override
   State<ExpandedPostPage> createState() => _ExpandedPostPageState();
 }
 
 class _ExpandedPostPageState extends State<ExpandedPostPage> {
-  var _querySnapshot;
-  var _display = List.empty(growable: true);
-  var _snapshots = List.empty(growable: true);
+  late StreamSubscription _querySnapshot;
+  List<Container> _display = List.empty(growable: true);
+  List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
 
-  var comments = List.empty(growable: true);
+  List<Comment> comments = List.empty(growable: true);
 
   SnackBar likedSnackBar = SnackBar(
     content: Text("You liked this post"),
@@ -63,68 +65,53 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     for (int i = 0; i < _snapshots.length; i++) {
       comments.add(new Comment(
           content: _snapshots[i].get('content'),
-          post: _snapshots[i].get('post').toString(),
+          post: _snapshots[i].get('post'),
           reports: _snapshots[i].get('reports'),
-          user: _snapshots[i].get('user').toString(),
+          user: _snapshots[i].get('user'),
           timestamp: _snapshots[i].get('timestamp'),
-          id: _snapshots[i].id));
+          id: _snapshots[i].reference
+      ));
     }
   }
-
-  /* TODO: this doesnt work idk why
-  String getUsername(String documentReference) {
-    RegExp pattern = new RegExp('users\/([a-zA-Z0-9]+)');
-    String? match = pattern.stringMatch(documentReference)?.split("/")?.last;
-
-    print(match);
-
-    if (match != null) {
-      // get username from user document
-      FirebaseFirestore.instance
-          .collection("users")
-          .doc("general")
-          .get()
-          .then((value) {
-        return value.get("username") == null ? "Unknown user" : value.get("username");
-      });
-    }
-    return "unknown user";
-  }
-   */
 
   String getLikesString(List<dynamic> likes) {
+    var usernames = List.empty(growable: true);
+    for (int i = 0; i < likes.length; i++) {
+      usernames.add(getUsername(likes[i]));
+    }
+
     String heart = "❤️ ";
-    if (likes.length == 0) {
+    if (usernames.length == 0) {
       return heart + "Be the first to like this post!";
-    } else if (likes.length == 1) {
-      return heart + "Liked by " + likes[0].toString();
-    } else if (likes.length == 2) {
+    } else if (usernames.length == 1) {
+      return heart + "Liked by " + usernames[0].toString();
+    } else if (usernames.length == 2) {
       return heart +
           "Liked by " +
-          likes[0].toString() +
+          usernames[0].toString() +
           " and " +
-          likes[1].toString();
-    } else if (likes.length == 3) {
+          usernames[1].toString();
+    } else if (usernames.length == 3) {
       return heart +
           "Liked by " +
-          likes[0].toString() +
+          usernames[0].toString() +
           ", " +
-          likes[1].toString() +
+          usernames[1].toString() +
           " and " +
-          likes[2].toString();
+          usernames[2].toString();
     } else {
       return heart +
           "Liked by " +
-          likes[0].toString() +
+          usernames[0].toString() +
           ", " +
-          likes[1].toString() +
+          usernames[1].toString() +
           " and " +
-          (likes.length - 2).toString() +
+          (usernames.length - 2).toString() +
           " others";
     }
   }
 
-  showAlertDialog(BuildContext context) {
+  reportDialog(BuildContext context, Comment comment) {
     Widget cancelBtn = TextButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -134,7 +121,10 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     Widget yesBtn = TextButton(
       child: Text("Yes"),
       onPressed: () {
-        // todo: report the comment
+        FirebaseFirestore.instance.doc(comment.id.path).update({
+          "reports": FieldValue.arrayUnion([getCurrentUserDocRef()])
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(reportedSnackBar);
         Navigator.of(context).pop(); // dismiss dialog
       },
@@ -189,7 +179,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
             children: [
               InkWell(
                 onDoubleTap: () => {
-                  print('double tapped'),
+                  likePost(this.widget.post.id),
                   ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
                 },
                 child: Image.network(widget.post.picture == ""
@@ -202,12 +192,12 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                 ),
                 child: InkWell(
                   onTap: () => {
-                    print('clicked like'),
+                    likePost(this.widget.post.id),
                     ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
                   },
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
-                    height: 40,
+                    height: 60,
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(getLikesString(widget.post.likes),
@@ -218,14 +208,12 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                    comments.length > 0
-                        ? "Comments (" + comments.length.toString() + "):"
-                        : "",
+                child: Text("Comments (" + comments.length.toString() + "):",
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-              // there is a better way to do this proposed by jacob but i couldnt get it working
+
+              // TODO: DO THIS THE PROPER WAY
               for (int i = 0; i < comments.length; i++)
                 Card(
                   shape: RoundedRectangleBorder(
@@ -233,20 +221,18 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                   ),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(8),
-                    onTap: () => print('clicked on comment: ' + i.toString()),
-                    // go to user profile
-                    onLongPress: () {
-                      print('long pressed comment: ' + i.toString());
-                      showAlertDialog(context);
+                    onTap: () => {
+                      // todo: here we want to go to the profile of the user who authored this comment
                     },
-                    // report comment (maybe open a menu first?)
+                    onLongPress: () {
+                      reportDialog(context, comments[i]);
+                    },
                     child: Container(
                       height: 50,
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              "user" +
-                                  i.toString() + //getUsername(comments[i].user).toString() +
+                              getUsername(comments[i].user) +
                                   ": " +
                                   comments[i].content,
                               style: TextStyle(fontSize: 20))),
@@ -255,10 +241,9 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                 ),
               TextField(
                 onEditingComplete: () {
-                  // todo: add new document to postComments collection
-
-                  // close keyboard
-                  FocusScope.of(context).unfocus();
+                  addComment(widget.post.id, commentBox.text,
+                      getCurrentUserDocRef() as DocumentReference<Object?>);
+                  FocusScope.of(context).unfocus(); // close the keyboard
                 },
                 controller: commentBox,
                 maxLength: 40,

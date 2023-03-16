@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/expanded_post.dart';
 import 'package:flutter_app_firebase_login/util/getScrapbookFromPost.dart';
 import '../scrapbook_widgets/scrapbook.dart';
+import '../util/util.dart';
 import 'post.dart';
 
 // TODO: make another file called scrapbook_tile.dart
@@ -17,7 +18,6 @@ class PostTile extends StatelessWidget {
     if (post.picture != '') {
       return Image.network(post.picture);
     } else {
-      // default image file from images/default_image.png
       return Image.asset('images/default_image.png');
     }
   }
@@ -37,11 +37,9 @@ class PostTile extends StatelessWidget {
     Widget yesBtn = TextButton(
       child: Text("Yes"),
       onPressed: () {
-        User? user = FirebaseAuth.instance.currentUser;
-        FirebaseFirestore.instance.collection("posts").doc(post.id).update({
-          "reports": FieldValue.arrayUnion([user!.uid])
+        FirebaseFirestore.instance.doc(post.id.path).update({
+          "reports": FieldValue.arrayUnion([getCurrentUserDocRef()])
         });
-        print("reported post: " + post.id);
 
         ScaffoldMessenger.of(context).showSnackBar(reportedSnackBar);
         Navigator.of(context).pop(); // dismiss dialog

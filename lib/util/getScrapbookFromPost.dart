@@ -14,7 +14,7 @@ Future<Scrapbook> getScrapbook(Post post) async {
       timestamp: Timestamp(0, 0),
       public: false);
   DocumentReference postRef =
-      FirebaseFirestore.instance.doc('/posts/' + post.id);
+      FirebaseFirestore.instance.doc(post.id.path);
   QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
       .collection("scrapbookPosts")
       .where("post", isEqualTo: postRef)
