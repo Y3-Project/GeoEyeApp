@@ -33,6 +33,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   // this list will only ever have one item!!
   List<DocumentReference> userDocument = List.empty(growable: true);
   List<Comment> comments = List.empty(growable: true);
+  List<dynamic> likesList = List.empty(growable: true); // will be list of likes
+  int l = 0; // temp likes variable
 
   SnackBar likedSnackBar = SnackBar(
     content: Text("You liked this post"),
@@ -61,6 +63,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
             continue;
           }
           if (_snapshots[i].get("post") == this.widget.post.id) {
+            // print(this.widget.post.likes.length);
+            // l = this.widget.post.likes.length;
             initComments(i);
           }
         }
@@ -83,10 +87,27 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     });
   }
 
+  Future<void> loadLikes() async {
+    FirebaseFirestore.instance
+        .doc(this.widget.post.id.path)
+        .snapshots()
+        .listen((event) {
+      print("here");
+      for (DocumentReference doc in event.get("likes")) {
+        print("here2");
+        FirebaseFirestore.instance.doc(doc.path).snapshots().listen((event) {
+          print("here3");
+          likesList.add(event.get("username"));
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     getCurrentUserReference();
     loadComments();
+    // loadLikes();
     super.initState();
   }
 
@@ -95,40 +116,43 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   }
 
   String getLikesString(List<dynamic> likes) {
-    var usernames = List.empty(growable: true);
-    // for (int i = 0; i < likes.length; i++) {
-    //   usernames.add(getUsername(likes[i]));
-    // }
+    List<dynamic> likesUsernames = likesList;
 
     String heart = "❤️ ";
-    if (usernames.length == 0) {
+    if (l == 0) {
       return heart + "Be the first to like this post!";
-    } else if (usernames.length == 1) {
-      return heart + "Liked by " + usernames[0].toString();
-    } else if (usernames.length == 2) {
-      return heart +
-          "Liked by " +
-          usernames[0].toString() +
-          " and " +
-          usernames[1].toString();
-    } else if (usernames.length == 3) {
-      return heart +
-          "Liked by " +
-          usernames[0].toString() +
-          ", " +
-          usernames[1].toString() +
-          " and " +
-          usernames[2].toString();
     } else {
-      return heart +
-          "Liked by " +
-          usernames[0].toString() +
-          ", " +
-          usernames[1].toString() +
-          " and " +
-          (usernames.length - 2).toString() +
-          " others";
+      return heart + l.toString();
     }
+
+    // if (likesUsernames.length == 0) {
+    //   return heart + "Be the first to like this post!";
+    // } else if (likesUsernames.length == 1) {
+    //   return heart + "Liked by " + likes[0].toString();
+    // } else if (likesUsernames.length == 2) {
+    //   return heart +
+    //       "Liked by " +
+    //       likesUsernames[0].toString() +
+    //       " and " +
+    //       likesUsernames[1].toString();
+    // } else if (likesUsernames.length == 3) {
+    //   return heart +
+    //       "Liked by " +
+    //       likesUsernames[0].toString() +
+    //       ", " +
+    //       likesUsernames[1].toString() +
+    //       " and " +
+    //       likesUsernames[2].toString();
+    // } else {
+    //   return heart +
+    //       "Liked by " +
+    //       likesUsernames[0].toString() +
+    //       ", " +
+    //       likesUsernames[1].toString() +
+    //       " and " +
+    //       (likesUsernames.length - 2).toString() +
+    //       " others";
+    // }
   }
 
   reportDialog(BuildContext context, Comment comment) {
@@ -141,9 +165,9 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     Widget yesBtn = TextButton(
       child: Text("Yes"),
       onPressed: () {
-        FirebaseFirestore.instance.doc(comment.id.path).update({
-          "reports": FieldValue.arrayUnion([getCurrentUserDocRef()])
-        });
+        FirebaseFirestore.instance
+            .doc(comment.id.path)
+            .update({"reports": FieldValue.arrayUnion(userDocument)});
 
         ScaffoldMessenger.of(context).showSnackBar(reportedSnackBar);
         Navigator.of(context).pop(); // dismiss dialog
@@ -199,7 +223,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
             children: [
               InkWell(
                 onDoubleTap: () => {
-                  likePost(this.widget.post.id),
+                  likePost(this.widget.post.id, userDocument),
                   ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
                 },
                 // TODO, might be a video
@@ -214,7 +238,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                 ),
                 child: InkWell(
                   onTap: () => {
-                    likePost(this.widget.post.id),
+                    likePost(this.widget.post.id, userDocument),
                     ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
                   },
                   borderRadius: BorderRadius.circular(8),

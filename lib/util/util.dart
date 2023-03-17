@@ -122,9 +122,9 @@ String getCurrentUsername() {
   @param: documentReference - the document reference of the post to be liked by the user
   note that here we assume that the logged in user is the user who is liking the post
  */
-void likePost(DocumentReference post) {
+void likePost(DocumentReference post, List<DocumentReference> userDocument) {
   // add the user to the post's likes list
-  FirebaseFirestore.instance.doc(post.path).update({
-    "likes": FieldValue.arrayUnion([getCurrentUserDocRef()])
-  });
+  FirebaseFirestore.instance
+      .doc(post.path)
+      .update({"likes": FieldValue.arrayUnion(userDocument)});
 }
