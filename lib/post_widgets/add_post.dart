@@ -41,7 +41,7 @@ class _AddPostState extends State<AddPost> {
     AddPost.postRef = await posts.add({
       'likes': List.empty(growable: true),
       'picture':
-          '', //todo get the download url from Storage and put it here IF user uploaded video,
+          '', //todo get the download url from Storage and put it here IF user uploaded picture,
       'reports': List.empty(growable: true),
       'text': titleCaptionForPost.postCaption,
       'timestamp': Timestamp.now(),

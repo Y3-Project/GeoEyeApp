@@ -82,8 +82,9 @@ class _CurrentUserScrapbookListState extends State<CurrentUserScrapbookList> {
                 },
               )
             : Center(
-                child: CircularProgressIndicator(
-                color: Color.fromARGB(255, 2, 2, 2),
+                child: Text(
+                'You don\'t have any scrapbooks yet! \nGo to the Feed Page to add one.',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               )));
   }
 }
