@@ -37,6 +37,7 @@ class MediaUploaderWidget extends StatefulWidget {
 
 class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
   File mediaFile = File('');
+  String fileName = "default_file";
 
   Future<File> pickMediaFile(ImageSource mediaSource) async {
     XFile? imgXFile = widget.mediaType == MediaType.picture ? await ImagePicker().pickImage(source: mediaSource) : await ImagePicker().pickVideo(source: mediaSource);
@@ -47,7 +48,7 @@ class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
     String extension = p.extension(imgFile.path);
     final String path =
         (await getApplicationDocumentsDirectory()).absolute.path;
-    final finalImage = await imgFile.copy('$path/' + widget.fileName + extension);
+    final finalImage = await imgFile.copy('$path/' + fileName + extension);
     showTopSnackBar(
       animationDuration: Duration(microseconds: 1000002),
       displayDuration: Duration(milliseconds: 95),
@@ -70,7 +71,7 @@ class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
 
   Future<String> uploadMedia(String storageDir, String collection, String docId, String field) async {
     final storageRef = FirebaseStorage.instance.ref();
-    final mediaStorageRef = storageRef.child(storageDir + widget.fileName);
+    final mediaStorageRef = storageRef.child(storageDir + fileName);
     String fileUrl = '';
 
     try {
@@ -84,10 +85,13 @@ class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
     return fileUrl;
   }
 
-
+  void changeFileName(String newFileName){
+    fileName = newFileName;
+  }
 
   @override
   Widget build(BuildContext context) {
+    fileName = widget.fileName;
     return Container(
       color: Colors.black,
       height: 100.0,

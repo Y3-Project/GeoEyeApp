@@ -2,15 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
-import 'package:flutter_app_firebase_login/user_pages/home_widget.dart';
 import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
-
-import '../profile_widgets/profile_widget.dart';
+import 'package:flutter_app_firebase_login/util/enums/media_type.dart';
+import '../media_widgets/media_uploader_widget.dart';
 import '../scrapbook_widgets/scrapbook_title.dart';
 import '../user_pages/profile_page.dart';
 
 class AddPost extends StatefulWidget {
-  AddPost({Key? key}) : super(key: key);
+  final MediaUploaderWidgetState thumbnailUploader;
+  final MediaUploaderWidgetState postUploader;
+  AddPost({Key? key, required this.postUploader, required this.thumbnailUploader}) : super(key: key);
 
   static String username = '';
   static String userDocID = '';
@@ -24,7 +25,11 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+
   Future<void> addScrapbookPostMarker() async {
+    String postDir = await ProfilePage().getUserDocumentID() + "/scrapbooks/";
+    String scrapbookThumbnailDir = "/images/" + await ProfilePage().getUserDocumentID() + "/scrapbooks/";
+
     //-------------------------POST SECTION STARTS--------------------------------------
     CollectionReference posts = FirebaseFirestore.instance.collection('posts');
     String userDocID = '';
@@ -51,7 +56,7 @@ class _AddPostState extends State<AddPost> {
           '' //todo get the download url from Storage and put it here IF user uploaded video,
     });
     print("Post added!" + "with postRef: " + AddPost.postRef.toString());
-    //-------------------------POST SECTION ENDS--------------------------------------
+    //-------------------------POST SECTION ENDS------------------------------------------
 
     //-------------------------SCRAPBOOK SECTION STARTS--------------------------------------
     //for getting the "creatorid" field of the scrapbook; ('/users/' + AddPost.userDocID);
@@ -79,17 +84,40 @@ class _AddPostState extends State<AddPost> {
       'creatorid': '/users/' + AddPost.userDocID,
       'currentUsername': AddPost.username,
       'location':
-          GeoPoint(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
+      GeoPoint(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
       'public': NewScrapbookPage.visibility,
-      'scrapbookThumbnail':
-          '', //todo get the download url from Storage and put it here, IF NULL, FILL IT WITH "images/default_image.png"
+      'scrapbookThumbnail': '',
       'scrapbookTitle': ScrapbookTitle.scrapbookTitle,
       'timestamp': Timestamp.now()
     });
     print("Scrapbook added!" +
         "with scrapbookRef: " +
         AddPost.scrapbookRef.toString());
+
     //-------------------------SCRAPBOOK SECTION ENDS--------------------------------------
+
+    //-------------------------THUMBNAIL UPLOADING SECTION STARTS-------------------------
+    String scrapbookId = AddPost.scrapbookRef.id;
+
+    scrapbookThumbnailDir += scrapbookId + "/";
+    thumbnailUploader.uploadMedia(scrapbookThumbnailDir, "scrapbooks", scrapbookId, "scrapbookThumbnail");
+    //-------------------------THUMBNAIL UPLOADING SECTION ENDS---------------------------
+
+    //-------------------------POST UPLOADING SECTION STARTS------------------------------
+    String postId = AddPost.postRef.id;
+    String field = "";
+
+    if (postUploader.widget.mediaType == MediaType.picture){
+      postDir = "/images/" + postDir + scrapbookId + "/posts/";
+      field = "picture";
+    } else {
+      postDir = "/videos/" + postDir + scrapbookId + "/posts/";
+      field = "video";
+    }
+    postUploader.changeFileName(postId);
+    postUploader.uploadMedia(postDir, "posts", postId, field);
+    //-------------------------POST UPLOADING SECTION ENDS--------------------------------
+
 
     //-------------------------MARKER SECTION STARTS--------------------------------------
     //add its corresponding marker

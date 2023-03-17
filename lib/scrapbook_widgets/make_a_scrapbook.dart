@@ -260,5 +260,5 @@ Widget finalStep() {
   }
 
   _determinePosition();
-  return Container(child: AddPost());
+  return Container(child: AddPost(postUploader: postUploader, thumbnailUploader: thumbnailUploader,));
 }
