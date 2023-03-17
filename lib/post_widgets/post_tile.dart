@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/expanded_post.dart';
-import 'package:flutter_app_firebase_login/util/getScrapbookFromPost.dart';
+import 'package:flutter_app_firebase_login/util/scrapbook_util/getScrapbookFromPost.dart';
 import '../scrapbook_widgets/scrapbook.dart';
 import '../util/util.dart';
 import 'post.dart';

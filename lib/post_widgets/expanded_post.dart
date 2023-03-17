@@ -8,7 +8,7 @@ import 'package:flutter_app_firebase_login/post_widgets/post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_posts_page.dart';
 
 import '../util/comment.dart';
-import '../util/getScrapbookFromPost.dart';
+import '../util/scrapbook_util/getScrapbookFromPost.dart';
 import '../util/util.dart';
 
 class ExpandedPostPage extends StatefulWidget {

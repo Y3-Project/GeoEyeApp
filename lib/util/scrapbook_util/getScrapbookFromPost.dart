@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../post_widgets/post.dart';
-import '../scrapbook_widgets/scrapbook.dart';
+import '../../post_widgets/post.dart';
+import '../../scrapbook_widgets/scrapbook.dart';
 
 Future<Scrapbook> getScrapbook(Post post) async {
   Scrapbook scrapbook = Scrapbook(
