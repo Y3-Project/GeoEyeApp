@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../util/enums/media_type.dart';
-import 'image_uploader_widget.dart';
+import 'media_uploader_widget.dart';
 
 
 
@@ -22,15 +22,6 @@ class _ScrapbookThumbnailState extends State<ScrapbookThumbnail> {
   File picture = new File('');
 
   int scrapbookNumber = 0;
-
-  String? getUuid() {
-    String? uuid = '';
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-
-    uuid = user?.uid;
-    return uuid;
-  }
 
   //TODO: Make picked image appear onto the inkwell
   /*

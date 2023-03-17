@@ -4,7 +4,7 @@ import 'package:flutter_app_firebase_login/util/enums/media_type.dart';
 import 'package:provider/provider.dart';
 
 import '../util/user_model.dart';
-import 'image_uploader_widget.dart';
+import 'media_uploader_widget.dart';
 
 final imageUploaderWidgetStateKey = new GlobalKey<MediaUploaderWidgetState>();
 final String PROFILE_PICTURE_STORAGE_DIRECTORY_PATH = "/images/";

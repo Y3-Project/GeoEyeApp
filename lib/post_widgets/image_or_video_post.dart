@@ -3,46 +3,36 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
-import '../media_widgets/image_uploader_widget.dart';
-import '../video_widgets/video_uploader_widget.dart';
+import '../media_widgets/media_uploader_widget.dart';
+import '../util/enums/media_type.dart';
 
 final imageUploaderWidgetStateKey = new GlobalKey<MediaUploaderWidgetState>();
 final String SCRAPBOOK_THUMBNAIL_STORAGE_DIRECTORY_PATH = "/scrapbooks/";
 final String SCRAPBOOK_THUMBNAIL_NAME = "scrapbook_thumbnail.png";
 
 class ImageVideoPost extends StatefulWidget {
-  const ImageVideoPost({Key? key}) : super(key: key);
+  final ValueChanged<MediaUploaderWidgetState> mediaUploader;
+
+  const ImageVideoPost({Key? key, required this.mediaUploader})
+      : super(key: key);
 
   @override
   State<ImageVideoPost> createState() => _ImageVideoPostState();
 }
 
 class _ImageVideoPostState extends State<ImageVideoPost> {
-  int postNumber = 0;
+  final mediaUploaderWidgetStateKey = new GlobalKey<MediaUploaderWidgetState>();
 
-  String? getUuid() {
-    String? uuid = '';
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
+  //int postNumber = 0;
 
-    uuid = user?.uid;
-    return uuid;
-  }
-
-  Future<void> checkImageUploader(
-      MediaUploaderWidget imageUploaderWidget) async {
-    await showModalBottomSheet(
-      context: context,
-      builder: ((builder) => imageUploaderWidget),
-    );
-  }
-
-  Future<void> checkVideoUploader(
-      VideoUploaderWidget videoUploaderWidget) async {
-    await showModalBottomSheet(
-      context: context,
-      builder: ((builder) => videoUploaderWidget),
-    );
+  void selectPostMedia(MediaType mediaType) {
+    MediaUploaderWidget mediaUploaderWidget = MediaUploaderWidget(
+        key: mediaUploaderWidgetStateKey,
+        mediaType: mediaType,
+        fileName: "scrapbook_post");
+    mediaUploaderWidget.buildMediaUploader(mediaUploaderWidget, context).then(
+        (value) =>
+            widget.mediaUploader(mediaUploaderWidgetStateKey.currentState!));
   }
 
   @override
@@ -50,32 +40,13 @@ class _ImageVideoPostState extends State<ImageVideoPost> {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       InkWell(
           onTap: () {
-            /*
-            ImageUploaderWidget imageUploaderWidget = ImageUploaderWidget(
-                key: imageUploaderWidgetStateKey,
-                storagePath:
-                    '/images/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
-                        postNumber.toString() +
-                        "-" +
-                        getUuid().toString() +
-                        '.png');
-            checkImageUploader(imageUploaderWidget);
-
-             */
+            selectPostMedia(MediaType.picture);
           },
           child: Image.asset('images/add_img.png', height: 100)),
       // Divider(indent: 90),
       InkWell(
-          //todo : upload videos to Storage in onTap function below
           onTap: () {
-            VideoUploaderWidget videoUploaderWidget = VideoUploaderWidget(
-                key: imageUploaderWidgetStateKey,
-                storagePath:
-                    '/videos/scrapbookPosts/' + //change this path if it doesn't work for the profile picture, etc
-                        postNumber.toString() +
-                        "-" +
-                        getUuid().toString());
-            checkVideoUploader(videoUploaderWidget);
+            selectPostMedia(MediaType.video);
           },
           child: Icon(Icons.video_call_rounded, size: 100))
     ]);

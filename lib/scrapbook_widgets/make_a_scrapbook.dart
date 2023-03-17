@@ -8,12 +8,13 @@ import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.d
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_title.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../media_widgets/image_uploader_widget.dart';
+import '../media_widgets/media_uploader_widget.dart';
 import '../media_widgets/scrapbook_thumbnail.dart';
 import '../util/enums/media_type.dart';
 
 //todo this page allows the user to make a completely new scrapbook
 MediaUploaderWidgetState thumbnailUploader = new MediaUploaderWidgetState();
+MediaUploaderWidgetState postUploader = new MediaUploaderWidgetState();
 
 class NewScrapbookPage extends StatefulWidget {
   NewScrapbookPage({Key? key}) : super(key: key);
@@ -124,8 +125,7 @@ Widget thumbnailStep() {
 
       //goes to another file called scrapbook_thumbnail.dart
 
-      ScrapbookThumbnail(imageUploader:
-          (newImageUploader) {
+      ScrapbookThumbnail(imageUploader: (newImageUploader) {
         thumbnailUploader = newImageUploader;
         print(thumbnailUploader.mediaFile.path);
       }),
@@ -174,7 +174,12 @@ Widget imageOrVideoPostStep() {
       "Note: Your post can either be a photo or a video, but not both",
       style: TextStyle(fontSize: 12),
     ),
-    ImageVideoPost()
+    ImageVideoPost(
+      mediaUploader: (newPostUploader) {
+        postUploader = newPostUploader;
+        print(postUploader.mediaFile.path);
+      },
+    )
   ]);
 }
 
