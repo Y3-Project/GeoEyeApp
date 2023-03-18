@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/comment_widgets/comment_tile.dart';
+import 'package:flutter_app_firebase_login/media_widgets/video_player_widget.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_posts_page.dart';
 
@@ -191,6 +192,18 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     );
   }
 
+  Widget mediaWidgetPicker() {
+    Widget pickedMediaWidget = new Image.network("");
+    if (widget.post.picture != ""){
+      pickedMediaWidget = Image.network(widget.post.picture == ""
+          ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
+          : widget.post.picture);
+    } else{
+      pickedMediaWidget = new VideoPlayerScreen(videoUrl: widget.post.video);
+    }
+    return pickedMediaWidget;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,9 +240,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                   ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
                 },
                 // TODO, might be a video
-                child: Image.network(widget.post.picture == ""
-                    ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
-                    : widget.post.picture),
+                child: mediaWidgetPicker(),
               ),
               // LIKES / LIKING
               Card(

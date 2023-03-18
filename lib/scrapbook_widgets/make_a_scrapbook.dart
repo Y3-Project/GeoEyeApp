@@ -10,9 +10,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../media_widgets/media_uploader_widget.dart';
 import '../media_widgets/scrapbook_thumbnail.dart';
-import '../util/enums/media_type.dart';
 
-//todo this page allows the user to make a completely new scrapbook
 MediaUploaderWidgetState thumbnailUploader = new MediaUploaderWidgetState();
 MediaUploaderWidgetState postUploader = new MediaUploaderWidgetState();
 

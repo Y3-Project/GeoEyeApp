@@ -6,7 +6,8 @@ import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
-  const VideoPlayerScreen({super.key});
+  final String videoUrl;
+  const VideoPlayerScreen({super.key, required this.videoUrl});
 
   @override
   State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
@@ -25,7 +26,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // offers several different constructors to play videos from assets, files,
     // or the internet.
     _controller = VideoPlayerController.network(
-        'https://firebasestorage.googleapis.com/v0/b/flutter-app-firebase-log-c1c41.appspot.com/o/videos%2FscrapbookPosts%2F0-SipKM55FHmP33fZrAJarxsqubOJ3.png?alt=media&token=17bf16f3-c461-4e33-aedd-5bd4c6738fe7'
+        widget.videoUrl
     );
 
     _initializeVideoPlayerFuture = _controller.initialize();
