@@ -28,6 +28,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   List<CommentTile> _displayComments = List.empty(growable: true);
   List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
   String currentUUID = "";
+  bool liked = false; // a bandage solution to the problem of the like button not updating
+
   // this is really annoying
   // basically you can declare a document refence object normally
   // so I'm doing this lmao
@@ -64,8 +66,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
             continue;
           }
           if (_snapshots[i].get("post") == this.widget.post.id) {
-            // print(this.widget.post.likes.length);
-            // l = this.widget.post.likes.length;
+            print(this.widget.post.likes.length);
+            l = this.widget.post.likes.length;
             initComments(i);
           }
         }
@@ -108,7 +110,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   void initState() {
     getCurrentUserReference();
     loadComments();
-    // loadLikes();
+    loadLikes();
     super.initState();
   }
 
@@ -126,34 +128,34 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
       return heart + l.toString();
     }
 
-    // if (likesUsernames.length == 0) {
-    //   return heart + "Be the first to like this post!";
-    // } else if (likesUsernames.length == 1) {
-    //   return heart + "Liked by " + likes[0].toString();
-    // } else if (likesUsernames.length == 2) {
-    //   return heart +
-    //       "Liked by " +
-    //       likesUsernames[0].toString() +
-    //       " and " +
-    //       likesUsernames[1].toString();
-    // } else if (likesUsernames.length == 3) {
-    //   return heart +
-    //       "Liked by " +
-    //       likesUsernames[0].toString() +
-    //       ", " +
-    //       likesUsernames[1].toString() +
-    //       " and " +
-    //       likesUsernames[2].toString();
-    // } else {
-    //   return heart +
-    //       "Liked by " +
-    //       likesUsernames[0].toString() +
-    //       ", " +
-    //       likesUsernames[1].toString() +
-    //       " and " +
-    //       (likesUsernames.length - 2).toString() +
-    //       " others";
-    // }
+    if (likesUsernames.length == 0) {
+      return heart + "Be the first to like this post!";
+    } else if (likesUsernames.length == 1) {
+      return heart + "Liked by " + likes[0].toString();
+    } else if (likesUsernames.length == 2) {
+      return heart +
+          "Liked by " +
+          likesUsernames[0].toString() +
+          " and " +
+          likesUsernames[1].toString();
+    } else if (likesUsernames.length == 3) {
+      return heart +
+          "Liked by " +
+          likesUsernames[0].toString() +
+          ", " +
+          likesUsernames[1].toString() +
+          " and " +
+          likesUsernames[2].toString();
+    } else {
+      return heart +
+          "Liked by " +
+          likesUsernames[0].toString() +
+          ", " +
+          likesUsernames[1].toString() +
+          " and " +
+          (likesUsernames.length - 2).toString() +
+          " others";
+    }
   }
 
   reportDialog(BuildContext context, Comment comment) {
@@ -194,11 +196,11 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
 
   Widget mediaWidgetPicker() {
     Widget pickedMediaWidget = new Image.network("");
-    if (widget.post.picture != ""){
+    if (widget.post.picture != "") {
       pickedMediaWidget = Image.network(widget.post.picture == ""
           ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
           : widget.post.picture);
-    } else{
+    } else {
       pickedMediaWidget = new VideoPlayerScreen(videoUrl: widget.post.video);
     }
     return pickedMediaWidget;
@@ -236,8 +238,12 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
             children: [
               InkWell(
                 onDoubleTap: () => {
-                  likePost(this.widget.post.id, userDocument),
-                  ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
+                  if (!liked)
+                    {
+                      liked = true,
+                      likePost(this.widget.post.id, userDocument),
+                      ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
+                    }
                 },
                 // TODO, might be a video
                 child: mediaWidgetPicker(),
@@ -249,8 +255,18 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                 ),
                 child: InkWell(
                   onTap: () => {
-                    likePost(this.widget.post.id, userDocument),
-                    ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
+                    if (!liked)
+                      {
+                        liked = true,
+                        likePost(this.widget.post.id, userDocument),
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(likedSnackBar),
+                        setState(() {
+                          // add use to likesList
+                          likesList.add(getCurrentUserReference());
+                          l = l + 1;
+                        })
+                      }
                   },
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
