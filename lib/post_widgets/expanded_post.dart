@@ -153,13 +153,13 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   }
 
   reportDialog(BuildContext context, Comment comment) {
-    Widget cancelBtn = TextButton(
+    Widget noReport = TextButton(
       child: Text("Cancel"),
       onPressed: () {
         Navigator.of(context).pop(); // dismiss dialog
       },
     );
-    Widget yesBtn = TextButton(
+    Widget yesReport = TextButton(
       child: Text("Yes"),
       onPressed: () {
         FirebaseFirestore.instance
@@ -171,19 +171,49 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
       },
     );
 
-    AlertDialog alert = AlertDialog(
+    AlertDialog reportDialog = AlertDialog(
       title: Text("Report Comment"),
       content: Text("Are you sure you want to report this comment?"),
       actions: [
-        cancelBtn,
-        yesBtn,
+        noReport,
+        yesReport,
+      ],
+    );
+
+    Widget noDelete = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    Widget yesDelete = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        FirebaseFirestore.instance.doc(comment.id.path).delete();
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    AlertDialog deleteDialog = AlertDialog(
+      title: Text("Delete Comment"),
+      content: Text("Are you sure you want to delete this comment?"),
+      actions: [
+        noDelete,
+        yesDelete,
       ],
     );
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        print(comment.user.id);
+        print(userDocument[0].id);
+        if (comment.user.id == userDocument[0].id) {
+          return deleteDialog;
+        } else {
+          return reportDialog;
+        }
       },
     );
   }
