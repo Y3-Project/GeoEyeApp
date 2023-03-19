@@ -15,11 +15,11 @@ class ScrapbookList extends StatefulWidget {
 }
 
 class _ScrapbookListState extends State<ScrapbookList> {
-  List<Scrapbook> getPublicScrapbooks(List<Scrapbook> scrapbooks){
+  List<Scrapbook> getPublicScrapbooks(List<Scrapbook> scrapbooks) {
     List<Scrapbook> publicScrapbooks = [];
 
     scrapbooks.forEach((scrapbook) {
-      if (scrapbook.public){
+      if (scrapbook.public) {
         publicScrapbooks.add(scrapbook);
       }
     });
@@ -32,11 +32,9 @@ class _ScrapbookListState extends State<ScrapbookList> {
     final scrapbooks = Provider.of<List<Scrapbook>>(context);
     List<Scrapbook> publicScrapbooks = getPublicScrapbooks(scrapbooks);
 
-
-
     return ListView.builder(
       itemCount: publicScrapbooks.length,
-      itemBuilder: (context, index){
+      itemBuilder: (context, index) {
         return ScrapbookTile(publicScrapbooks[index]);
       },
     );

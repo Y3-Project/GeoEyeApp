@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/add_post.dart';
 import 'package:flutter_app_firebase_login/post_widgets/image_or_video_post.dart';
@@ -258,5 +255,9 @@ Widget finalStep() {
   }
 
   _determinePosition();
-  return Container(child: AddPost(postUploader: postUploader, thumbnailUploader: thumbnailUploader,));
+  return Container(
+      child: AddPost(
+    postUploader: postUploader,
+    thumbnailUploader: thumbnailUploader,
+  ));
 }

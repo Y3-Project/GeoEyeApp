@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_list.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_post.dart';
-import 'package:flutter_app_firebase_login/user_pages/post_pages/feed_page.dart';
 import 'package:provider/provider.dart';
 
 import '../user_pages/main_page.dart';

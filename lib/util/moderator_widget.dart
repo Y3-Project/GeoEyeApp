@@ -6,7 +6,9 @@ import 'package:flutter_app_firebase_login/util/moderator_user_page.dart';
 
 class ModeratorWidget extends StatefulWidget {
   final Function(User?) onSignOut;
+
   const ModeratorWidget({required this.onSignOut});
+
   @override
   State<ModeratorWidget> createState() => _moderatorWidgetState();
 }

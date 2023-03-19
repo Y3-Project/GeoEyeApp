@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_tile.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_post.dart';
 import 'package:provider/provider.dart';
+
 import '../scrapbook_widgets/scrapbook.dart';
 import 'post.dart';
 
@@ -32,13 +33,15 @@ class _PostListState extends State<PostList> {
         if (currScrapbook.id == widget.scrapbook.id) {
           DocumentSnapshot postSnap = await scrapbookPosts[i].postRef.get();
           Post currPost = Post.fromDocument(postSnap);
-          if (currPost.reports.isEmpty){
+          if (currPost.reports.isEmpty) {
             tempPosts.add(currPost);
           }
         }
       }
       return tempPosts;
-    };
+    }
+
+    ;
 
     getPosts(scrapbookPosts).then((value) {
       posts = value;

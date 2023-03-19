@@ -1,6 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/welcome_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';

@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/post_widgets/expanded_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_posts_page.dart';
-import 'package:provider/provider.dart';
 
 import '../user_pages/profile_page.dart';
-import '../util/user_model.dart';
 import '../util/util.dart';
 
 class ScrapbookTile extends StatefulWidget {

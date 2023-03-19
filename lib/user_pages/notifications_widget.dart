@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NotificationsWidget extends StatefulWidget {
@@ -11,7 +10,6 @@ class NotificationsWidget extends StatefulWidget {
 class _NotificationsWidgetState extends State<NotificationsWidget> {
   @override
   Widget build(BuildContext context) {
-
     /*
     Future<List<String>> getNotifications() async {
 
@@ -25,7 +23,10 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
         toolbarHeight: 64,
         backgroundColor: Colors.black,
         centerTitle: true,
-        title: Text("Notifications", style: TextStyle(fontSize: 25),),
+        title: Text(
+          "Notifications",
+          style: TextStyle(fontSize: 25),
+        ),
       ),
       body: Container(
         alignment: Alignment.center,

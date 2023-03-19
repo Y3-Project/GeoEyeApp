@@ -28,7 +28,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   List<CommentTile> _displayComments = List.empty(growable: true);
   List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
   String currentUUID = "";
-  bool liked = false; // a bandage solution to the problem of the like button not updating
+  bool liked =
+      false; // a bandage solution to the problem of the like button not updating
 
   // this is really annoying
   // basically you can declare a document refence object normally
@@ -66,8 +67,6 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
             continue;
           }
           if (_snapshots[i].get("post") == this.widget.post.id) {
-            print(this.widget.post.likes.length);
-            l = this.widget.post.likes.length;
             initComments(i);
           }
         }
@@ -77,14 +76,12 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
 
   Future<void> getCurrentUserReference() async {
     currentUUID = FirebaseAuth.instance.currentUser!.uid;
-    print("current UUID: " + currentUUID);
     await FirebaseFirestore.instance
         .collection("users")
         .where("uuid", isEqualTo: currentUUID)
         .snapshots()
         .listen((event) {
       for (var doc in event.docs) {
-        print(doc.id);
         userDocument.add(doc.reference);
       }
     });
@@ -95,11 +92,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
         .doc(this.widget.post.id.path)
         .snapshots()
         .listen((event) {
-      print("here");
       for (DocumentReference doc in event.get("likes")) {
-        print("here2");
         FirebaseFirestore.instance.doc(doc.path).snapshots().listen((event) {
-          print("here3");
           likesList.add(event.get("username"));
         });
       }

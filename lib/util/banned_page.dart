@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import '../user_authentication_widgets/login_page.dart';
 
 class BannedPage extends StatefulWidget {
   final Function(User?) onSignOut;
+
   const BannedPage({required this.onSignOut});
+
   @override
   State<StatefulWidget> createState() => _bannedPageState();
 }

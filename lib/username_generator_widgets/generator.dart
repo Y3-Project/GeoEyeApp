@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'raw.dart';
 
+import 'raw.dart';
 
 abstract class UsernameGenImpl {
   /// Allocates a list of names for the specified `UsernameGen`.

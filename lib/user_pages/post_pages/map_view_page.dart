@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
-import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+
 import 'popup_card_style.dart';
 
 class MapViewPage extends StatefulWidget {

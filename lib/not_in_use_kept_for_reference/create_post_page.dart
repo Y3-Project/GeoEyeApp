@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart' as fire_core;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_pages/profile_page.dart';
-import 'package:firebase_core/firebase_core.dart' as fire_core;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-
 
 /*
 NOT
@@ -19,8 +18,6 @@ TO
 add_post.dart
  */
 
-
-
 class CreatePostPage extends StatefulWidget {
   // TODO: we will also need the currently logged in user
   const CreatePostPage({Key? key}) : super(key: key);
@@ -30,15 +27,14 @@ class CreatePostPage extends StatefulWidget {
 }
 
 class _CreatePostPageState extends State<CreatePostPage> {
-
   final titleTextController = TextEditingController();
   final descTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
     Future<void> addPost(String title, String desc) async {
-      CollectionReference posts = FirebaseFirestore.instance.collection('posts');
+      CollectionReference posts =
+          FirebaseFirestore.instance.collection('posts');
       String userDocID = '';
       QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
           .instance
@@ -49,7 +45,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
         userDocID = doc.id;
       }
-      DocumentReference userDocRef = FirebaseFirestore.instance.doc('/users/' + userDocID);
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.doc('/users/' + userDocID);
       await posts.add({
         'likes': List.empty(growable: true),
         'picture': '',
@@ -63,25 +60,30 @@ class _CreatePostPageState extends State<CreatePostPage> {
       print("Post added!");
     }
 
-
     Future<File> pickImage(ImageSource imageSource) async {
       XFile? imgXFile = await ImagePicker().pickImage(source: imageSource);
       File imgFile = File('');
-      if(imgXFile != null) {
+      if (imgXFile != null) {
         imgFile = File(imgXFile.path);
       }
-      final String path = (await getApplicationDocumentsDirectory()).absolute.path;
+      final String path =
+          (await getApplicationDocumentsDirectory()).absolute.path;
       final finalImage = await imgFile.copy('$path/postPic.png');
       return finalImage;
     }
 
-    Future<String> uploadPicture(File picture) async{
+    Future<String> uploadPicture(File picture) async {
       final storageRef = FirebaseStorage.instance.ref();
       final imgRef = storageRef.child('images/img.png');
       String picStoragePath = '';
 
       try {
-        picStoragePath = await imgRef.putFile(picture).snapshot.ref.getDownloadURL().toString();
+        picStoragePath = await imgRef
+            .putFile(picture)
+            .snapshot
+            .ref
+            .getDownloadURL()
+            .toString();
       } on fire_core.FirebaseException catch (e) {
         print(e.toString());
       }
