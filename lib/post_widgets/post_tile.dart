@@ -1,15 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/expanded_post.dart';
 
 import '../util/util.dart';
 import 'post.dart';
 
-// TODO: make another file called scrapbook_tile.dart
 class PostTile extends StatelessWidget {
   final Post post;
+  String currentUUID = "";
+  List<DocumentReference> userDocument = List.empty(growable: true);
 
-  PostTile(this.post);
+  Future<void> getCurrentUserReference() async {
+    currentUUID = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection("users")
+        .where("uuid", isEqualTo: currentUUID)
+        .snapshots()
+        .listen((event) {
+      for (var doc in event.docs) {
+        userDocument.add(doc.reference);
+      }
+    });
+  }
+
+  PostTile(this.post) {
+    getCurrentUserReference();
+  }
 
   Widget imageHandler() {
     if (post.picture != '') {
@@ -24,14 +41,19 @@ class PostTile extends StatelessWidget {
     duration: Duration(seconds: 2),
   );
 
+  SnackBar deletedSnackBar = SnackBar(
+    content: Text("Deleted post"),
+    duration: Duration(seconds: 2),
+  );
+
   showAlertDialog(BuildContext context) {
-    Widget cancelBtn = TextButton(
+    Widget noReport = TextButton(
       child: Text("Cancel"),
       onPressed: () {
         Navigator.of(context).pop(); // dismiss dialog
       },
     );
-    Widget yesBtn = TextButton(
+    Widget yesReport = TextButton(
       child: Text("Yes"),
       onPressed: () {
         FirebaseFirestore.instance.doc(post.id.path).update({
@@ -43,19 +65,50 @@ class PostTile extends StatelessWidget {
       },
     );
 
-    AlertDialog alert = AlertDialog(
+    AlertDialog reportDialog = AlertDialog(
       title: Text("Report Post"),
       content: Text("Are you sure you want to report this post?"),
       actions: [
-        cancelBtn,
-        yesBtn,
+        noReport,
+        yesReport,
+      ],
+    );
+
+    Widget yesDelete = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        FirebaseFirestore.instance.doc(post.id.path).delete();
+        Navigator.of(context).pop(); // dismiss dialog
+        ScaffoldMessenger.of(context).showSnackBar(deletedSnackBar);
+      },
+    );
+
+    Widget noDelete = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    AlertDialog deleteAlert = AlertDialog(
+      title: Text("Delete Post"),
+      content: Text("Are you sure you want to delete this post?"),
+      actions: [
+        noDelete,
+        yesDelete,
       ],
     );
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        print("user id: " + post.user.id);
+        print("current user id: " + userDocument[0].id);
+        if (post.user.id == userDocument[0].id) {
+          return deleteAlert;
+        } else {
+          return reportDialog;
+        }
       },
     );
   }
