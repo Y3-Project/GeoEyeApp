@@ -276,6 +276,11 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                     {
                       liked = false,
                       removeLike(this.widget.post.id, userDocument),
+                      setState(() {
+                        // remove user from likesList
+                        likesList.remove(getCurrentUserReference());
+                        l = l - 1;
+                      })
                     }
                 },
                 // TODO, might be a video
@@ -304,6 +309,11 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                       {
                         liked = false,
                         removeLike(this.widget.post.id, userDocument),
+                        setState(() {
+                          // remove user from likesList
+                          likesList.remove(getCurrentUserReference());
+                          l = l - 1;
+                        })
                       }
                   },
                   borderRadius: BorderRadius.circular(8),
