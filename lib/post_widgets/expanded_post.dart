@@ -152,6 +152,11 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     }
   }
 
+  SnackBar deletedSnackBar = SnackBar(
+    content: Text("Deleted post"),
+    duration: Duration(seconds: 2),
+  );
+
   reportDialog(BuildContext context, Comment comment) {
     Widget noReport = TextButton(
       child: Text("Cancel"),
@@ -192,6 +197,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
       onPressed: () {
         FirebaseFirestore.instance.doc(comment.id.path).delete();
         Navigator.of(context).pop(); // dismiss dialog
+        ScaffoldMessenger.of(context).showSnackBar(deletedSnackBar);
       },
     );
 
@@ -207,8 +213,6 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        print(comment.user.id);
-        print(userDocument[0].id);
         if (comment.user.id == userDocument[0].id) {
           return deleteDialog;
         } else {
