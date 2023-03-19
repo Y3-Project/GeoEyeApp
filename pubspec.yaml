@@ -53,6 +53,7 @@ dependencies:
   camera: ^0.10.3+2
   ar_location_view: ^2.0.6
   flutter_map_marker_popup: ^4.0.1
+  uuid: ^3.0.7
 
 
 dev_dependencies:
