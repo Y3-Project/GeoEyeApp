@@ -9,7 +9,6 @@ import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_tile.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:uuid/uuid.dart';
-import '../../util/util.dart';
 
 class Annotation extends ArAnnotation {
   Annotation({required super.uid, required super.position});
@@ -99,6 +98,7 @@ class _ARViewPageState extends State<ARViewPage> {
                 border: Border.all(color: Colors.white),
                 borderRadius: const BorderRadius.all(Radius.circular(20))),
             child: ArLocationWidget(
+                showDebugInfoSensor: false,
                 annotations: _displayAnnotations,
                 annotationViewBuilder: (context, annotation) {
                   return _display[0];
