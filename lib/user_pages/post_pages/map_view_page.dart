@@ -123,12 +123,7 @@ class _MapViewPageState extends State<MapViewPage> {
                 zoom: 14,
                 onTap: (_, __) => _popupLayerController.hideAllPopups(),
               ),
-              nonRotatedChildren: [
-                AttributionWidget.defaultWidget(
-                  source: 'OpenStreetMap contributors',
-                  onSourceTapped: null,
-                ),
-              ],
+              nonRotatedChildren: [],
               children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
