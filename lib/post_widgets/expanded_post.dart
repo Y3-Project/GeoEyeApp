@@ -272,6 +272,11 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                       likePost(this.widget.post.id, userDocument),
                       ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
                     }
+                  else
+                    {
+                      liked = false,
+                      removeLike(this.widget.post.id, userDocument),
+                    }
                 },
                 // TODO, might be a video
                 child: mediaWidgetPicker(),
@@ -294,6 +299,11 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                           likesList.add(getCurrentUserReference());
                           l = l + 1;
                         })
+                      }
+                    else
+                      {
+                        liked = false,
+                        removeLike(this.widget.post.id, userDocument),
                       }
                   },
                   borderRadius: BorderRadius.circular(8),
