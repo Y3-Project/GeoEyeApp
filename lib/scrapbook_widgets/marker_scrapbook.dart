@@ -20,7 +20,8 @@ class MarkerScrapbook extends StatefulWidget {
       currentUsername: '',
       location: GeoPoint(0.0, 0.0),
       timestamp: Timestamp.now(),
-      public: false);
+      public: false,
+      thumbnailStoragePath: '');
 
   @override
   State<MarkerScrapbook> createState() => _MarkerScrapbookState();

@@ -11,7 +11,10 @@ import '../user_pages/profile_page.dart';
 class AddPost extends StatefulWidget {
   final MediaUploaderWidgetState thumbnailUploader;
   final MediaUploaderWidgetState postUploader;
-  AddPost({Key? key, required this.postUploader, required this.thumbnailUploader}) : super(key: key);
+
+  AddPost(
+      {Key? key, required this.postUploader, required this.thumbnailUploader})
+      : super(key: key);
 
   static String username = '';
   static String userDocID = '';
@@ -25,10 +28,10 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-
   Future<void> addScrapbookPostMarker() async {
     String postDir = await ProfilePage().getUserDocumentID() + "/scrapbooks/";
-    String scrapbookThumbnailDir = "/images/" + await ProfilePage().getUserDocumentID() + "/scrapbooks/";
+    String scrapbookThumbnailDir =
+        "/images/" + await ProfilePage().getUserDocumentID() + "/scrapbooks/";
 
     //-------------------------POST SECTION STARTS--------------------------------------
     CollectionReference posts = FirebaseFirestore.instance.collection('posts');
@@ -45,15 +48,14 @@ class _AddPostState extends State<AddPost> {
         FirebaseFirestore.instance.doc('/users/' + userDocID);
     AddPost.postRef = await posts.add({
       'likes': List.empty(growable: true),
-      'picture':
-          '', //todo get the download url from Storage and put it here IF user uploaded picture,
+      'picture': '',
       'reports': List.empty(growable: true),
       'text': titleCaptionForPost.postCaption,
       'timestamp': Timestamp.now(),
       'title': titleCaptionForPost.postTitle,
       'user': userDocRef,
-      'video':
-          '' //todo get the download url from Storage and put it here IF user uploaded video,
+      'video': '',
+      'postStoragePath': ''
     });
     print("Post added!" + "with postRef: " + AddPost.postRef.toString());
     //-------------------------POST SECTION ENDS------------------------------------------
@@ -84,11 +86,12 @@ class _AddPostState extends State<AddPost> {
       'creatorid': '/users/' + AddPost.userDocID,
       'currentUsername': AddPost.username,
       'location':
-      GeoPoint(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
+          GeoPoint(NewScrapbookPage.currentLat!, NewScrapbookPage.currentLong!),
       'public': NewScrapbookPage.visibility,
       'scrapbookThumbnail': '',
       'scrapbookTitle': ScrapbookTitle.scrapbookTitle,
-      'timestamp': Timestamp.now()
+      'timestamp': Timestamp.now(),
+      'thumbnailStoragePath': ''
     });
     print("Scrapbook added!" +
         "with scrapbookRef: " +
@@ -100,14 +103,17 @@ class _AddPostState extends State<AddPost> {
     String scrapbookId = AddPost.scrapbookRef.id;
 
     scrapbookThumbnailDir += scrapbookId + "/";
-    thumbnailUploader.uploadMedia(scrapbookThumbnailDir, "scrapbooks", scrapbookId, "scrapbookThumbnail");
+    String thumbnailStoragePath = await thumbnailUploader.uploadMedia(
+        scrapbookThumbnailDir, "scrapbooks", scrapbookId, "scrapbookThumbnail");
+    thumbnailUploader.sendDataToFirestore(thumbnailStoragePath, "scrapbooks",
+        scrapbookId, "thumbnailStoragePath");
     //-------------------------THUMBNAIL UPLOADING SECTION ENDS---------------------------
 
     //-------------------------POST UPLOADING SECTION STARTS------------------------------
     String postId = AddPost.postRef.id;
     String field = "";
 
-    if (postUploader.widget.mediaType == MediaType.picture){
+    if (postUploader.widget.mediaType == MediaType.picture) {
       postDir = "/images/" + postDir + scrapbookId + "/posts/";
       field = "picture";
     } else {
@@ -115,9 +121,11 @@ class _AddPostState extends State<AddPost> {
       field = "video";
     }
     postUploader.changeFileName(postId);
-    postUploader.uploadMedia(postDir, "posts", postId, field);
+    String postStoragePath =
+        await postUploader.uploadMedia(postDir, "posts", postId, field);
+    postUploader.sendDataToFirestore(
+        postStoragePath, 'posts', postId, 'postStoragePath');
     //-------------------------POST UPLOADING SECTION ENDS--------------------------------
-
 
     //-------------------------MARKER SECTION STARTS--------------------------------------
     //add its corresponding marker
@@ -153,7 +161,6 @@ class _AddPostState extends State<AddPost> {
                     textStyle: MaterialStateTextStyle.resolveWith(
                         (states) => TextStyle(color: Colors.white))),
                 onPressed: () async {
-
                   //------MAIN METHOD BELOW-------//
                   addScrapbookPostMarker();
                   //------MAIN METHOD BELOW-------//
@@ -165,7 +172,6 @@ class _AddPostState extends State<AddPost> {
                     );
                   });
                   //---FOR NAVIGATING TO THE HOME PAGE---
-
                 },
                 child: Text("Create the scrapbook",
                     style:

@@ -9,7 +9,7 @@ import 'package:flutter_app_firebase_login/post_widgets/post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_posts_page.dart';
 
 import '../util/comment.dart';
-import '../util/scrapbook_util/getScrapbookFromPost.dart';
+import '../util/scrapbook_util/get_scrapboook.dart';
 import '../util/util.dart';
 
 class ExpandedPostPage extends StatefulWidget {
@@ -213,7 +213,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            getScrapbook(widget.post).then((scrapbook) {
+            getScrapbookFromPost(widget.post).then((scrapbook) {
               Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (context) =>

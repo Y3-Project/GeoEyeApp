@@ -10,6 +10,7 @@ class Scrapbook {
   GeoPoint location = GeoPoint(0, 0);
   Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(0);
   bool public = false; // scrapbooks are private by default
+  String thumbnailStoragePath = '';
 
   /* Constructor */
   Scrapbook(
@@ -20,7 +21,8 @@ class Scrapbook {
       required this.currentUsername,
       required this.location,
       required this.timestamp,
-      required this.public});
+      required this.public,
+      required this.thumbnailStoragePath});
 
   /* Convert a document to a Scrapbook object */
   Scrapbook.fromDocument(DocumentSnapshot doc) {
@@ -32,5 +34,6 @@ class Scrapbook {
     this.location = doc['location'];
     this.timestamp = doc['timestamp'];
     this.public = doc['public'];
+    this.thumbnailStoragePath = doc['thumbnailStoragePath'];
   }
 }

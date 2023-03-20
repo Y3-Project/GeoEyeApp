@@ -25,7 +25,8 @@ class MarkerPopup extends StatefulWidget {
       currentUsername: '',
       location: GeoPoint(0.0, 0.0),
       timestamp: Timestamp.now(),
-      public: false);
+      public: false,
+      thumbnailStoragePath: '');
 
   @override
   State<StatefulWidget> createState() => _MarkerPopupState();

@@ -38,6 +38,7 @@ class _FeedPageState extends State<FeedPage> {
         location: doc.get('location') as GeoPoint,
         timestamp: doc.get('timestamp') as Timestamp,
         public: doc.get('public'),
+        thumbnailStoragePath: doc.get('thumbnailStoragePath')
       );
     }).toList();
   }
@@ -94,7 +95,6 @@ class _FeedPageState extends State<FeedPage> {
     return StreamProvider<List<Scrapbook>>.value(
       value: scrapbooks,
       initialData: [],
-      // todo: display scrapbooks instead of posts
       child: Scaffold(
         body: ScrapbookList(),
         floatingActionButton: PopupItemLauncher(

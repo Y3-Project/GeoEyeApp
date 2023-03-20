@@ -18,6 +18,7 @@ class Post {
   List<dynamic> likes = List.empty(
       growable:
           true); // this is an array of references to users who liked the post
+  String postStoragePath = '';
 
   /* Constructor */
   Post(
@@ -30,7 +31,8 @@ class Post {
       required this.user,
       required this.text,
       required this.title,
-      required this.id});
+      required this.id,
+      required this.postStoragePath});
 
   /* Convert a document to a Post object */
   Post.fromDocument(DocumentSnapshot doc) {
@@ -44,5 +46,6 @@ class Post {
     this.title = doc['title'];
     this.text = doc['text'];
     this.id = doc.reference;
+    this.postStoragePath = doc['postStoragePath'];
   }
 }

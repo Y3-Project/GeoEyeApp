@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../post_widgets/post.dart';
 import '../../scrapbook_widgets/scrapbook.dart';
 
-Future<Scrapbook> getScrapbook(Post post) async {
+Future<Scrapbook> getScrapbookFromPost(Post post) async {
   Scrapbook scrapbook = Scrapbook(
       id: '',
       creatorid: '',
@@ -12,9 +12,9 @@ Future<Scrapbook> getScrapbook(Post post) async {
       currentUsername: '',
       location: GeoPoint(0, 0),
       timestamp: Timestamp(0, 0),
-      public: false);
-  DocumentReference postRef =
-      FirebaseFirestore.instance.doc(post.id.path);
+      public: false,
+      thumbnailStoragePath: '');
+  DocumentReference postRef = FirebaseFirestore.instance.doc(post.id.path);
   QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
       .collection("scrapbookPosts")
       .where("post", isEqualTo: postRef)

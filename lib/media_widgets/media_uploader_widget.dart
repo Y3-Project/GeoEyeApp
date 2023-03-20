@@ -62,11 +62,11 @@ class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
     return await finalImage;
   }
 
-  Future<void> _sendMediaToFirestore(String url, String collection, String docId, String field) async {
+  Future<void> sendDataToFirestore(String data, String collection, String docId, String field) async {
     await FirebaseFirestore.instance
         .collection(collection)
         .doc(docId)
-        .update({field: url});
+        .update({field: data});
   }
 
   Future<String> uploadMedia(String storageDir, String collection, String docId, String field) async {
@@ -81,8 +81,8 @@ class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
     } on fire_core.FirebaseException catch (e) {
       print(e.toString());
     }
-    _sendMediaToFirestore(fileUrl, collection, docId, field);
-    return fileUrl;
+    sendDataToFirestore(fileUrl, collection, docId, field);
+    return mediaStorageRef.fullPath;
   }
 
   void changeFileName(String newFileName){
