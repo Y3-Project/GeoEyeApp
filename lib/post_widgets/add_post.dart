@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/media_widgets/scrapbook_thumbnail.dart';
 import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
 import 'package:flutter_app_firebase_login/user_pages/main_page.dart';

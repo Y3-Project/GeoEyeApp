@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/expanded_post.dart';
-import 'package:flutter_app_firebase_login/util/scrapbook_util/getScrapbookFromPost.dart';
+import 'package:flutter_app_firebase_login/util/scrapbook_util/get_marker.dart';
 import '../scrapbook_widgets/scrapbook.dart';
 import '../util/util.dart';
 import 'post.dart';
@@ -80,6 +80,7 @@ class PostTile extends StatelessWidget {
       child: Text("Yes"),
       onPressed: () {
         FirebaseFirestore.instance.doc(post.id.path).delete();
+        //TODO: Need to delete from storage as well
         Navigator.of(context).pop(); // dismiss dialog
         ScaffoldMessenger.of(context).showSnackBar(deletedSnackBar);
       },
