@@ -1,16 +1,13 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../util/enums/media_type.dart';
 import 'media_uploader_widget.dart';
 
-
-
-
 class ScrapbookThumbnail extends StatefulWidget {
   final ValueChanged<MediaUploaderWidgetState> imageUploader;
+
   ScrapbookThumbnail({Key? key, required this.imageUploader}) : super(key: key);
 
   @override
@@ -35,14 +32,17 @@ class _ScrapbookThumbnailState extends State<ScrapbookThumbnail> {
 
   @override
   Widget build(BuildContext context) {
-
     return InkWell(
         onTap: () {
-          MediaUploaderWidget imageUploaderWidget =
-          MediaUploaderWidget(key: imageUploaderWidgetStateKey, mediaType: MediaType.picture, fileName: "scrapbook_thumbnail");
-          imageUploaderWidget.buildMediaUploader(imageUploaderWidget, context).then((value) => widget.imageUploader(imageUploaderWidgetStateKey.currentState!));
+          MediaUploaderWidget imageUploaderWidget = MediaUploaderWidget(
+              key: imageUploaderWidgetStateKey,
+              mediaType: MediaType.picture,
+              fileName: "scrapbook_thumbnail");
+          imageUploaderWidget
+              .buildMediaUploader(imageUploaderWidget, context)
+              .then((value) => widget
+                  .imageUploader(imageUploaderWidgetStateKey.currentState!));
         },
-        child: Icon(Icons.add_a_photo, size: 40)
-    );
+        child: Icon(Icons.add_a_photo, size: 40));
   }
 }

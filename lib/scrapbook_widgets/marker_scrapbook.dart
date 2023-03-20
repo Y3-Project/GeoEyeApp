@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_tile.dart';
 import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
-import 'package:flutter_app_firebase_login/user_pages/post_pages/map_view_page.dart';
 
 import '../user_pages/post_pages/popup_card_style.dart';
 

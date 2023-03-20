@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
+
 import '../media_widgets/media_uploader_widget.dart';
 import '../util/enums/media_type.dart';
 

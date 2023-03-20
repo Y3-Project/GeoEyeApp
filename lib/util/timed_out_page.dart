@@ -1,19 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../user_authentication_widgets/login_page.dart';
 
 class TimedOutPage extends StatefulWidget {
   final Function(User?) onSignOut;
   final String timeout;
+
   const TimedOutPage({required this.onSignOut, required this.timeout});
+
   @override
   State<StatefulWidget> createState() => _timedOutPageState(timeout: timeout);
 }
 
 class _timedOutPageState extends State<TimedOutPage> {
   final String timeout;
+
   _timedOutPageState({required this.timeout});
 
   @override

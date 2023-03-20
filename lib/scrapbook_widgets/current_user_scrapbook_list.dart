@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_tile.dart';
-import 'package:provider/provider.dart';
+
 import '../user_pages/profile_page.dart';
-import '../util/user_model.dart';
 
 class CurrentUserScrapbookList extends StatefulWidget {
   const CurrentUserScrapbookList({Key? key}) : super(key: key);

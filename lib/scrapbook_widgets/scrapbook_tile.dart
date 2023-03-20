@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/post_widgets/expanded_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_posts_page.dart';
-import 'package:provider/provider.dart';
 
 import '../user_pages/profile_page.dart';
-import '../util/user_model.dart';
 import '../util/util.dart';
 
 class ScrapbookTile extends StatefulWidget {
@@ -21,10 +18,20 @@ class ScrapbookTile extends StatefulWidget {
 }
 
 class _ScrapbookTileState extends State<ScrapbookTile> {
-  bool doesPostBelongToUser() {
-    print("current user: " + getCurrentUsername());
-    print("post user: " + widget.scrapbook.currentUsername);
-    return widget.scrapbook.currentUsername == getCurrentUsername();
+  String currentUUID = "";
+  List<DocumentReference> userDocument = List.empty(growable: true);
+
+  Future<void> getCurrentUserReference() async {
+    currentUUID = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection("users")
+        .where("uuid", isEqualTo: currentUUID)
+        .snapshots()
+        .listen((event) {
+      for (var doc in event.docs) {
+        userDocument.add(doc.reference);
+      }
+    });
   }
 
   void getProfilePic() async {
@@ -52,14 +59,19 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
     duration: Duration(seconds: 2),
   );
 
+  SnackBar deletedSnackBar = SnackBar(
+    content: Text("Deleted post"),
+    duration: Duration(seconds: 2),
+  );
+
   showAlertDialog(BuildContext context) {
-    Widget cancelBtn = TextButton(
+    Widget noReport = TextButton(
       child: Text("Cancel"),
       onPressed: () {
         Navigator.of(context).pop(); // dismiss dialog
       },
     );
-    Widget yesBtn = TextButton(
+    Widget yesReport = TextButton(
       child: Text("Yes"),
       onPressed: () {
         FirebaseFirestore.instance.doc('/posts/' + widget.scrapbook.id).update({
@@ -71,25 +83,59 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
       },
     );
 
-    AlertDialog alert = AlertDialog(
-      title: Text(doesPostBelongToUser() ? "Delete Post" : "Report Post"),
-      content: Text(
-          doesPostBelongToUser()
-              ? "Are you sure you want to delete this post?"
-              : "Are you sure you want to report this post?",
-          style: TextStyle(fontSize: 16, color: Colors.red)),
+    AlertDialog reportAlert = AlertDialog(
+      title: Text("Report Post"),
+      content: Text("Are you sure you want to report this post?"),
       actions: [
-        cancelBtn,
-        yesBtn,
+        noReport,
+        yesReport,
+      ],
+    );
+
+    Widget yesDelete = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        FirebaseFirestore.instance.doc('/posts/' + widget.scrapbook.id).delete();
+        Navigator.of(context).pop(); // dismiss dialog
+        ScaffoldMessenger.of(context).showSnackBar(deletedSnackBar);
+      },
+    );
+
+    Widget noDelete = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    AlertDialog deleteAlert = AlertDialog(
+      title: Text("Delete Post"),
+      content: Text("Are you sure you want to delete this post?"),
+      actions: [
+        noDelete,
+        yesDelete,
       ],
     );
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        print(widget.scrapbook.creatorid);
+        print('/' + userDocument[0].path);
+        if (widget.scrapbook.creatorid == '/' + userDocument[0].path) {
+          return deleteAlert;
+        } else {
+          return reportAlert;
+        }
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUserReference();
+    getProfilePic();
   }
 
   @override

@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/util/moderator_page.dart';
 import 'package:geolocator/geolocator.dart';
 
 int distanceFromOneGeoPointToAnotherInKM(GeoPoint p1, GeoPoint p2) {
@@ -119,12 +116,23 @@ String getCurrentUsername() {
 }
 
 /*
-  @param: documentReference - the document reference of the post to be liked by the user
-  note that here we assume that the logged in user is the user who is liking the post
+  @param: post - the post to add the like to
+  @param: userDocument - the user who is adding the like
  */
 void likePost(DocumentReference post, List<DocumentReference> userDocument) {
   // add the user to the post's likes list
   FirebaseFirestore.instance
       .doc(post.path)
       .update({"likes": FieldValue.arrayUnion(userDocument)});
+}
+
+/*
+  @param: post - the document reference of the post to be unliked by the user
+  @param: userDocument - the document reference of the user who is unliking the post
+ */
+void removeLike(DocumentReference post, List<DocumentReference> userDocument) {
+  // remove the user from the post's likes list
+  FirebaseFirestore.instance
+      .doc(post.path)
+      .update({"likes": FieldValue.arrayRemove(userDocument)});
 }

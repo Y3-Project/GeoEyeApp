@@ -4,7 +4,6 @@ class ScrapbookTitle extends StatefulWidget {
   ScrapbookTitle({Key? key}) : super(key: key);
   static String scrapbookTitle = '';
 
-
   @override
   State<ScrapbookTitle> createState() => _ScrapbookTitleState();
 }
@@ -14,7 +13,6 @@ class _ScrapbookTitleState extends State<ScrapbookTitle> {
 
   @override
   Widget build(BuildContext context) {
-
     return TextField(
       onEditingComplete: () {
         setState(() {
@@ -28,8 +26,7 @@ class _ScrapbookTitleState extends State<ScrapbookTitle> {
       decoration: InputDecoration(
           hintStyle: TextStyle(fontSize: 18),
           hintText: 'Enter a title for your scrapbook here',
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20))),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20))),
     );
   }
 }

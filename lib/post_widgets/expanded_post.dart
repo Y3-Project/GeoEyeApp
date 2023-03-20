@@ -28,6 +28,9 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   List<CommentTile> _displayComments = List.empty(growable: true);
   List<QueryDocumentSnapshot> _snapshots = List.empty(growable: true);
   String currentUUID = "";
+  bool liked =
+      false; // a bandage solution to the problem of the like button not updating
+
   // this is really annoying
   // basically you can declare a document refence object normally
   // so I'm doing this lmao
@@ -64,8 +67,6 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
             continue;
           }
           if (_snapshots[i].get("post") == this.widget.post.id) {
-            // print(this.widget.post.likes.length);
-            // l = this.widget.post.likes.length;
             initComments(i);
           }
         }
@@ -75,14 +76,12 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
 
   Future<void> getCurrentUserReference() async {
     currentUUID = FirebaseAuth.instance.currentUser!.uid;
-    print("current UUID: " + currentUUID);
     await FirebaseFirestore.instance
         .collection("users")
         .where("uuid", isEqualTo: currentUUID)
         .snapshots()
         .listen((event) {
       for (var doc in event.docs) {
-        print(doc.id);
         userDocument.add(doc.reference);
       }
     });
@@ -93,11 +92,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
         .doc(this.widget.post.id.path)
         .snapshots()
         .listen((event) {
-      print("here");
       for (DocumentReference doc in event.get("likes")) {
-        print("here2");
         FirebaseFirestore.instance.doc(doc.path).snapshots().listen((event) {
-          print("here3");
           likesList.add(event.get("username"));
         });
       }
@@ -108,7 +104,7 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
   void initState() {
     getCurrentUserReference();
     loadComments();
-    // loadLikes();
+    loadLikes();
     super.initState();
   }
 
@@ -126,44 +122,49 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
       return heart + l.toString();
     }
 
-    // if (likesUsernames.length == 0) {
-    //   return heart + "Be the first to like this post!";
-    // } else if (likesUsernames.length == 1) {
-    //   return heart + "Liked by " + likes[0].toString();
-    // } else if (likesUsernames.length == 2) {
-    //   return heart +
-    //       "Liked by " +
-    //       likesUsernames[0].toString() +
-    //       " and " +
-    //       likesUsernames[1].toString();
-    // } else if (likesUsernames.length == 3) {
-    //   return heart +
-    //       "Liked by " +
-    //       likesUsernames[0].toString() +
-    //       ", " +
-    //       likesUsernames[1].toString() +
-    //       " and " +
-    //       likesUsernames[2].toString();
-    // } else {
-    //   return heart +
-    //       "Liked by " +
-    //       likesUsernames[0].toString() +
-    //       ", " +
-    //       likesUsernames[1].toString() +
-    //       " and " +
-    //       (likesUsernames.length - 2).toString() +
-    //       " others";
-    // }
+    if (likesUsernames.length == 0) {
+      return heart + "Be the first to like this post!";
+    } else if (likesUsernames.length == 1) {
+      return heart + "Liked by " + likes[0].toString();
+    } else if (likesUsernames.length == 2) {
+      return heart +
+          "Liked by " +
+          likesUsernames[0].toString() +
+          " and " +
+          likesUsernames[1].toString();
+    } else if (likesUsernames.length == 3) {
+      return heart +
+          "Liked by " +
+          likesUsernames[0].toString() +
+          ", " +
+          likesUsernames[1].toString() +
+          " and " +
+          likesUsernames[2].toString();
+    } else {
+      return heart +
+          "Liked by " +
+          likesUsernames[0].toString() +
+          ", " +
+          likesUsernames[1].toString() +
+          " and " +
+          (likesUsernames.length - 2).toString() +
+          " others";
+    }
   }
 
+  SnackBar deletedSnackBar = SnackBar(
+    content: Text("Deleted post"),
+    duration: Duration(seconds: 2),
+  );
+
   reportDialog(BuildContext context, Comment comment) {
-    Widget cancelBtn = TextButton(
+    Widget noReport = TextButton(
       child: Text("Cancel"),
       onPressed: () {
         Navigator.of(context).pop(); // dismiss dialog
       },
     );
-    Widget yesBtn = TextButton(
+    Widget yesReport = TextButton(
       child: Text("Yes"),
       onPressed: () {
         FirebaseFirestore.instance
@@ -175,30 +176,59 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
       },
     );
 
-    AlertDialog alert = AlertDialog(
+    AlertDialog reportDialog = AlertDialog(
       title: Text("Report Comment"),
       content: Text("Are you sure you want to report this comment?"),
       actions: [
-        cancelBtn,
-        yesBtn,
+        noReport,
+        yesReport,
+      ],
+    );
+
+    Widget noDelete = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    Widget yesDelete = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        FirebaseFirestore.instance.doc(comment.id.path).delete();
+        Navigator.of(context).pop(); // dismiss dialog
+        ScaffoldMessenger.of(context).showSnackBar(deletedSnackBar);
+      },
+    );
+
+    AlertDialog deleteDialog = AlertDialog(
+      title: Text("Delete Comment"),
+      content: Text("Are you sure you want to delete this comment?"),
+      actions: [
+        noDelete,
+        yesDelete,
       ],
     );
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        if (comment.user.id == userDocument[0].id) {
+          return deleteDialog;
+        } else {
+          return reportDialog;
+        }
       },
     );
   }
 
   Widget mediaWidgetPicker() {
     Widget pickedMediaWidget = new Image.network("");
-    if (widget.post.picture != ""){
+    if (widget.post.picture != "") {
       pickedMediaWidget = Image.network(widget.post.picture == ""
           ? "https://www.myutilitygenius.co.uk/assets/images/blogs/default-image.jpg"
           : widget.post.picture);
-    } else{
+    } else {
       pickedMediaWidget = new VideoPlayerScreen(videoUrl: widget.post.video);
     }
     return pickedMediaWidget;
@@ -236,8 +266,22 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
             children: [
               InkWell(
                 onDoubleTap: () => {
-                  likePost(this.widget.post.id, userDocument),
-                  ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
+                  if (!liked)
+                    {
+                      liked = true,
+                      likePost(this.widget.post.id, userDocument),
+                      ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
+                    }
+                  else
+                    {
+                      liked = false,
+                      removeLike(this.widget.post.id, userDocument),
+                      setState(() {
+                        // remove user from likesList
+                        likesList.remove(getCurrentUserReference());
+                        l = l - 1;
+                      })
+                    }
                 },
                 // TODO, might be a video
                 child: mediaWidgetPicker(),
@@ -249,8 +293,28 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                 ),
                 child: InkWell(
                   onTap: () => {
-                    likePost(this.widget.post.id, userDocument),
-                    ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
+                    if (!liked)
+                      {
+                        liked = true,
+                        likePost(this.widget.post.id, userDocument),
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(likedSnackBar),
+                        setState(() {
+                          // add use to likesList
+                          likesList.add(getCurrentUserReference());
+                          l = l + 1;
+                        })
+                      }
+                    else
+                      {
+                        liked = false,
+                        removeLike(this.widget.post.id, userDocument),
+                        setState(() {
+                          // remove user from likesList
+                          likesList.remove(getCurrentUserReference());
+                          l = l - 1;
+                        })
+                      }
                   },
                   borderRadius: BorderRadius.circular(8),
                   child: Container(

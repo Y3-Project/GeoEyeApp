@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/login_page.dart';
 import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
+
 import '../username_generator_widgets/generator.dart';
 //generate a random username with UsernameGen().generate()
 
@@ -104,36 +105,48 @@ class _SignUpPageState extends State<SignUpPage> {
           Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             GestureDetector(
                 onTap: () {
-                  selectedUsername = username1;
+                  setState(() {
+                    selectedUsername = username1;
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(snack1);
                 },
                 child: Text(username1,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.lightBlue))),
+                        fontSize: selectedUsername == username1 ? 20 : 16,
+                        color: selectedUsername == username1
+                            ? Colors.green
+                            : Colors.lightBlue))),
             SizedBox(height: 25),
             GestureDetector(
                 onTap: () {
-                  selectedUsername = username2;
+                  setState(() {
+                    selectedUsername = username2;
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(snack2);
                 },
                 child: Text(username2,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.lightBlue))),
+                        fontSize: selectedUsername == username2 ? 20 : 16,
+                        color: selectedUsername == username2
+                            ? Colors.green
+                            : Colors.lightBlue))),
             SizedBox(height: 25),
             GestureDetector(
                 onTap: () {
-                  selectedUsername = username3;
+                  setState(() {
+                    selectedUsername = username3;
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(snack3);
                 },
                 child: Text(username3,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.lightBlue)))
+                        fontSize: selectedUsername == username3 ? 20 : 16,
+                        color: selectedUsername == username3
+                            ? Colors.green
+                            : Colors.lightBlue)))
           ]),
           TextFormField(
             controller: _controllerPassword,

@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/marker_scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_map/flutter_map.dart';
-
-import '../profile_page.dart';
 
 class MarkerPopup extends StatefulWidget {
   final Marker marker;

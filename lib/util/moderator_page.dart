@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'moderator_util/reported_posts_util.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../user_authentication_widgets/login_page.dart';
-import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'util.dart';
-import '../post_widgets/post.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import '../user_authentication_widgets/login_page.dart';
+import 'moderator_util/reported_posts_util.dart';
 
 class ModeratorPage extends StatefulWidget {
   const ModeratorPage();

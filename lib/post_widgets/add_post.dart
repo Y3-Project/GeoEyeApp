@@ -28,6 +28,7 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+
   Future<void> addScrapbookPostMarker() async {
     String postDir = await ProfilePage().getUserDocumentID() + "/scrapbooks/";
     String scrapbookThumbnailDir =
@@ -161,6 +162,7 @@ class _AddPostState extends State<AddPost> {
                     textStyle: MaterialStateTextStyle.resolveWith(
                         (states) => TextStyle(color: Colors.white))),
                 onPressed: () async {
+
                   //------MAIN METHOD BELOW-------//
                   addScrapbookPostMarker();
                   //------MAIN METHOD BELOW-------//
@@ -172,6 +174,7 @@ class _AddPostState extends State<AddPost> {
                     );
                   });
                   //---FOR NAVIGATING TO THE HOME PAGE---
+
                 },
                 child: Text("Create the scrapbook",
                     style:

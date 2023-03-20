@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/create_account_page.dart';
 import 'package:flutter_app_firebase_login/util/moderator_widget.dart';
 import 'package:flutter_app_firebase_login/util/timed_out_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'forgot_password_page.dart';
 import '../user_pages/main_page.dart';
-import '../util/util.dart';
 import '../util/banned_page.dart';
+import '../util/util.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function(User?) onSignIn;

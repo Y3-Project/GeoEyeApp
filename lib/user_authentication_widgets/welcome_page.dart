@@ -5,8 +5,6 @@ import 'package:flutter_app_firebase_login/user_authentication_widgets/login_pag
 import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../user_pages/post_pages/feed_page.dart';
-
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
 
