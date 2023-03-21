@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_posts_page.dart';
+import 'package:flutter_app_firebase_login/user_pages/other_user_widget.dart';
 
 import '../user_pages/profile_page.dart';
 import '../util/util.dart';
+//import '../user_pages/other_user_widget.dart';
 
 class ScrapbookTile extends StatefulWidget {
   //static String profileUrl = '';
@@ -158,7 +160,7 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
   @override
   void initState() {
     super.initState();
-    getCurrentUserReference();
+    //getCurrentUserReference();
     print("2 + " + profileUrl);
     print("2 + " + widget.scrapbook.creatorid.substring(7));
     //getProfilePic();
@@ -169,36 +171,54 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
       child: Card(
-        shape:
-            ContinuousRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onLongPress: () {
-            showAlertDialog(context);
-          },
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) =>
-                      ScrapbookPostsPage(scrapbook: this.widget.scrapbook)),
-            );
-          },
-          child: ListTile(
-            leading: CircleAvatar(
-                //backgroundImage: NetworkImage(profileUrl))
-                //"https://firebasestorage.googleapis.com/v0/b/flutter-app-firebase-log-c1c41.appspot.com/o/images%2FKhrRphvHVAesRFxpMaePhkd8kJ93%2Fprofile_picture?alt=media&token=cd21af1b-c36d-4d6f-8f6b-9daf6791281c")),
-                backgroundImage: profileUrl != ''
-                    ? NetworkImage(profileUrl)
-                    : Image(
-                        image: AssetImage('images/default_avatar.png'),
-                      ).image),
-            title: Text(widget.scrapbook.scrapbookTitle),
-            subtitle: Text(widget.scrapbook.currentUsername),
-            trailing: imageHandler(),
-          ),
-        ),
-      ),
+          shape: ContinuousRectangleBorder(
+              borderRadius: BorderRadius.circular(30)),
+          margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0),
+          child: FutureBuilder(
+              future: getCurrentUserReference(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                /*if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Text('Result: ${snapshot.data}');
+                }
+              } else {*/
+                return InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onLongPress: () {
+                    showAlertDialog(context);
+                  },
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => ScrapbookPostsPage(
+                              scrapbook: this.widget.scrapbook)),
+                    );
+                  },
+                  child: ListTile(
+                    leading: InkWell(
+                        onTap: () {
+                          OtherUserPopUp();
+                          //popUpItemBody();
+                        },
+                        child: CircleAvatar(
+                            //backgroundImage: NetworkImage(profileUrl))
+                            //"https://firebasestorage.googleapis.com/v0/b/flutter-app-firebase-log-c1c41.appspot.com/o/images%2FKhrRphvHVAesRFxpMaePhkd8kJ93%2Fprofile_picture?alt=media&token=cd21af1b-c36d-4d6f-8f6b-9daf6791281c")),
+                            backgroundImage: profileUrl == ''
+                                ? Image(
+                                    image:
+                                        AssetImage('images/default_avatar.png'),
+                                  ).image
+                                : NetworkImage(profileUrl))),
+                    title: Text(widget.scrapbook.scrapbookTitle),
+                    subtitle: Text(widget.scrapbook.currentUsername),
+                    trailing: imageHandler(),
+                  ),
+                );
+              }
+              //},
+              )),
     );
   }
 }
