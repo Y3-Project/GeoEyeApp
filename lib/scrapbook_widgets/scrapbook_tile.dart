@@ -27,17 +27,17 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
   Future<void> getCurrentUserReference() async {
     //currentUUID = FirebaseAuth.instance.currentUser!.uid;
     //profileID = widget.scrapbook.creatorid.substring(7); //remove /users/?
-    await FirebaseFirestore.instance
+    await (FirebaseFirestore.instance
         .collection("users")
         .doc(widget.scrapbook.creatorid.substring(7))
         .get()
         .then((DocumentSnapshot snapshot) {
       //if (snapshot.exists) {
       profileUrl = snapshot.get("profilePicture");
-      print(profileUrl);
-      print(widget.scrapbook.creatorid.substring(7));
+      print("1 + " + profileUrl);
+      print("1 + " + widget.scrapbook.creatorid.substring(7));
       //}
-    }); //not realy sure what this does
+    })); //not realy sure what this does
     /*.where("uuid", isEqualTo: widget.scrapbook.creatorid.substring(7))
         .snapshots()
         .listen((event) {
@@ -159,6 +159,8 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
   void initState() {
     super.initState();
     getCurrentUserReference();
+    print("2 + " + profileUrl);
+    print("2 + " + widget.scrapbook.creatorid.substring(7));
     //getProfilePic();
   }
 
@@ -183,15 +185,15 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
             );
           },
           child: ListTile(
-            leading: CircleAvatar(backgroundImage: NetworkImage(profileUrl))
-            //"https://firebasestorage.googleapis.com/v0/b/flutter-app-firebase-log-c1c41.appspot.com/o/images%2FKhrRphvHVAesRFxpMaePhkd8kJ93%2Fprofile_picture?alt=media&token=cd21af1b-c36d-4d6f-8f6b-9daf6791281c")),
-            /*backgroundImage: ScrapbookTile.profileUrl == ''
-                    ? Image(
+            leading: CircleAvatar(
+                //backgroundImage: NetworkImage(profileUrl))
+                //"https://firebasestorage.googleapis.com/v0/b/flutter-app-firebase-log-c1c41.appspot.com/o/images%2FKhrRphvHVAesRFxpMaePhkd8kJ93%2Fprofile_picture?alt=media&token=cd21af1b-c36d-4d6f-8f6b-9daf6791281c")),
+                backgroundImage: profileUrl != ''
+                    ? NetworkImage(profileUrl)
+                    : Image(
                         image: AssetImage('images/default_avatar.png'),
-                      ).image
-                    : NetworkImage(ScrapbookTile.profileUrl))*/
-            ,
-            title: Text(profileUrl), //Text(widget.scrapbook.scrapbookTitle),
+                      ).image),
+            title: Text(widget.scrapbook.scrapbookTitle),
             subtitle: Text(widget.scrapbook.currentUsername),
             trailing: imageHandler(),
           ),
