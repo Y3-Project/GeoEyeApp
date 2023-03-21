@@ -12,6 +12,8 @@ class titleCaptionForPost extends StatefulWidget {
 class _titleCaptionForPostState extends State<titleCaptionForPost> {
   final titleTextController = TextEditingController();
   final descTextController = TextEditingController();
+  bool _validate1 = true;
+  bool _validate2 = true;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class _titleCaptionForPostState extends State<titleCaptionForPost> {
           onEditingComplete: () {
             setState(() {
               titleCaptionForPost.postTitle = titleTextController.text;
+              _validate1 = false;
             });
             titleTextController.clear();
           },
@@ -30,7 +33,9 @@ class _titleCaptionForPostState extends State<titleCaptionForPost> {
           decoration: InputDecoration(
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              hintText: 'Enter a title for the post...'),
+              hintText: 'Enter a title for the post...',
+              errorStyle: TextStyle(fontSize: 12),
+              errorText: _validate1 ? "Your post must have a title." : null),
         ),
       ),
       Container(
@@ -39,6 +44,7 @@ class _titleCaptionForPostState extends State<titleCaptionForPost> {
           onEditingComplete: () {
             setState(() {
               titleCaptionForPost.postCaption = descTextController.text;
+              _validate2 = false;
             });
             descTextController.clear();
           },
@@ -47,7 +53,9 @@ class _titleCaptionForPostState extends State<titleCaptionForPost> {
           decoration: InputDecoration(
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              hintText: 'Enter a caption for the post...'),
+              hintText: 'Enter a caption for the post...',
+              errorStyle: TextStyle(fontSize: 12),
+              errorText: _validate2 ? "Your post must have a caption." : null),
         ),
       ),
     ]));

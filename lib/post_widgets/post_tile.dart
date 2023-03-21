@@ -3,10 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/post_widgets/expanded_post.dart';
-import 'package:flutter_app_firebase_login/util/scrapbook_util/get_marker.dart';
-import '../scrapbook_widgets/scrapbook.dart';
+import 'package:flutter_app_firebase_login/post_widgets/post.dart';
 import '../util/util.dart';
-import 'post.dart';
 
 class PostTile extends StatelessWidget {
   final Post post;

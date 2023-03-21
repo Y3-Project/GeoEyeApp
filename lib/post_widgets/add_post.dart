@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/media_widgets/scrapbook_thumbnail.dart';
 import 'package:flutter_app_firebase_login/post_widgets/title_caption_for_post.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/make_a_scrapbook.dart';
 import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
@@ -28,7 +27,6 @@ class AddPost extends StatefulWidget {
 
 class _AddPostState extends State<AddPost> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-
 
   Future<void> addScrapbookPostMarker() async {
     String postDir = await ProfilePage().getUserDocumentID() + "/scrapbooks/";
@@ -163,19 +161,16 @@ class _AddPostState extends State<AddPost> {
                     textStyle: MaterialStateTextStyle.resolveWith(
                         (states) => TextStyle(color: Colors.white))),
                 onPressed: () async {
-
                   //------MAIN METHOD BELOW-------//
                   addScrapbookPostMarker();
                   //------MAIN METHOD BELOW-------//
-
                   //---FOR NAVIGATING TO THE HOME PAGE---
                   setState(() {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => MainUserPage()),
+                      //---FOR NAVIGATING TO THE HOME PAGE---
                     );
                   });
-                  //---FOR NAVIGATING TO THE HOME PAGE---
-
                 },
                 child: Text("Create the scrapbook",
                     style:
