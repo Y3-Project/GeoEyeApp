@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../user_authentication_widgets/login_page.dart';
-import 'moderator_util/reported_posts_util.dart';
+import '../util/moderator_util/reported_posts_util.dart';
 
 class ModeratorPage extends StatefulWidget {
   const ModeratorPage();

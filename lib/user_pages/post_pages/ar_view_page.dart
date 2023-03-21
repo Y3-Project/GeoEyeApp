@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:ar_location_view/ar_annotation.dart';
-import 'package:ar_location_view/ar_location_widget.dart';
-import 'package:camera/camera.dart';
+import 'package:ar_location_view/ar_location_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
@@ -22,34 +20,18 @@ class ARViewPage extends StatefulWidget {
 }
 
 class _ARViewPageState extends State<ARViewPage> {
-  CameraController? cameraController; // controller for camera
-  List<CameraDescription>? cameras; // list of devices cameras
   late StreamSubscription stream;
   List<ScrapbookTile> _display = List.empty(growable: true);
   List<Annotation> _displayAnnotations = List.empty(growable: true);
+  List<ArLocationWidget> arLocationWidgets = List.empty(growable: true);
   final CollectionReference scrapbookCollection =
       FirebaseFirestore.instance.collection('scrapbooks');
 
   @override
   void initState() {
-    findCameras();
     findScrapbooks();
     loadAnnotations();
     super.initState();
-  }
-
-  void findCameras() async {
-    cameras = await availableCameras();
-    if (cameras == null) {
-      print("NO CAMERAS FOUND!");
-      return;
-    }
-    print(cameras!.length);
-    cameraController = CameraController(cameras![0], ResolutionPreset.max);
-    cameraController!.initialize().then((value) {
-      if (!mounted) return;
-      setState(() {});
-    });
   }
 
   void findScrapbooks() async {
@@ -67,28 +49,26 @@ class _ARViewPageState extends State<ARViewPage> {
             longitude: tile.scrapbook.location.longitude,
             latitude: tile.scrapbook.location.latitude,
             timestamp: DateTime.now(),
-            accuracy: 0.0,
+            accuracy: 1.0,
             altitude: 0.0,
             heading: 0.0,
             speed: 0.0,
             speedAccuracy: 0.0);
         Annotation annon = Annotation(uid: Uuid().v1(), position: pos);
         _displayAnnotations.add(annon);
+        arLocationWidgets.add(ArLocationWidget(
+          annotations: [annon],
+          annotationViewBuilder: (context, annotation) {
+            return tile;
+          },
+          onLocationChange: (position) {},
+        ));
       }
     }
   }
 
-  List<Widget> setDisplayStack() {
-    List<Widget> displayList = List.empty(growable: true);
-
-    // displayList.add(arLocationWidget);
-    print(displayList.length);
-    return displayList;
-  }
-
   @override
   Widget build(BuildContext context) {
-    Stack stack = Stack(children: setDisplayStack());
     return Scaffold(
         body: Container(
             alignment: Alignment.center,
@@ -99,6 +79,7 @@ class _ARViewPageState extends State<ARViewPage> {
                 borderRadius: const BorderRadius.all(Radius.circular(20))),
             child: ArLocationWidget(
                 showDebugInfoSensor: false,
+                showRadar: false,
                 annotations: _displayAnnotations,
                 annotationViewBuilder: (context, annotation) {
                   return _display[0];

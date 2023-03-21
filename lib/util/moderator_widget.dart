@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_firebase_login/util/moderator_comments.dart';
-import 'package:flutter_app_firebase_login/util/moderator_page.dart';
-import 'package:flutter_app_firebase_login/util/moderator_user_page.dart';
+import 'package:flutter_app_firebase_login/moderator_widgets/moderator_comments.dart';
+import 'package:flutter_app_firebase_login/moderator_widgets/moderator_page.dart';
+import 'package:flutter_app_firebase_login/moderator_widgets/moderator_user_page.dart';
 
 class ModeratorWidget extends StatefulWidget {
   final Function(User?) onSignOut;
