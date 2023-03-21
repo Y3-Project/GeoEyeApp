@@ -270,7 +270,13 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                     {
                       liked = true,
                       likePost(this.widget.post.id, userDocument),
-                      ScaffoldMessenger.of(context).showSnackBar(likedSnackBar)
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(likedSnackBar),
+                      setState(() {
+                        // add use to likesList
+                        likesList.add(getCurrentUserReference());
+                        l = l + 1;
+                      })
                     }
                   else
                     {
