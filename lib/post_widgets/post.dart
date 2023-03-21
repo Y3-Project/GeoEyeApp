@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Post {
   Timestamp timestamp =
       Timestamp.fromMillisecondsSinceEpoch(0); // time the post was created
-
   /* String scrapbookId = ''; // path to scrapbook document eg '/scrapbooks/abcdefg' */
   List<dynamic> reports = List.empty(
       growable:
