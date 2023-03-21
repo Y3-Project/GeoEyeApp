@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/post_widgets/post_tile.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/forgot_password_page.dart';
 import 'package:flutter_app_firebase_login/user_authentication_widgets/welcome_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -23,6 +24,8 @@ class AccountSettingsPage extends StatelessWidget {
       print('Deleting credentials from secure storage');
       storage.delete(key: 'email');
       storage.delete(key: 'password');
+
+      Navigator.popUntil(context, (route) => false);
 
       Navigator.of(context).push(
         MaterialPageRoute(

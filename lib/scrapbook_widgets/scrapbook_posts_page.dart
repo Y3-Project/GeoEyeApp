@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +25,8 @@ class ScrapbookPostsPage extends StatefulWidget {
 }
 
 class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
+  Widget removeButton = SizedBox.shrink();
+
   Future<void> deleteScrapbook() async {
     List<DocumentReference> scrapbookPostsRefs =
         await getScrapbookPostsFromScrapbook(widget.scrapbook);
@@ -95,8 +99,48 @@ class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
     }).toList();
   }
 
+  Future<Widget> getRemoveButton() async {
+    String scrapbookCreatorId = await getScrapbookCreatorId();
+    if (ProfilePage().getUuid() == scrapbookCreatorId) {
+      removeButton = IconButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      content: Text(
+                          "Are you sure you want to delete this scrapbook?"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              deleteScrapbook().then((value) =>
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => MainUserPage())));
+                            },
+                            child: Text("Yes")),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Cancel"))
+                      ],
+                    ));
+          },
+          icon: const Icon(Icons.delete));
+    }
+    setState(() {});
+    return removeButton;
+  }
+
+  Future<String> getScrapbookCreatorId() async {
+    return (await (await FirebaseFirestore.instance
+                .doc(widget.scrapbook.creatorid))
+            .get())
+        .get("uuid");
+  }
+
   @override
   Widget build(BuildContext context) {
+    getRemoveButton();
     return StreamProvider<List<ScrapbookPost>>.value(
       value: scrapbookPosts,
       initialData: [],
@@ -118,34 +162,7 @@ class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
             widget.scrapbook.scrapbookTitle,
             style: TextStyle(fontSize: 25),
           ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            content: Text(
-                                "Are you sure you want to delete this scrapbook?"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    deleteScrapbook().then((value) =>
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MainUserPage())));
-                                  },
-                                  child: Text("Yes")),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Cancel"))
-                            ],
-                          ));
-                },
-                icon: const Icon(Icons.delete))
-          ],
+          actions: [removeButton],
         ),
         body: PostList(scrapbook: widget.scrapbook),
       ),
