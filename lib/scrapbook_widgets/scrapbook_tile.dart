@@ -8,7 +8,8 @@ import '../user_pages/profile_page.dart';
 import '../util/util.dart';
 
 class ScrapbookTile extends StatefulWidget {
-  static String profileUrl = '';
+  //static String profileUrl = '';
+  //static String profileID = '';
   final Scrapbook scrapbook;
 
   ScrapbookTile(this.scrapbook);
@@ -18,23 +19,35 @@ class ScrapbookTile extends StatefulWidget {
 }
 
 class _ScrapbookTileState extends State<ScrapbookTile> {
-  String currentUUID = "";
+  //String currentUUID = "";
+  String profileUrl = '';
+  //static String profileID = '';
   List<DocumentReference> userDocument = List.empty(growable: true);
 
   Future<void> getCurrentUserReference() async {
-    currentUUID = FirebaseAuth.instance.currentUser!.uid;
+    //currentUUID = FirebaseAuth.instance.currentUser!.uid;
+    //profileID = widget.scrapbook.creatorid.substring(7); //remove /users/?
     await FirebaseFirestore.instance
         .collection("users")
-        .where("uuid", isEqualTo: currentUUID)
+        .doc(widget.scrapbook.creatorid.substring(7))
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      //if (snapshot.exists) {
+      profileUrl = snapshot.get("profilePicture");
+      print(profileUrl);
+      print(widget.scrapbook.creatorid.substring(7));
+      //}
+    }); //not realy sure what this does
+    /*.where("uuid", isEqualTo: widget.scrapbook.creatorid.substring(7))
         .snapshots()
         .listen((event) {
-      for (var doc in event.docs) {
-        userDocument.add(doc.reference);
-      }
-    });
+          for (var doc in event.docs) {
+            userDocument.add(doc.reference);
+          }
+        });*/
   }
 
-  void getProfilePic() async {
+  /*void getProfilePic() async {
     QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
         .collection("users")
         .where("uuid", isEqualTo: ProfilePage().getUuid() as String)
@@ -43,9 +56,18 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
     for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docList) {
       ScrapbookTile.profileUrl = await doc['profilePicture'];
     }
-  }
+  }*/
 
   Widget imageHandler() {
+    if (widget.scrapbook.scrapbookThumbnail != '') {
+      return Image.network(widget.scrapbook.scrapbookThumbnail);
+    } else {
+      // default image file from images/default_image.png
+      return Image.asset('images/default_image.png');
+    }
+  }
+
+  Widget pfpHandler() {
     if (widget.scrapbook.scrapbookThumbnail != '') {
       return Image.network(widget.scrapbook.scrapbookThumbnail);
     } else {
@@ -95,7 +117,9 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
     Widget yesDelete = TextButton(
       child: Text("Yes"),
       onPressed: () {
-        FirebaseFirestore.instance.doc('/posts/' + widget.scrapbook.id).delete();
+        FirebaseFirestore.instance
+            .doc('/posts/' + widget.scrapbook.id)
+            .delete();
         Navigator.of(context).pop(); // dismiss dialog
         ScaffoldMessenger.of(context).showSnackBar(deletedSnackBar);
       },
@@ -135,7 +159,7 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
   void initState() {
     super.initState();
     getCurrentUserReference();
-    getProfilePic();
+    //getProfilePic();
   }
 
   @override
@@ -159,13 +183,15 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
             );
           },
           child: ListTile(
-            leading: CircleAvatar(
-                backgroundImage: ScrapbookTile.profileUrl == ''
+            leading: CircleAvatar(backgroundImage: NetworkImage(profileUrl))
+            //"https://firebasestorage.googleapis.com/v0/b/flutter-app-firebase-log-c1c41.appspot.com/o/images%2FKhrRphvHVAesRFxpMaePhkd8kJ93%2Fprofile_picture?alt=media&token=cd21af1b-c36d-4d6f-8f6b-9daf6791281c")),
+            /*backgroundImage: ScrapbookTile.profileUrl == ''
                     ? Image(
                         image: AssetImage('images/default_avatar.png'),
                       ).image
-                    : NetworkImage(ScrapbookTile.profileUrl)),
-            title: Text(widget.scrapbook.scrapbookTitle),
+                    : NetworkImage(ScrapbookTile.profileUrl))*/
+            ,
+            title: Text(profileUrl), //Text(widget.scrapbook.scrapbookTitle),
             subtitle: Text(widget.scrapbook.currentUsername),
             trailing: imageHandler(),
           ),
