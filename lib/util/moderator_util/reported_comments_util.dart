@@ -74,7 +74,7 @@ PopupMenuButton createCommentDropDownMenu(
               },
             ),
             PopupMenuItem(
-              child: Text("Allow comment (beta)${comment.id}"),
+              child: Text("Allow comment ${comment.id}"),
               value: 4,
               onTap: () {
                 allowPostOrCommentOrUser(comment);

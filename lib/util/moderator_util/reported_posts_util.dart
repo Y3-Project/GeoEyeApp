@@ -132,7 +132,7 @@ PopupMenuButton createDropDownMenu(QueryDocumentSnapshot post, String user) {
               },
             ),
             PopupMenuItem(
-              child: Text("Allow post (beta)${post.id}"),
+              child: Text("Allow post ${post.id}"),
               value: 4,
               onTap: () {
                 allowPostOrCommentOrUser(post);
