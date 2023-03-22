@@ -5,6 +5,7 @@ import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_list.dart
 import 'package:popup_card/popup_card.dart';
 import 'package:provider/provider.dart';
 
+import '../../scrapbook_widgets/current_user_scrapbook_list.dart';
 import '../../scrapbook_widgets/scrapbook.dart';
 
 class FeedPage extends StatefulWidget {
@@ -49,20 +50,17 @@ class _FeedPageState extends State<FeedPage> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ScrapbookList(),
-                ),
+                    builder: (context) =>
+                        CurrentUserScrapbookList()),
               );
             },
             child: const Text(
-                'CHOOSE THE SCRAPBOOK TO ADD A POST TO \n [MAY REMOVE THIS BUTTON LATER]',
+                'ADD POSTS TO SCRAPBOOKS',
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.red,
+                    color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.bold)),
-          ),
-          const Divider(
-            color: Colors.white,
-            thickness: 0.1,
           ),
           const Divider(
             color: Colors.white,

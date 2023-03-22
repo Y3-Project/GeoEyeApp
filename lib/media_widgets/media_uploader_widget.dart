@@ -36,6 +36,7 @@ class MediaUploaderWidget extends StatefulWidget {
 class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
   File mediaFile = File('');
   String fileName = "default_file";
+  MediaType mediaType = MediaType.picture;
 
   Future<File> pickMediaFile(ImageSource mediaSource) async {
     XFile? imgXFile = widget.mediaType == MediaType.picture
@@ -89,6 +90,7 @@ class MediaUploaderWidgetState extends State<MediaUploaderWidget> {
 
   @override
   Widget build(BuildContext context) {
+    mediaType = widget.mediaType;
     fileName = widget.fileName;
     return Container(
       color: Colors.black,

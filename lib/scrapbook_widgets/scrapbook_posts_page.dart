@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_firebase_login/post_widgets/post_creation_page.dart';
 import 'package:flutter_app_firebase_login/post_widgets/post_list.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook.dart';
 import 'package:flutter_app_firebase_login/scrapbook_widgets/scrapbook_post.dart';
@@ -26,6 +27,7 @@ class ScrapbookPostsPage extends StatefulWidget {
 
 class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
   Widget removeButton = SizedBox.shrink();
+  Widget addPostButton = SizedBox.shrink();
 
   Future<void> deleteScrapbook() async {
     List<DocumentReference> scrapbookPostsRefs =
@@ -131,6 +133,22 @@ class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
     return removeButton;
   }
 
+  Future<Widget> getAddPostButton() async {
+    String scrapbookCreatorId = await getScrapbookCreatorId();
+    if (ProfilePage().getUuid() == scrapbookCreatorId) {
+      addPostButton = FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => AddPostToScrapbookPage(scrapbook: widget.scrapbook)),
+            );
+          },
+          backgroundColor: Colors.black,
+          child: Icon(Icons.add, color: Colors.white,));
+    }
+    setState(() {});
+    return addPostButton;
+  }
+
   Future<String> getScrapbookCreatorId() async {
     return (await (await FirebaseFirestore.instance
                 .doc(widget.scrapbook.creatorid))
@@ -141,6 +159,7 @@ class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
   @override
   Widget build(BuildContext context) {
     getRemoveButton();
+    getAddPostButton();
     return StreamProvider<List<ScrapbookPost>>.value(
       value: scrapbookPosts,
       initialData: [],
@@ -165,6 +184,7 @@ class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
           actions: [removeButton],
         ),
         body: PostList(scrapbook: widget.scrapbook),
+        floatingActionButton: addPostButton,
       ),
     );
   }
