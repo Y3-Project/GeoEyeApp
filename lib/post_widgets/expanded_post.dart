@@ -159,13 +159,13 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
 
   reportDialog(BuildContext context, Comment comment) {
     Widget noReport = TextButton(
-      child: Text("Cancel"),
+      child: Text("Cancel", style: TextStyle(color: Colors.black)),
       onPressed: () {
         Navigator.of(context).pop(); // dismiss dialog
       },
     );
     Widget yesReport = TextButton(
-      child: Text("Yes"),
+      child: Text("Yes", style: TextStyle(color: Colors.black)),
       onPressed: () {
         FirebaseFirestore.instance
             .doc(comment.id.path)
@@ -186,14 +186,14 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
     );
 
     Widget noDelete = TextButton(
-      child: Text("Cancel"),
+      child: Text("Cancel", style: TextStyle(color: Colors.black)),
       onPressed: () {
         Navigator.of(context).pop(); // dismiss dialog
       },
     );
 
     Widget yesDelete = TextButton(
-      child: Text("Yes"),
+      child: Text("Yes", style: TextStyle(color: Colors.black)),
       onPressed: () {
         FirebaseFirestore.instance.doc(comment.id.path).delete();
         Navigator.of(context).pop(); // dismiss dialog

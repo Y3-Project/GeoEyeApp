@@ -48,13 +48,13 @@ class PostTile extends StatelessWidget {
 
   showAlertDialog(BuildContext context) {
     Widget noReport = TextButton(
-      child: Text("Cancel"),
+      child: Text("Cancel", style: TextStyle(color: Colors.black)),
       onPressed: () {
         Navigator.of(context).pop(); // dismiss dialog
       },
     );
     Widget yesReport = TextButton(
-      child: Text("Yes"),
+      child: Text("Yes", style: TextStyle(color: Colors.black)),
       onPressed: () {
         FirebaseFirestore.instance.doc(post.id.path).update({
           "reports": FieldValue.arrayUnion([getCurrentUserDocRef()])
