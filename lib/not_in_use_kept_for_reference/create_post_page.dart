@@ -15,7 +15,7 @@ USE
 CURRENTLY
 GO
 TO
-add_post.dart
+add_scrapbook.dart
  */
 
 class CreatePostPage extends StatefulWidget {
