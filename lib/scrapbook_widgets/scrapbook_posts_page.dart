@@ -135,8 +135,6 @@ class _ScrapbookPostsPageState extends State<ScrapbookPostsPage> {
 
   Future<Widget> getAddPostButton() async {
     String scrapbookCreatorId = await getScrapbookCreatorId();
-
-    //TODO: make add post button display
     if (ProfilePage().getUuid() == scrapbookCreatorId) {
       addPostButton = FloatingActionButton(
           onPressed: () {
