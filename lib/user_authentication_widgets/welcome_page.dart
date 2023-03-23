@@ -63,11 +63,23 @@ class _WelcomePageState extends State<WelcomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
-                  child: Text(
+                  child: 
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      TypewriterAnimatedText('Hello, welcome to GeoEye',
+                          speed: const Duration(milliseconds: 150),
+                          cursor: "_", textStyle: TextStyle(fontSize: 20),),
+                      TypewriterAnimatedText("Where Location meets People",
+                          speed: const Duration(milliseconds: 150), cursor: "_", textStyle: TextStyle(fontSize: 20),),
+                    ],
+                    repeatForever: true,
+                    pause: const Duration(seconds: 1),
+                  ),
+                  /*Text(
                     textAlign: TextAlign.center,
                     'Hello, welcome to GeoEye.',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
+                  ),*/
                   flex: 1,
                   fit: FlexFit.tight,
                 ),
