@@ -112,7 +112,19 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   flex: 2,
                   fit: FlexFit.loose,
-                )
+                ),
+                Flexible(
+                  child: Container(),
+                  flex: 1,
+                  fit: FlexFit.tight,
+                ),
+                Flexible(
+                  child: Image(
+                    image: AssetImage('images/default_image - Copy.json'),
+                  ),
+                  flex: 3,
+                  fit: FlexFit.tight,
+                ),
               ],
             ),
           ),
