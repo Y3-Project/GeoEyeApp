@@ -112,16 +112,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         style: TextStyle(fontSize: 20),
                       )
                     ]),
-                    Align(
-                        child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(border: Border.symmetric()),
-                      child: Text(
-                          "Scrapbook Count: [remove this, as value is refreshing]",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17)),
-                    )),
+//                    Align(
+//                        child: Container(
+//                      height: 40,
+//                      alignment: Alignment.centerLeft,
+//                      decoration: BoxDecoration(border: Border.symmetric()),
+//                      child: Text(
+//                          "Scrapbook Count: [remove this, as value is refreshing]",
+//                          style: TextStyle(
+//                              fontWeight: FontWeight.bold, fontSize: 17)),
+//                    )),
                     Align(
                         child: Container(
                       height: 40,
