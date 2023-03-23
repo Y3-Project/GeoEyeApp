@@ -4,6 +4,7 @@ import 'package:flutter_app_firebase_login/user_authentication_widgets/create_ac
 import 'package:flutter_app_firebase_login/user_authentication_widgets/login_page.dart';
 import 'package:flutter_app_firebase_login/user_pages/main_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -45,11 +46,21 @@ class _WelcomePageState extends State<WelcomePage> {
         children: [
           AppBar(
             centerTitle: true,
-            title: Text('GeoEye', style: TextStyle(fontSize: 25)),
+            title: AnimatedTextKit(
+              animatedTexts: [
+                TypewriterAnimatedText('GeoEye',
+                    speed: const Duration(milliseconds: 500), cursor: "_"),
+                //TypewriterAnimatedText("slogan",
+                //    speed: const Duration(milliseconds: 500), cursor: "_"),
+              ],
+              repeatForever: true,
+              pause: const Duration(seconds: 5),
+            ),
+            //Text('GeoEye', style: TextStyle(fontSize: 25)),
           ),
           Flexible(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
                   child: Text(
@@ -57,9 +68,17 @@ class _WelcomePageState extends State<WelcomePage> {
                     'Hello, welcome to GeoEye.',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
-                  flex: 3,
+                  flex: 1,
                   fit: FlexFit.tight,
                 ),
+                Flexible(
+                  child: Image(
+                    image: AssetImage('images/eye.png'),
+                  ),
+                  flex: 2,
+                  fit: FlexFit.tight,
+                ),
+                Flexible(child: Container()),
                 Flexible(
                   child: ElevatedButton(
                     style: ButtonStyle(
@@ -103,7 +122,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   flex: 2,
                   fit: FlexFit.loose,
-                )
+                ),
               ],
             ),
           ),

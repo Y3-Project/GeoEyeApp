@@ -54,6 +54,7 @@ dependencies:
   ar_location_view: ^2.0.6
   flutter_map_marker_popup: ^4.0.1
   uuid: ^3.0.7
+  animated_text_kit: ^4.2.2
 
 
 dev_dependencies:
@@ -92,6 +93,7 @@ flutter:
    - images/default_avatar.png
    - images/default_image.png
    - images/add_img.png
+   - images/eye.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
