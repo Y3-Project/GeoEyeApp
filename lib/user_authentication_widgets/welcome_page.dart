@@ -49,7 +49,9 @@ class _WelcomePageState extends State<WelcomePage> {
             title: AnimatedTextKit(
               animatedTexts: [
                 TypewriterAnimatedText('GeoEye',
-                    speed: const Duration(milliseconds: 500))
+                    speed: const Duration(milliseconds: 500), cursor: "_"),
+                //TypewriterAnimatedText("slogan",
+                //    speed: const Duration(milliseconds: 500), cursor: "_"),
               ],
               repeatForever: true,
               pause: const Duration(seconds: 5),
@@ -58,7 +60,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           Flexible(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
                   child: Text(
@@ -66,9 +68,17 @@ class _WelcomePageState extends State<WelcomePage> {
                     'Hello, welcome to GeoEye.',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
-                  flex: 3,
+                  flex: 1,
                   fit: FlexFit.tight,
                 ),
+                Flexible(
+                  child: Image(
+                    image: AssetImage('images/eye.png'),
+                  ),
+                  flex: 2,
+                  fit: FlexFit.tight,
+                ),
+                Flexible(child: Container()),
                 Flexible(
                   child: ElevatedButton(
                     style: ButtonStyle(
@@ -112,18 +122,6 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   flex: 2,
                   fit: FlexFit.loose,
-                ),
-                Flexible(
-                  child: Container(),
-                  flex: 1,
-                  fit: FlexFit.tight,
-                ),
-                Flexible(
-                  child: Image(
-                    image: AssetImage('images/default_image - Copy.json'),
-                  ),
-                  flex: 3,
-                  fit: FlexFit.tight,
                 ),
               ],
             ),
