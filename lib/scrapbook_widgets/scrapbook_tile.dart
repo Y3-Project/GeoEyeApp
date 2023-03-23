@@ -72,14 +72,14 @@ class _ScrapbookTileState extends State<ScrapbookTile> {
     }
   }
 
-  Widget pfpHandler() {
+  /*Widget pfpHandler() {
     if (widget.scrapbook.scrapbookThumbnail != '') {
       return Image.network(widget.scrapbook.scrapbookThumbnail);
     } else {
       // default image file from images/default_image.png
       return Image.asset('images/default_image.png');
     }
-  }
+  }*/
 
   Widget OtherUserPopUpItemBody() {
     return Center(
