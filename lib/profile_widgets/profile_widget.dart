@@ -189,27 +189,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         )),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: ProfileWidget.SETTINGS_BUTTON_SPACING),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          minimumSize: Size.fromHeight(ProfileWidget
-                              .SETTINGS_BUTTON_WIDTH), // fromHeight use double.infinity as width and 40 is the height
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => HelpPage()),
-                          );
-                        },
-                        child: Text(
-                          "Help Page [REMOVE, IF WE DON'T ADD ANYTHING HERE]",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        )),
-                  ),
+                  )
                 ],
               ),
             ],
