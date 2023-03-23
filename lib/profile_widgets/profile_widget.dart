@@ -122,24 +122,24 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 //                          style: TextStyle(
 //                              fontWeight: FontWeight.bold, fontSize: 17)),
 //                    )),
-                    Align(
-                        child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(border: Border.symmetric()),
-                      child: Text("Interactions: ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20)),
-                    )),
-                    Align(
-                        child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(border: Border.symmetric()),
-                      child: Text("Interacted with: ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20)),
-                    ))
+//                    Align(
+//                        child: Container(
+//                      height: 40,
+//                      alignment: Alignment.centerLeft,
+//                      decoration: BoxDecoration(border: Border.symmetric()),
+//                      child: Text("Interactions: ",
+//                          style: TextStyle(
+//                              fontWeight: FontWeight.bold, fontSize: 20)),
+//                    )),
+//                    Align(
+//                        child: Container(
+//                      height: 40,
+//                      alignment: Alignment.centerLeft,
+//                      decoration: BoxDecoration(border: Border.symmetric()),
+//                      child: Text("Interacted with: ",
+//                          style: TextStyle(
+//                              fontWeight: FontWeight.bold, fontSize: 20)),
+//                    ))
                   ],
                 )
               ]),
